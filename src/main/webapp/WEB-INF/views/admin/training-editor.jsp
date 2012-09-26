@@ -14,13 +14,14 @@
     <meta name="author" content="">
     <!-- Le styles -->
     <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />" rel="stylesheet">
+    <link href="<c:url value="/resources/bootstrap/css/tidepool.css" />" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 60px;
         padding-bottom: 40px;
       }
     </style>
-    <link href="<c:url value="/resources/bootstrap/css/bootstrap-responsive.css" />" rel="stylesheet">
+   
 
   </head>
 
@@ -69,7 +70,7 @@
 		
 		<div class="hero-unit">			  			
   			<div class="row">	  				  			
-	  			<div class="span-4">
+	  			<%-- <div class="span-4">
 		  			
 		  			<p>Current Coded Attributes</p>
 		  			
@@ -86,12 +87,12 @@
 		     		 </c:forEach>
 		     		</p>
 		    		 	
-	     		</div>
+	     		</div> --%>
 	     		
 	     		<div class="span-4">
 	  				<p>Edit Attributes</p>
 	  				<p>
-	  				<img id="jcrop_target" src="${cdn_url}55098795410639527_laxmM6oX_b.jpg">
+	  				<img id="jcrop_target" src="${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.pictureId}">
 	  				</p>
 	  							
 	  				<p>
@@ -105,11 +106,11 @@
 	     		<div class="span-3">
 		     		<p>
 				  		<div>		  			
-				  			<div class="btn-toolbar">
+				  			<div>
 				  				<c:forEach var="attribute" items="${allAttributes}" varStatus="rowCounter">
 									
-									<c:if test="${rowCounter.count == 0 or rowCounter.count % 5 == 0}">     	
-     									<c:if test="${rowCounter.count != 0}">
+									<c:if test="${rowCounter.index == 0 or rowCounter.index % 5 == 0}">     	
+     									<c:if test="${rowCounter.index != 0}">
      										</div>
      									</c:if>
       									
@@ -119,7 +120,7 @@
 																		
 										<button class="attribute btn" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>							
 									
-									<c:if test="${fn:length(allAttributes) - 1 == rowCounter.count}">  
+									<c:if test="${fn:length(allAttributes) - 1 == rowCounter.index}">  
          								</div>
       								</c:if>
 									
@@ -170,7 +171,7 @@
 				});
 				
 				$("#imageCanvas").drawImage({
-					  source: "http://ds61wl515l8xu.cloudfront.net/experiment0/55098795410639527_laxmM6oX_b.jpg",					  
+					  source: "${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.pictureId}",					  
 					  x: 0, y: 0,					  
 					  fromCenter: false	
 								

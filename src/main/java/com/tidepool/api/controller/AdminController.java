@@ -111,7 +111,7 @@ public class AdminController {
 		
 		TrainingItem trainingSet = hBaseManager.getTrainingItem(trainingId);
 		model.addAttribute("allAttributes", attributeMap.values());
-		model.addAttribute("trainingSet", trainingSet);
+		model.addAttribute("trainingItem", trainingSet);
 		model.addAttribute("cdn_url", cdnUrl);
 		
 		return "admin/training-editor";

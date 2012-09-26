@@ -41,7 +41,7 @@ public class HBaseTest {
 	@Autowired
 	private HBaseManager hBaseManager;
 	
-	@Test
+	//@Test
 	public void testHBASEConnection() {
 	
 		System.out.println("Hbase Demo Application ");
@@ -112,7 +112,7 @@ public class HBaseTest {
 
 	}
 	
-	@Test
+	//@Test
 	public void testHBASEAccountConnection() {
 		
 		System.out.println("Hbase Demo Application ");
@@ -184,27 +184,27 @@ public class HBaseTest {
 	}
 	
 
-	@Test
+	//@Test
 	public void testGetAllPhotos() {			
 		assertTrue(hBaseManager.getAllPhotos().size() > 0);
 		
 	}
 	
-	@Test
+	//@Test
 	public void testOnePhotoFromPicName() {
 			
 		assertNotNull(hBaseManager.getPhotoFromPicName("55098795410639527_laxmM6oX_b.jpg"));
 		
 	}
 	
-	@Test
+	//@Test
 	public void testMapCodedItem() {
 		
 		CodedItem item = hBaseManager.getCodedItemFromId("55098795410639527_laxmM6oX_b.jpg"); 
 		assertNotNull(item);
 	}
 	
-	@Test
+	//@Test
 	public void testPutCodedItem() {
 		
 		CodedItem item = hBaseManager.getCodedItemFromId("55098795410639527_laxmM6oX_b.jpg"); 
@@ -213,7 +213,7 @@ public class HBaseTest {
 		
 	}
 	
-	@Test
+	//@Test
 	public void testAttributes() {
 		List<CodedAttribute> attributes = hBaseManager.getCodedElements();
 		assertTrue(attributes.size() > 0);
@@ -226,7 +226,7 @@ public class HBaseTest {
 	}
 	
 	
-	@Test
+	//@Test
 	public void testAttributeGroups() {
 		List<CodedAttributeGroup> groups = hBaseManager.getCodedAttributeGroup("1");
 		assertTrue(groups.size() > 0);
@@ -236,7 +236,7 @@ public class HBaseTest {
 		}
 	}
 	
-	@Test
+	//@Test
 	public void testGetPageAttributes() {
 		
 		List<CodedAttribute> allCodedAttributes = new ArrayList<CodedAttribute>();
@@ -258,7 +258,7 @@ public class HBaseTest {
 		
 	}
 	
-	@Test
+	//@Test
 	public void testAttributePagingRollup() {
 		
 		List<CodedAttribute> allCodedAttributes = new ArrayList<CodedAttribute>();
@@ -298,7 +298,7 @@ public class HBaseTest {
 	}
 	
 	
-	@Test
+	//@Test
 	public void testPutCodingEvent() {
 		
 		CodingEvent event = new CodingEvent();
@@ -315,7 +315,7 @@ public class HBaseTest {
 	}
 	
 	
-	@Test
+	//@Test
 	public void testGetRandomExplicitCoding() {
 		
 		CodedItem item0 = hBaseManager.getRandomCodedItem();		
@@ -328,7 +328,7 @@ public class HBaseTest {
 		
 	}
 	
-	@Test
+	//@Test
 	public void testTrainingItem() {
 		
 		String trainingId = "1";
@@ -356,5 +356,16 @@ public class HBaseTest {
 		assertTrue(hBaseManager.getTrainingItem(trainingId).getCodedItem().getHighlightMap().get("night_life").getX0() == 10);
 	}
 	
+	
+	@Test
+	public void testTrainingItems() {
+		List<TrainingItem> items = hBaseManager.getTrainingSets(); 
+		assertTrue(items.size() > 0);
+		
+		for (TrainingItem item : items) {
+			System.out.println("Item: " + item.getPictureId());
+		}
+		
+	}
 	
 }

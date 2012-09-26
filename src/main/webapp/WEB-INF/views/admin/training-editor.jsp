@@ -67,12 +67,9 @@
 
     <div class="container">
 		
-		<div class="hero-unit">			
-  			
-  			<div class="row">
-	  			
-	  			
-	  			<div class="span-5">
+		<div class="hero-unit">			  			
+  			<div class="row">	  				  			
+	  			<div class="span-4">
 		  			
 		  			<p>Current Coded Attributes</p>
 		  			
@@ -91,31 +88,46 @@
 		    		 	
 	     		</div>
 	     		
-	     		<div class="span-5">
+	     		<div class="span-4">
 	  				<p>Edit Attributes</p>
 	  				<p>
 	  				<img id="jcrop_target" src="${cdn_url}55098795410639527_laxmM6oX_b.jpg">
 	  				</p>
-	  				
+	  							
 	  				<p>
-			  		<div>		  			
-			  			<div class="btn-toolbar">
-			  				<c:forEach var="attribute" items="${allAttributes}" varStatus="rowCounter">
-								<div class="btn-group">
-									<button class="attribute btn" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>							
-								</div>
-			  				</c:forEach>
-			  			</div>
-			  		</div>
-			  		</p>
-	  				
-	  				<p>
-			  		<div>	  			
-			  			<button class="btn btn-success" id="nextButton">Done</button>
-		  			</div>
+			  			<div>	  			
+			  				<button class="btn btn-success" id="nextButton">Done</button>
+		  				</div>
 		  			</p>
 	  				
 	  			</div>
+	     		
+	     		<div class="span-3">
+		     		<p>
+				  		<div>		  			
+				  			<div class="btn-toolbar">
+				  				<c:forEach var="attribute" items="${allAttributes}" varStatus="rowCounter">
+									
+									<c:if test="${rowCounter.count == 0 or rowCounter.count % 5 == 0}">     	
+     									<c:if test="${rowCounter.count != 0}">
+     										</div>
+     									</c:if>
+      									
+      									<div class="btn-group">
+      								
+      								</c:if>
+																		
+										<button class="attribute btn" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>							
+									
+									<c:if test="${fn:length(allAttributes) - 1 == rowCounter.count}">  
+         								</div>
+      								</c:if>
+									
+				  				</c:forEach>
+				  			</div>
+				  		</div>
+				  	</p>
+	     		</div>
 	     		
      		</div>
      	</div>

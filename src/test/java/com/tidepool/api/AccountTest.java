@@ -27,7 +27,7 @@ public class AccountTest {
 	@Autowired
 	private ShaPasswordEncoder encoder;
 	
-	@Test
+	//@Test
 	public void testAccountLookup() {
 		Account account = hBaseManager.getAccountFromEmail("jshoop@tidepool.co"); 		
 		assertNotNull(account);
@@ -37,7 +37,7 @@ public class AccountTest {
 		assertNotNull(account.getLastName());
 	}
 	
-	@Test
+	//@Test
 	public void testAccountSave() {
 		
 		Account account = hBaseManager.getAccountFromEmail("jshoop@tidepool.co"); 		
@@ -57,7 +57,7 @@ public class AccountTest {
 	}
 	
 	
-	@Test
+	//@Test
 	public void testPassword() {
 		
 		String encoded = encoder.encodePassword("t1d3p00l", "jshoop@tidepool.co");
@@ -68,20 +68,20 @@ public class AccountTest {
 	
 	
 	
-	@Test
+	//@Test
 	public void testGroup() {
 		
 	}
 	
 	
-	@Test
+	//@Test
 	public void testGetAccounts() {
 		List<Account> accounts = hBaseManager.getAccounts(); 
 		assertTrue(accounts.size() > 0);
 	}
 	
 	
-	@Test
+	//@Test
 	public void testCreateAccount() {
 		Account account = new Account();
 		String email = "jshoop@tidepool.co";

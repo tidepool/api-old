@@ -70,7 +70,7 @@
 			<c:forEach  var="trainingItem" items="${trainingSets}" varStatus="trainingSetCounter">
 				<tr>
 					<td>${ trainingItem.trainingId }</td>
-					<td>${ trainingItem.name }</td>
+					<td><img src="${cdn_url}${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.pictureId}"></td>
 					<td>
 						<a href="<c:url value="/admin/trainingEditor?trainingId=${ trainingItem.trainingId}" />"><button class="btn btn-mini btn-primary" type="button">Edit</button></a>
 					</td>

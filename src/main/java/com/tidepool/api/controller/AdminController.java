@@ -28,7 +28,7 @@ import com.tidepool.api.model.TrainingItem;
 @Controller
 public class AdminController {
 
-	@Value("${tidepool.cdn.url}") 
+	@Value("${tidepool.training.cdn.url}") 
 	private String cdnUrl;
 	
 	private HBaseManager hBaseManager;
@@ -92,7 +92,7 @@ public class AdminController {
 		
 		List<TrainingItem> trainingSets = hBaseManager.getTrainingSets();
 		model.addAttribute("trainingSets", trainingSets);
-		
+		model.addAttribute("cdn_url", cdnUrl);
 		return "admin/training-sets";
 	}
 	

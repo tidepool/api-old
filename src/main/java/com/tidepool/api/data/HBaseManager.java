@@ -594,7 +594,7 @@ public class HBaseManager {
 			scanner = table.getScanner(scan);		
 			for (Result result : scanner) {
 				TrainingItem trainingItem = new TrainingItem();	
-				trainingItem.setTrainingId(Bytes.toString(result.getRow()));
+				mapTrainingSet(trainingItem, result);
 				CodedItem attribute = new CodedItem();
 				mapResultToCodedItem(attribute, result);
 				trainingItem.setCodedItem(attribute);
@@ -616,7 +616,8 @@ public class HBaseManager {
 			HTableInterface table = pool.getTable(trainingImageTable);
 			Get get = new Get(Bytes.toBytes(trainingId));			
 			Result result = table.get(get);
-			trainingItem.setTrainingId(Bytes.toString(result.getRow()));
+			mapTrainingSet(trainingItem, result);
+			
 			CodedItem attribute = new CodedItem();
 			mapResultToCodedItem(attribute, result);
 			trainingItem.setCodedItem(attribute);				
@@ -626,6 +627,25 @@ public class HBaseManager {
 
 		}
 		return trainingItem;
+	}
+
+	private void mapTrainingSet(TrainingItem trainingItem, Result result) {
+		trainingItem.setTrainingId(Bytes.toString(result.getRow()));
+		
+		if (result.containsColumn(family_name_column, TrainingItem.picture_id_column)) {
+			byte[] val = result.getValue(family_name_column, TrainingItem.picture_id_column);
+			trainingItem.setPictureId(Bytes.toString(val));
+		}
+		
+		if (result.containsColumn(family_name_column, TrainingItem.bucket_name_column)) {
+			byte[] val = result.getValue(family_name_column, TrainingItem.bucket_name_column);
+			trainingItem.setBucketName(Bytes.toString(val));
+		}
+		
+		if (result.containsColumn(family_name_column, TrainingItem.folder_name_column)) {
+			byte[] val = result.getValue(family_name_column, TrainingItem.folder_name_column);
+			trainingItem.setFolderName(Bytes.toString(val));
+		}
 	}
 	
 	public void saveTrainingItem(TrainingItem item) {		

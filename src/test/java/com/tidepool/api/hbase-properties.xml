@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"  
+  xmlns:context="http://www.springframework.org/schema/context"  
+  xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+  xmlns:ehcache="http://ehcache-spring-annotations.googlecode.com/svn/schema/ehcache-spring"
+  xmlns:mongo="http://www.springframework.org/schema/data/mongo" 
+  xmlns:util="http://www.springframework.org/schema/util" 
+  xsi:schemaLocation="
+  		http://www.springframework.org/schema/beans 
+  		http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/context
+		http://www.springframework.org/schema/context/spring-context-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/data/mongo
+        http://www.springframework.org/schema/data/mongo/spring-mongo-1.0.xsd">
+
+
+	<context:property-placeholder properties-ref="defaultProperties" />
+	
+	<util:properties id="defaultProperties">
+		<prop key="tidepool.hbase.quorum">localhost</prop>						
+		<prop key="tidepool.hbase.clientPort">2181</prop>
+		<prop key="tidepool.hbase.master">localhost:60000</prop>
+		<prop key="tidepool.attribute.page.limit">6</prop>
+	</util:properties>
+	
+	
+	<bean id="hBaseManager" class="com.tidepool.api.data.HBaseManager" init-method="initialize"></bean>
+	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>		
+	
+</beans>

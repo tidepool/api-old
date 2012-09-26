@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+				xmlns:context="http://www.springframework.org/schema/context"
+				xmlns:util="http://www.springframework.org/schema/util"
+				xsi:schemaLocation="http://www.springframework.org/schema/beans 
+				http://www.springframework.org/schema/beans/spring-beans-3.0.xsd
+		http://www.springframework.org/schema/util http://www.springframework.org/schema/util/spring-util-3.0.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-3.0.xsd">
+
+	<context:property-placeholder properties-ref="defaultProperties" />
+	
+	<util:properties id="defaultProperties">
+		
+		<prop key="tidepool.cdn.url">http://ds61wl515l8xu.cloudfront.net/experiment0/</prop>						
+		<prop key="tidepool.attribute.page.limit">6</prop>
+		<prop key="tidepool.registration.limit">3</prop>
+		
+		
+		<!-- LOCAL --> 
+		<prop key="tidepool.hbase.quorum">localhost</prop>						
+		<prop key="tidepool.hbase.clientPort">2181</prop>
+		<prop key="tidepool.hbase.master">localhost:60000</prop>						
+	
+		<!-- LIVE: BUT NOT WORKING YET --> 
+		<!-- <prop key="tidepool.hbase.quorum">ec2-23-22-153-180.compute-1.amazonaws.com</prop>						
+		<prop key="tidepool.hbase.clientPort">2181</prop>
+		<prop key="tidepool.hbase.master">ec2-23-22-153-180.compute-1.amazonaws.com:60000</prop>						
+	 -->
+	
+	</util:properties>
+	
+</beans>

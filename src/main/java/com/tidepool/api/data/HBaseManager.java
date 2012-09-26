@@ -402,31 +402,31 @@ public class HBaseManager {
 				highlight = new Highlight();
 				
 				byte[] val = result.getValue(family_name_column, x0.getBytes());
-				highlight.setX0(Bytes.toInt(val));
+				highlight.setX0(Bytes.toDouble(val));
 				
 				if (result.containsColumn(family_name_column, y0.getBytes())) {
 					val = result.getValue(family_name_column, y0.getBytes());
-					highlight.setY0(Bytes.toInt(val));
+					highlight.setY0(Bytes.toDouble(val));
 				}
 				
 				if (result.containsColumn(family_name_column, x1.getBytes())) {
 					val = result.getValue(family_name_column, x1.getBytes());
-					highlight.setX1(Bytes.toInt(val));
+					highlight.setX1(Bytes.toDouble(val));
 				}
 				
 				if (result.containsColumn(family_name_column, y1.getBytes())) {
 					val = result.getValue(family_name_column, y1.getBytes());
-					highlight.setY1(Bytes.toInt(val));
+					highlight.setY1(Bytes.toDouble(val));
 				}
 				
 				if (result.containsColumn(family_name_column, height.getBytes())) {
 					val = result.getValue(family_name_column, height.getBytes());
-					highlight.setHeight(Bytes.toInt(val));
+					highlight.setHeight(Bytes.toDouble(val));
 				}
 				
 				if (result.containsColumn(family_name_column, width.getBytes())) {
 					val = result.getValue(family_name_column, width.getBytes());
-					highlight.setWidth(Bytes.toInt(val));
+					highlight.setWidth(Bytes.toDouble(val));
 				}
 			}
 			

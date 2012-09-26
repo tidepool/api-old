@@ -67,7 +67,7 @@
     </div>
 
     <div class="container">
-		
+		<input type="hidden" id="trainingId" value="${ trainingItem.trainingId }">
 		<div class="hero-unit">			  			
   			<div class="row">	  				  			
 	  			<%-- <div class="span-4">
@@ -91,15 +91,18 @@
 	     		
 	     		<div class="span-4">
 	  				<p>Edit Attributes</p>
+	  				
+	  				<p>
+		  				<div style="display:none" id="highlightAlert" class="alert alert-success">
+	  						Please highlight the associated attribute by dragging the mouse on the picture.		
+						</div>
+	  				</p>
+	  				
 	  				<p>
 	  				<img id="jcrop_target" src="${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.pictureId}">
 	  				</p>
 	  							
-	  				<p>
-			  			<div>	  			
-			  				<button class="btn btn-success" id="nextButton">Done</button>
-		  				</div>
-		  			</p>
+	  				
 	  				
 	  			</div>
 	     		
@@ -118,7 +121,7 @@
       								
       								</c:if>
 																		
-										<button class="attribute btn" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>							
+										<button class="attribute btn" tidepool-highlightable="${ attribute.highlightable }" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>							
 									
 									<c:if test="${fn:length(allAttributes) - 1 == rowCounter.index}">  
          								</div>
@@ -156,54 +159,89 @@
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-carousel.js"/>"></script>
 	 <script src="<c:url value="/resources/bootstrap/js/jcanvas.min.js"/>"></script>
 	 <script src="<c:url value="/resources/js/jquery.Jcrop.min.js"/>"></script>
+	 <script src="<c:url value="/resources/js/jquery-ui.min.js"/>"></script>
 	<script>
 	
-	 	var jcrop_api;
+		var contextPath = "${pageContext.request.contextPath}";
+	    var jcrop_api;
+	    var currentAttribute;
+	    function showCoords(c) {
+	    	
+	    	$.post(contextPath + "/admin/json/savetraining.ajax", { trainingId:$("#trainingId").val(), 
+	    														attributeId:currentAttribute,
+	    														x0:c.x, 
+		    													y0:c.y, 
+		    													x1:c.x2,
+		    													y1:c.y2,	
+		    													height:c.height, 
+	    														width:c.weight }, function(attribute) {	
+	    	
+	    															$('#highlightAlert').hide();		
+	    															jcrop_api.release();													
+	    	});			
+		};
 	 
 		(function ($) {
 			$(document).ready(function () {				
 				
 				$('#jcrop_target').Jcrop({
 					//onChange: showCoords,
-					onSelect: function(c) { alert("Hola:" + c.x)}
+					onSelect: showCoords
 				}, function(){
 					  jcrop_api = this;
 				});
 				
-				$("#imageCanvas").drawImage({
-					  source: "${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.pictureId}",					  
-					  x: 0, y: 0,					  
-					  fromCenter: false	
-								
+				$("#nextButton").click(function() {	
+					
+					if ($('#textInput').val() != '') {
+						$.post(contextPath + "/admin/json/savetraining.ajax", { trainingId:$("#trainingId").val()}, function(attribute) {	
+							$('#textInput').hide();		    			 														 
+					 	});
+					}
+					var currentButtonGroupCount = $('#buttonPanelSize').val();
+					var currentButtonGroupIndex = $('#buttonPanelIndex').val();
+					
+					if (currentButtonGroupIndex == (currentButtonGroupCount - 1)) {
+						$.post(contextPath + "/admin/json/savetraining.ajax", { trainingId:$("#trainingId").val()}, function(attribute) {	
+							window.location.href = contextPath + "/test";		    			 														 
+						 });						
+					} else {
+						//$("#buttonToolbar" + currentButtonGroupIndex).hide("slide", { direction: "left" }, 1000);
+						$("#buttonToolbar" + currentButtonGroupIndex).hide("slow");
+						currentButtonGroupIndex++;
+						$('#buttonPanelIndex').val(currentButtonGroupIndex);
+						//$("#buttonToolbar" + currentButtonGroupIndex).show();
+						$("#buttonToolbar" + currentButtonGroupIndex).show("slow");
+					}
 				});
 				
-				var obj = {
-						  strokeStyle: "#000",
-						  strokeWidth: 2,
-						  rounded: true
-						};
-
-				// Your array of points
-				var x0 = 0;
-				var y0 = 0;
-				var x1 = 100;
-				var y1 = 100;
-				var pts = [
-				  [x0, y0],
-				  [x0, y1],
-				  [x1, y1],
-				  [x1, y0],
-				  [x0, y0]
-				];
-
-				// Add the points from the array to the object
-				for (var p=0; p<pts.length; p+=1) {
-				  obj['x'+(p+1)] = pts[p][0];
-				  obj['y'+(p+1)] = pts[p][1];
-				}
-
-				// Draw the line
-				$("canvas").drawLine(obj);
+				$('.attribute').popover();
+				
+				$('.attribute').each(function() {
+					var button = $(this);
+				    $(this).click(function() {					    	
+				    					    	
+				    	if (button.is('.active')) {
+				    		var buttonStatus = "0"; 					    	 
+				    	} else {
+				    		var buttonStatus = "1";
+				    		
+				    		if (button.attr('tidepool-highlightable') == "true") {
+				    			currentAttribute = button.attr("id");
+				    			$('#highlightAlert').show();
+				    		}
+				    	}
+				    	
+				    	$.post(contextPath + "/admin/json/savetraining.ajax", { trainingId:$("#trainingId").val(), attributeId:button.attr("id"), attributeValue:buttonStatus}, function(attribute) {	
+				    		if (button.is('.active')) {
+					    		button.removeClass('active');
+					    		$('#highlightAlert').hide();
+					    	} else {
+					    		button.addClass('active') 					    	
+					    	}	 														 
+						 });
+				    });
+				}); 
 				
 			});
 		})(jQuery);		

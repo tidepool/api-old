@@ -118,7 +118,7 @@ public class AdminController {
 	}
 	
 	
-	@RequestMapping(value="/json/savetraining.ajax", method=RequestMethod.POST)
+	@RequestMapping(value="/admin/json/savetraining.ajax", method=RequestMethod.POST)
 	public @ResponseBody TrainingItem logTrainingEvent(
 			HttpServletRequest request,
 			@RequestParam(required=true) String trainingId,
@@ -140,21 +140,29 @@ public class AdminController {
 		if (item != null) { 
 			CodedItem codedItem = item.getCodedItem();
 			Class<CodedItem> codedItemClass = CodedItem.class;
-			try {
-				Field field = codedItemClass.getField(attributeId);
-				field.setInt(codedItem, Integer.valueOf(attributeValue));
-			} catch (Exception e) {
-				e.printStackTrace();
+			if (!StringUtils.isEmpty(attributeValue)) {
+				try {
+					Field field = codedItemClass.getField(attributeId);
+					field.setInt(codedItem, Integer.valueOf(attributeValue));
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 			
 			if (!StringUtils.isEmpty(x0)) {
 				Highlight event = new Highlight();
-				event.x0 = Integer.valueOf(x0);
-				event.y0 = Integer.valueOf(y0);
-				event.x1 = Integer.valueOf(x1);
-				event.y1 = Integer.valueOf(y1);
-				event.width = Integer.valueOf(width);
-				event.height = Integer.valueOf(height);
+				event.x0 = Double.valueOf(x0);
+				event.y0 = Double.valueOf(y0);
+				event.x1 = Double.valueOf(x1);
+				event.y1 = Double.valueOf(y1);
+				
+				if (!StringUtils.isEmpty(width)) {
+					event.width = Double.valueOf(width);
+				}
+				
+				if (!StringUtils.isEmpty(height)) {
+					event.height = Double.valueOf(height);
+				}
 			}
 
 			hBaseManager.saveTrainingItem(item);

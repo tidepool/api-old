@@ -9,8 +9,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Tidepool Survey</title>
-    
+    <title>Tidepool(Admin) Group Editor</title>   
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -36,11 +35,10 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="<c:url value="/" />">Tidepool Training</a>
+          <a class="brand" href="<c:url value="/" />">Tidepool(Admin) Group Editor</a>
           <div class="nav-collapse">
             <ul class="nav">                            
-             <c:if test="${ account.admin}">
-	            <li class="dropdown"><a href="#" class="dropdown-toggle"
+             	<li class="dropdown"><a href="#" class="dropdown-toggle"
 							data-toggle="dropdown">Admin<b class="caret"></b></a>
 							<ul class="dropdown-menu">
 								<li><a href="<c:url value="/admin/createAccount" />">Create Account</a>
@@ -59,7 +57,6 @@
 								</li>
 							</ul>
 						</li>
-			</c:if>
             </ul>
             <p class="navbar-text pull-right">Logged in as <a href="/">${account.email}</a> | <a href="<c:url value="/signout" />">logout</a></p>
           </div><!--/.nav-collapse -->
@@ -68,36 +65,17 @@
     </div>
 
     <div class="container">
-	
-		<div class="hero-unit">			
-  			<h1></h1>
-  			<p>Select attribute buttons that match the all the highlighted regions.</p>
+		<input type="hidden" id="groupId" value="${ group.id }">
+		<div class="hero-unit">			  			
+  			<div class="row">
   			
-  			<p>
-	  		<div>		  			
-	  			<div class="btn-toolbar">
-	  				<c:forEach var="attribute" items="${codedAttributes}" varStatus="rowCounter">
-						<div class="btn-group">
-							<button class="attribute btn" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>							
-						</div>
-	  				</c:forEach>
-	  				<div class="btn-group">
-	  					<button class="btn btn-success" id="nextButton">OK</button>
-	  				</div>
-	  			</div>	  			
-	  		</div>
-	  		</p> 	
-     	
-     		
-  			<p>
-  				<div>
-					<canvas id="imageCanvas" height="630px" width="630px"></canvas>
-				</div>	
-     		</p>
-     	
-     	</div>
-      
-      <footer>
+  			<div>
+  			Group: ${ group.id }
+  			</div>
+  			
+  			</div>
+		</div>
+		<footer>
         <p>&copy; Tidepool 2012</p>
       </footer>
 
@@ -118,68 +96,11 @@
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-button.js"/>"></script>
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-collapse.js"/>"></script>
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-carousel.js"/>"></script>
-	 <script src="<c:url value="/resources/bootstrap/js/jcanvas.min.js"/>"></script>
-	<script>
 	
-		var boxen = [
-					<c:forEach var="highlight" items="${trainingItem.codedItem.highlightMap}">
-						[
-							[${highlight.value.x0}, ${highlight.value.y0}],
-							[${highlight.value.x0}, ${highlight.value.y1}],
-							[${highlight.value.x1}, ${highlight.value.y1}],
-							[${highlight.value.x1}, ${highlight.value.y0}],
-							[${highlight.value.x0}, ${highlight.value.y0}]						
-						]<c:if test="${fn:length(allAttributes) - 1 != rowCounter.index}">,</c:if>
-						
-					</c:forEach>
-		             ];
-	
-	     function drawBox() {
-	    	 
-	    	 var obj = {
-					  strokeStyle: "#EE0000",
-					  strokeWidth: 2,
-					  rounded: true
-					};
-
-			// Your array of points
-			/* var x0 = 100;
-			var y0 = 100;
-			var x1 = 200;
-			var y1 = 200;
-			var pts = [
-			  [x0, y0],
-			  [x0, y1],
-			  [x1, y1],
-			  [x1, y0],
-			  [x0, y0]
-			]; */
-			
-			for (var box=0; box<boxen.length; box+=1) {
-				var pts = boxen[0];
-				
-				for (var p=0; p<pts.length; p+=1) {
-			  		obj['x'+(p+1)] = pts[p][0];
-			  		obj['y'+(p+1)] = pts[p][1];
-				}
-			
-				$("#imageCanvas").drawLine(obj);
-			}
-			
-	    	 	    	 
-	     }
-	
+	<script>	
 		(function ($) {
 			$(document).ready(function () {				
 				
-				$("#imageCanvas").drawImage({
-					  source: "${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.pictureId}",					  
-					  x: 0, y: 0,					  
-					  fromCenter: false,
-					  load:drawBox
-								
-				});
-					
 			});
 		})(jQuery);		
 	</script>

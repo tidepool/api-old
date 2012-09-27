@@ -150,19 +150,21 @@ public class AdminController {
 			}
 			
 			if (!StringUtils.isEmpty(x0)) {
-				Highlight event = new Highlight();
-				event.x0 = Double.valueOf(x0);
-				event.y0 = Double.valueOf(y0);
-				event.x1 = Double.valueOf(x1);
-				event.y1 = Double.valueOf(y1);
+				Highlight highlight = new Highlight();
+				highlight.x0 = Double.valueOf(x0);
+				highlight.y0 = Double.valueOf(y0);
+				highlight.x1 = Double.valueOf(x1);
+				highlight.y1 = Double.valueOf(y1);
 				
 				if (!StringUtils.isEmpty(width)) {
-					event.width = Double.valueOf(width);
+					highlight.width = Double.valueOf(width);
 				}
 				
 				if (!StringUtils.isEmpty(height)) {
-					event.height = Double.valueOf(height);
+					highlight.height = Double.valueOf(height);
 				}
+				
+				item.getCodedItem().getHighlightMap().put(attributeId, highlight);
 			}
 
 			hBaseManager.saveTrainingItem(item);
@@ -184,6 +186,23 @@ public class AdminController {
 		model.addAttribute("groups", hBaseManager.getCodedGroups());
 		
 		return "admin/groups";
+	}
+	
+	
+	@RequestMapping(value="/admin/groupsEditor", method=RequestMethod.GET)
+	public String getGroupsEditor(HttpServletRequest request, 
+			@RequestParam(required=false) String groupId, 
+			Model model) {
+
+		Account account =  accountService.getAccount();	
+		if (account == null || !account.isAdmin()) {
+			return "signin/signin";
+		}			
+		model.addAttribute("account", account);
+				
+		model.addAttribute("group", hBaseManager.getGroup(groupId));
+		
+		return "admin/groups-editor";
 	}
 	
 	

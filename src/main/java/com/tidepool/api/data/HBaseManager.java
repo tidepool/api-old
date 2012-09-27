@@ -670,7 +670,7 @@ public class HBaseManager {
 				put.add(family_name_column, Bytes.toBytes(key + "_x0"), Bytes.toBytes(highlight.getX0()));
 				put.add(family_name_column, Bytes.toBytes(key + "_y0"), Bytes.toBytes(highlight.getY0()));
 				put.add(family_name_column, Bytes.toBytes(key + "_x1"), Bytes.toBytes(highlight.getX1()));
-				put.add(family_name_column, Bytes.toBytes(key + "_x1"), Bytes.toBytes(highlight.getX1()));
+				put.add(family_name_column, Bytes.toBytes(key + "_y1"), Bytes.toBytes(highlight.getX1()));
 				put.add(family_name_column, Bytes.toBytes(key + "_height"), Bytes.toBytes(highlight.getHeight()));
 				put.add(family_name_column, Bytes.toBytes(key + "_width"), Bytes.toBytes(highlight.getWidth()));
 			}
@@ -679,6 +679,31 @@ public class HBaseManager {
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {}
+	}
+
+	public CodingGroup getGroup(String groupId) {
+		CodingGroup codingGroup  = null;	
+		try {
+			HTableInterface table = pool.getTable(elementGroupTable);
+			Get get = new Get(Bytes.toBytes(groupId));							
+			Result result = table.get(get);		
+			codingGroup = new CodingGroup();
+			codingGroup.setId(Bytes.toString(result.getRow()));
+			List<CodedAttributeGroup> groups = new ArrayList<CodedAttributeGroup>();
+			for(byte[] currentFamily: result.getMap().keySet()) {				
+				for(byte[] mapId : result.getMap().get(currentFamily).keySet()) {
+					CodedAttributeGroup attribute = new CodedAttributeGroup();					
+					attribute.element_group_id = Bytes.toString(result.getRow());
+					attribute.element_group = Bytes.toString(mapId);
+					groups.add(attribute);
+				}
+			}
+			codingGroup.setAttributes(groups);				
+
+		} catch(Exception e) {
+
+		} finally {}				
+		return codingGroup;		
 	}
 	
 		

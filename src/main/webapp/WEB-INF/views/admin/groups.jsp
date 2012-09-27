@@ -76,7 +76,7 @@
 						</c:forEach>					
 					</td>
 					<td>
-					<button class="btn btn-mini btn-primary" type="button">Edit</button>
+						<a href="<c:url value="/admin/groupsEditor?groupId=${groupItem.id}" />"><button class="btn btn-mini btn-primary" type="button">Edit</button></a>
 					</td>
 				</tr>
 			</c:forEach>

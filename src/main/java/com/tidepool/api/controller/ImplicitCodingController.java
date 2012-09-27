@@ -20,10 +20,14 @@ import com.tidepool.api.data.HBaseManager;
 import com.tidepool.api.model.Account;
 import com.tidepool.api.model.CodedAttribute;
 import com.tidepool.api.model.CodingEvent;
+import com.tidepool.api.model.CodingGroup;
 
 @Controller
 public class ImplicitCodingController {
 
+	@Value("${tidepool.training.cdn.url}") 
+	private String trainingCdnUrl;
+	
 	@Value("${tidepool.cdn.url}") 
 	private String cdnUrl;
 	
@@ -159,8 +163,6 @@ public class ImplicitCodingController {
 		
 		buildAttributeMap();
 		
-		
-		
 		//TODO: Replace with actual training logic.
 		
 		List<CodedAttribute> allCodedAttributes = new ArrayList<CodedAttribute>();
@@ -169,9 +171,16 @@ public class ImplicitCodingController {
 		}
 		
 		model.addAttribute("codedAttributes", allCodedAttributes.subList(0, 5));
+				
+		CodingGroup group = hBaseManager.getGroup(account.getElementGroupId());
+		model.addAttribute("group", group);
 		
+		model.addAttribute("trainingItem", hBaseManager.getTrainingItem("10"));
+		model.addAttribute("cdn_url", trainingCdnUrl);
+			
 		return "training/training0";
 	}
+	
 	
 	@RequestMapping(value="/training0Post", method=RequestMethod.POST)
 	public String postTraining0(HttpServletRequest request, 
@@ -184,8 +193,7 @@ public class ImplicitCodingController {
 			model.addAttribute("account", accountService.getAccount());
 		} else {
 			return "redirect:/signin";
-		}
-		
+		}	
 		
 		return "training/training1";
 	}

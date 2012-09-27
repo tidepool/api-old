@@ -328,21 +328,21 @@ public class HBaseTest {
 		
 	}
 	
-	//@Test
+	@Test
 	public void testTrainingItem() {
 		
-		String trainingId = "1";
+		String trainingId = "1-test";
 		
 		TrainingItem item = new TrainingItem();
 		item.setTrainingId(trainingId);
 		CodedItem codedItem = new CodedItem();
 		Highlight highlight = new Highlight();
-		highlight.setX0(10);
-		highlight.setY0(10);
-		highlight.setX1(10);
-		highlight.setX1(10);
-		highlight.setHeight(10);
-		highlight.setWidth(10);
+		highlight.setX0(10.0);
+		highlight.setY0(10.0);
+		highlight.setX1(10.0);
+		highlight.setX1(10.0);
+		highlight.setHeight(10.0);
+		highlight.setWidth(10.0);
 		codedItem.getHighlightMap().put("night_life", highlight);
 		
 		item.setCodedItem(codedItem);
@@ -353,7 +353,7 @@ public class HBaseTest {
 		assertNotNull(hBaseManager.getTrainingItem(trainingId).getCodedItem());
 		assertNotNull(hBaseManager.getTrainingItem(trainingId).getCodedItem().getHighlightMap());
 		assertNotNull(hBaseManager.getTrainingItem(trainingId).getCodedItem().getHighlightMap().get("night_life"));
-		assertTrue(hBaseManager.getTrainingItem(trainingId).getCodedItem().getHighlightMap().get("night_life").getX0() == 10);
+		assertTrue(hBaseManager.getTrainingItem(trainingId).getCodedItem().getHighlightMap().get("night_life").getX0() == 10.0);
 	}
 	
 	

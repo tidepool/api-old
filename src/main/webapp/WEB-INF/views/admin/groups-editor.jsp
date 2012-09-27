@@ -67,13 +67,59 @@
     <div class="container">
 		<input type="hidden" id="groupId" value="${ group.id }">
 		<div class="hero-unit">			  			
-  			<div class="row">
   			
-  			<div>
-  			Group: ${ group.id }
-  			</div>
-  			
-  			</div>
+  			<p>Group: ${ group.id }</p>
+			<div class="row">
+
+				<div class="span-4">
+
+					<div id="cart">
+						<h3>Current Attributes</h3>
+						<div class="ui-widget-content">
+							<ol>
+							    <li class="placeholder">Add attributes here</li>
+								<c:forEach var="groupAttribute" items="${group.attributes}" varStatus="groupAttributeCounter">
+									<li class="placeholder">${ groupAttribute.element_group }</li>								
+								</c:forEach>
+							</ol>
+						</div>
+					</div>
+
+				</div>
+
+				<div class="span-8">
+					<div id="catalog">
+						<h3>
+							<a href="#">All Attributes</a>
+						</h3>
+						<div class="row">							
+								<c:forEach var="attribute" items="${allAttributes}" varStatus="rowCounter">
+									
+									<c:if test="${rowCounter.index == 0 or rowCounter.index % 20 == 0}">     	
+     									<c:if test="${rowCounter.index != 0}">
+     										</ul>
+     										</div>
+     									</c:if>      									
+      									<div class="span-2">
+      									<ul>      								
+      								</c:if>
+																			
+									<li>${ attribute.element_name }</li>								
+								
+									<c:if test="${fn:length(allAttributes) - 1 == rowCounter.index}">  
+         								</ul>
+         								</div>
+      								</c:if>
+								
+								</c:forEach>
+							
+						</div>
+						
+					</div>
+
+				</div>
+
+			</div>
 		</div>
 		<footer>
         <p>&copy; Tidepool 2012</p>
@@ -96,10 +142,35 @@
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-button.js"/>"></script>
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-collapse.js"/>"></script>
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-carousel.js"/>"></script>
+	<script src="<c:url value="/resources/js/jquery-ui.min.js"/>"></script>
 	
 	<script>	
 		(function ($) {
 			$(document).ready(function () {				
+				
+				
+				$( "#catalog" ).accordion();
+				$( "#catalog li" ).draggable({
+					appendTo: "body",
+					helper: "clone"
+				});
+				$( "#cart ol" ).droppable({
+					activeClass: "ui-state-default",
+					hoverClass: "ui-state-hover",
+					accept: ":not(.ui-sortable-helper)",
+					drop: function( event, ui ) {
+						$( this ).find( ".placeholder" ).remove();
+						$( "<li></li>" ).text( ui.draggable.text() ).appendTo( this );
+					}
+				}).sortable({
+					items: "li:not(.placeholder)",
+					sort: function() {
+						// gets added unintentionally by droppable interacting with sortable
+						// using connectWithSortable fixes this, but doesn't allow you to customize active/hoverClass options
+						$( this ).removeClass( "ui-state-default" );
+					}
+				});
+				
 				
 			});
 		})(jQuery);		

@@ -68,6 +68,8 @@
 		<table class="table">
 			<tr><th>Id</th><th>Attributes</th><th></th></tr>
 			<c:forEach  var="groupItem" items="${groups}" varStatus="groupCounter">
+				
+				<c:if test="${groupItem.id ne '0'}">
 				<tr>
 					<td>${groupItem.id}</td>
 					<td> 
@@ -79,6 +81,7 @@
 						<a href="<c:url value="/admin/groupsEditor?groupId=${groupItem.id}" />"><button class="btn btn-mini btn-primary" type="button">Edit</button></a>
 					</td>
 				</tr>
+				</c:if>
 			</c:forEach>
 		</table>
 		

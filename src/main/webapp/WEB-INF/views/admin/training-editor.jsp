@@ -99,10 +99,16 @@
 	  				</p>
 	  				
 	  				<p>
-	  				<img id="jcrop_target" src="${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.pictureId}">
+	  				 <img id="jcrop_target" src="${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.pictureId}">
 	  				</p>
-	  							
 	  				
+	  				
+	  				<p>Current Highlights</p>			
+	  				<p>
+  						<div>
+							<canvas id="imageCanvas" height="630px" width="630px"></canvas>
+						</div>	
+     				</p>
 	  				
 	  			</div>
 	     		
@@ -112,7 +118,7 @@
 				  			<div>
 				  				<c:forEach var="attribute" items="${allAttributes}" varStatus="rowCounter">
 									
-									<c:if test="${rowCounter.index == 0 or rowCounter.index % 5 == 0}">     	
+									<c:if test="${rowCounter.index == 0 or rowCounter.index % 4 == 0}">     	
      									<c:if test="${rowCounter.index != 0}">
      										</div>
      									</c:if>
@@ -180,7 +186,47 @@
 	    															jcrop_api.release();													
 	    	});			
 		};
-	 
+	 	
+		
+		
+		var boxen = [
+						<c:forEach var="highlight" items="${trainingItem.codedItem.highlightMap}">
+							[
+								[${highlight.value.x0}, ${highlight.value.y0}],
+								[${highlight.value.x0}, ${highlight.value.y1}],
+								[${highlight.value.x1}, ${highlight.value.y1}],
+								[${highlight.value.x1}, ${highlight.value.y0}],
+								[${highlight.value.x0}, ${highlight.value.y0}]						
+							]<c:if test="${fn:length(allAttributes) - 1 != rowCounter.index}">,</c:if>
+							
+						</c:forEach>
+			             ];
+		
+		     function drawBox() {
+		    	 
+		    	 var obj = {
+						  strokeStyle: "#EE0000",
+						  strokeWidth: 2,
+						  rounded: true
+						};
+
+			
+				for (var box=0; box<boxen.length; box+=1) {
+					var pts = boxen[box];
+					
+					for (var p=0; p<pts.length; p+=1) {
+				  		obj['x'+(p+1)] = pts[p][0];
+				  		obj['y'+(p+1)] = pts[p][1];
+					}
+				
+					$("#imageCanvas").drawLine(obj);
+				}
+				
+		    	 	    	 
+		     }
+		
+		
+		
 		(function ($) {
 			$(document).ready(function () {				
 				
@@ -190,6 +236,14 @@
 				}, function(){
 					  jcrop_api = this;
 				});
+				
+				$("#imageCanvas").drawImage({
+					  source: "${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.pictureId}",					  
+					  x: 0, y: 0,					  
+					  fromCenter: false,
+					  load:drawBox							
+				});
+				
 				
 				$("#nextButton").click(function() {	
 					

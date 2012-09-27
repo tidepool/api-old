@@ -2,7 +2,7 @@ package com.tidepool.api.model;
 
 import java.io.Serializable;
 
-public class CodedAttribute implements Serializable {
+public class CodedAttribute implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
 	
@@ -11,6 +11,17 @@ public class CodedAttribute implements Serializable {
 	public String element_description;
 	public boolean highlightable = true;
 	public boolean active = false;
+	
+	public CodedAttribute clone() {
+		CodedAttribute attribute = new CodedAttribute();
+		attribute.setElement(element);
+		attribute.setElement_description(element_description);
+		attribute.setElement_name(element_name);
+		attribute.setHighlightable(highlightable);
+		attribute.setActive(active);
+		return attribute;
+		
+	}
 	
 	public String getElement_name() {
 		return element_name;

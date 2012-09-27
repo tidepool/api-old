@@ -380,4 +380,19 @@ public class HBaseTest {
 		
 	}
 	
+	
+	@Test
+	public void testCodedAttributeMap() {
+		
+		HashMap<String, CodedAttribute> attributeMap = hBaseManager.getCodedElementsMap();
+		assertNotNull(attributeMap);
+		
+		for(String name : attributeMap.keySet()) {
+			System.out.println("public int " + name + ";");
+		}
+		
+		
+	}
+	
+	
 }

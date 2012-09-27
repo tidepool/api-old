@@ -114,7 +114,7 @@ public class AdminController {
 		TrainingItem trainingSet = hBaseManager.getTrainingItem(trainingId);
 		List<CodedAttribute> attributes = new ArrayList<CodedAttribute>();
 		for (String attributeName : attributeMap.keySet()) {
-			CodedAttribute attribute = attributeMap.get(attributeName);
+			CodedAttribute attribute = attributeMap.get(attributeName).clone();			
 			if (trainingSet.getCodedItem().isAttributeActive(attributeName)) {
 				attribute.setActive(true);
 			}
@@ -211,8 +211,12 @@ public class AdminController {
 			return "signin/signin";
 		}			
 		model.addAttribute("account", account);
-				
+		
+		buildAttributeMap();
+		
 		model.addAttribute("group", hBaseManager.getGroup(groupId));
+		
+		model.addAttribute("allAttributes", attributeMap.values());
 		
 		return "admin/groups-editor";
 	}

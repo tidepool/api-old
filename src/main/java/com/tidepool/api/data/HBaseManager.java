@@ -654,13 +654,16 @@ public class HBaseManager {
 			HTableInterface table = pool.getTable(trainingImageTable);
 			Put put = new Put(Bytes.toBytes(item.trainingId));		
 			for (Field field : codedItemClass.getFields()) {
-				if (field.getType().equals(Integer.TYPE)) {					
-					put.add(family_name_column, Bytes.toBytes(field.getName()), Bytes.toBytes(field.getInt(item.getCodedItem())));
-				}
-				if (field.getType().equals(String.class)) {					
-					String value = (String)field.get(item.getCodedItem());					
-					if (value != null) {
-						put.add(family_name_column, Bytes.toBytes(field.getName()), Bytes.toBytes(value));
+				if (!field.getName().equals("picture_id")) {
+																
+					if (field.getType().equals(Integer.TYPE)) {					
+						put.add(family_name_column, Bytes.toBytes(field.getName()), Bytes.toBytes(field.getInt(item.getCodedItem())));
+					}
+					if (field.getType().equals(String.class)) {					
+						String value = (String)field.get(item.getCodedItem());					
+						if (value != null) {
+							put.add(family_name_column, Bytes.toBytes(field.getName()), Bytes.toBytes(value));
+						}
 					}
 				}
 			}

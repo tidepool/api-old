@@ -79,7 +79,7 @@
 							<ol>
 							    <li class="placeholder">Add attributes here</li>
 								<c:forEach var="groupAttribute" items="${group.attributes}" varStatus="groupAttributeCounter">
-									<li class="placeholder">${ groupAttribute.element_group }</li>								
+									<li>${ groupAttribute.element_group }</li>								
 								</c:forEach>
 							</ol>
 						</div>

@@ -670,7 +670,7 @@ public class HBaseManager {
 				put.add(family_name_column, Bytes.toBytes(key + "_x0"), Bytes.toBytes(highlight.getX0()));
 				put.add(family_name_column, Bytes.toBytes(key + "_y0"), Bytes.toBytes(highlight.getY0()));
 				put.add(family_name_column, Bytes.toBytes(key + "_x1"), Bytes.toBytes(highlight.getX1()));
-				put.add(family_name_column, Bytes.toBytes(key + "_y1"), Bytes.toBytes(highlight.getX1()));
+				put.add(family_name_column, Bytes.toBytes(key + "_y1"), Bytes.toBytes(highlight.getY1()));
 				put.add(family_name_column, Bytes.toBytes(key + "_height"), Bytes.toBytes(highlight.getHeight()));
 				put.add(family_name_column, Bytes.toBytes(key + "_width"), Bytes.toBytes(highlight.getWidth()));
 			}

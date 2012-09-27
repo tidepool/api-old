@@ -156,7 +156,7 @@
 			]; */
 			
 			for (var box=0; box<boxen.length; box+=1) {
-				var pts = boxen[0];
+				var pts = boxen[box];
 				
 				for (var p=0; p<pts.length; p+=1) {
 			  		obj['x'+(p+1)] = pts[p][0];

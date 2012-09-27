@@ -1,6 +1,8 @@
 package com.tidepool.api.controller;
 
 import java.lang.reflect.Field;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -110,12 +112,22 @@ public class AdminController {
 		buildAttributeMap();
 		
 		TrainingItem trainingSet = hBaseManager.getTrainingItem(trainingId);
-		model.addAttribute("allAttributes", attributeMap.values());
+		List<CodedAttribute> attributes = new ArrayList<CodedAttribute>();
+		for (String attributeName : attributeMap.keySet()) {
+			CodedAttribute attribute = attributeMap.get(attributeName);
+			if (trainingSet.getCodedItem().isAttributeActive(attributeName)) {
+				attribute.setActive(true);
+			}
+			attributes.add(attribute);
+		}
+		
+		model.addAttribute("allAttributes", attributes);
 		model.addAttribute("trainingItem", trainingSet);
 		model.addAttribute("cdn_url", cdnUrl);
 		
 		return "admin/training-editor";
 	}
+	
 	
 	
 	@RequestMapping(value="/admin/json/savetraining.ajax", method=RequestMethod.POST)

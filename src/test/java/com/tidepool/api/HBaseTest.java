@@ -364,7 +364,19 @@ public class HBaseTest {
 		
 		for (TrainingItem item : items) {
 			System.out.println("Item: " + item.getPictureId());
-		}
+		}		
+	}
+	
+	
+	@Test
+	public void testCodedItemActive() {
+		
+		CodedItem item = new CodedItem();
+		item.night_life = 1;
+		
+		assertTrue(item.isAttributeActive("night_life"));
+		assertFalse(item.isAttributeActive("movement"));
+		
 		
 	}
 	

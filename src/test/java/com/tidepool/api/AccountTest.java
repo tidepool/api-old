@@ -37,6 +37,21 @@ public class AccountTest {
 		assertNotNull(account.getLastName());
 	}
 	
+	@Test
+	public void testResetRegistration() {
+		Account account = hBaseManager.getAccountFromEmail("jjingles@tidepool.com"); 		
+		assertNotNull(account);
+		assertTrue(account.getEmail().equals("jjingles@tidepool.com"));
+		assertNotNull(account.getPassword());
+		assertNotNull(account.getFirstName());
+		assertNotNull(account.getLastName());
+		
+		account.setRegistrationLevel(0);
+		hBaseManager.saveAccount(account);
+		
+	}
+	
+	
 	//@Test
 	public void testAccountSave() {
 		

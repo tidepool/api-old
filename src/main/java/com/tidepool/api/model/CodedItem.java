@@ -1,6 +1,7 @@
 package com.tidepool.api.model;
 
 import java.io.Serializable;
+import java.lang.reflect.Field;
 import java.util.HashMap;
 
 public class CodedItem implements Serializable {
@@ -8,6 +9,29 @@ public class CodedItem implements Serializable {
 	private static final long serialVersionUID = 1L;
 	
 	public HashMap<String, Highlight> highlightMap = new HashMap<String, Highlight>();
+	
+	
+	public boolean isAttributeActive(String attributeName) {
+		Class<CodedItem> codedItemClass = CodedItem.class;
+		try {
+			Field field = codedItemClass.getField(attributeName);
+			try {
+				if (field.getInt(this) > 0) {
+					return true;
+				}
+			} catch (IllegalArgumentException e) {
+				return false;
+			} catch (IllegalAccessException e) {
+				return false;
+			}
+		} catch (SecurityException e) {
+			return false;
+		} catch (NoSuchFieldException e) {
+			return false;
+		}
+		return false;
+	}
+	
 	
 	public String id;
 	public String pic_name;

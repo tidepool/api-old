@@ -10,6 +10,7 @@ public class CodedAttribute implements Serializable {
 	public String element;
 	public String element_description;
 	public boolean highlightable = true;
+	public boolean active = false;
 	
 	public String getElement_name() {
 		return element_name;
@@ -34,6 +35,12 @@ public class CodedAttribute implements Serializable {
 	}
 	public void setHighlightable(boolean highlightable) {
 		this.highlightable = highlightable;
+	}
+	public boolean isActive() {
+		return active;
+	}
+	public void setActive(boolean active) {
+		this.active = active;
 	}
 	
 	

@@ -121,7 +121,7 @@
       								
       								</c:if>
 																		
-										<button class="attribute btn" tidepool-highlightable="${ attribute.highlightable }" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>							
+										<button class='attribute btn <c:if test="${ attribute.active }">active</c:if>' tidepool-highlightable="${ attribute.highlightable }" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>							
 									
 									<c:if test="${fn:length(allAttributes) - 1 == rowCounter.index}">  
          								</div>

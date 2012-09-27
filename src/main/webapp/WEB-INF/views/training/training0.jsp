@@ -76,14 +76,17 @@
   			<p>
 	  		<div>		  			
 	  			<div class="btn-toolbar">
+	  			    <form class="form-horizontal" action="<c:url value="/training0Post" />" method="post">
 	  				<c:forEach var="attribute" items="${codedAttributes}" varStatus="rowCounter">
 						<div class="btn-group">
 							<button class="attribute btn" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>							
+							<input type="hidden" id="${ attribute.element }_field" name="button${ rowCounter.index }">
 						</div>
 	  				</c:forEach>
 	  				<div class="btn-group">
-	  					<button class="btn btn-success" id="nextButton">OK</button>
+	  					<button type="submit" class="btn btn-success" id="nextButton">OK</button>
 	  				</div>
+	  				</form>
 	  			</div>	  			
 	  		</div>
 	  		</p> 	
@@ -142,19 +145,7 @@
 					  rounded: true
 					};
 
-			// Your array of points
-			/* var x0 = 100;
-			var y0 = 100;
-			var x1 = 200;
-			var y1 = 200;
-			var pts = [
-			  [x0, y0],
-			  [x0, y1],
-			  [x1, y1],
-			  [x1, y0],
-			  [x0, y0]
-			]; */
-			
+		
 			for (var box=0; box<boxen.length; box+=1) {
 				var pts = boxen[box];
 				
@@ -176,10 +167,24 @@
 					  source: "${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.pictureId}",					  
 					  x: 0, y: 0,					  
 					  fromCenter: false,
-					  load:drawBox
-								
+					  load:drawBox							
 				});
-					
+				
+				$('.attribute').each(function() {
+					var button = $(this);
+				    $(this).click(function() {					 		
+				    	if (button.is('.active')) {
+				    		$('#' + button.attr('id') + '_field').val("");
+				    		button.removeClass('active');
+				    	} else {
+				    		$('#' + button.attr('id') + '_field').val(button.attr('id'));
+				    		button.addClass('active');
+				    	}
+				    	
+				    	return false;
+				    });
+				});
+									
 			});
 		})(jQuery);		
 	</script>

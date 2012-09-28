@@ -193,8 +193,9 @@ public class AdminController {
 		if (account == null || !account.isAdmin()) {
 			return "signin/signin";
 		}			
+		buildAttributeMap();
 		model.addAttribute("account", account);
-				
+		model.addAttribute("attributeMap", attributeMap);		
 		model.addAttribute("groups", hBaseManager.getCodedGroups());
 		
 		return "admin/groups";
@@ -216,6 +217,7 @@ public class AdminController {
 		
 		model.addAttribute("group", hBaseManager.getGroup(groupId));
 		
+		model.addAttribute("attributeMap", attributeMap);
 		model.addAttribute("allAttributes", attributeMap.values());
 		
 		return "admin/groups-editor";

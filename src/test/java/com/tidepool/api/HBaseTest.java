@@ -28,6 +28,7 @@ import com.tidepool.api.model.CodedAttribute;
 import com.tidepool.api.model.CodedAttributeGroup;
 import com.tidepool.api.model.CodedItem;
 import com.tidepool.api.model.CodingEvent;
+import com.tidepool.api.model.CodingGroup;
 import com.tidepool.api.model.Highlight;
 import com.tidepool.api.model.TrainingItem;
 
@@ -393,6 +394,15 @@ public class HBaseTest {
 		
 		
 	}
+
 	
+	@Test
+	public void testGetCodedGroups() {
+		List<CodingGroup> codedGroups = hBaseManager.getCodedGroups();
+		
+		assertTrue(codedGroups.size() > 0);
+		
+		
+	}
 	
 }

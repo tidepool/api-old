@@ -74,7 +74,7 @@
 					<td>${groupItem.id}</td>
 					<td> 
 						<c:forEach  var="groupAttribute" items="${groupItem.attributes}" varStatus="groupAttributeCounter">
-							<div>${ groupAttribute.element_group }</div>
+							<div>${ attributeMap[groupAttribute.element_group].element_name }</div>
 						</c:forEach>					
 					</td>
 					<td>

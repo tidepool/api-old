@@ -68,7 +68,7 @@
 		<input type="hidden" id="groupId" value="${ group.id }">
 		<div class="hero-unit">			  			
   			
-  			<p>Group: ${ group.id }</p>
+  			<p>Group: ${ group.id }. Drag attributes into the current attributes.</p>
 			<div class="row">
 
 				<div class="span-4">
@@ -76,12 +76,12 @@
 					<div id="cart">
 						<h3>Current Attributes</h3>
 						<div class="ui-widget-content">
-							<ol>
+							<ul>
 							    <li class="placeholder">Add attributes here</li>
 								<c:forEach var="groupAttribute" items="${group.attributes}" varStatus="groupAttributeCounter">
-									<li>${ groupAttribute.element_group }</li>								
+									<li> ${ attributeMap[groupAttribute.element_group].element_name } | <a>delete</a></li>								
 								</c:forEach>
-							</ol>
+							</ul>
 						</div>
 					</div>
 
@@ -104,7 +104,7 @@
       									<ul>      								
       								</c:if>
 																			
-									<li>${ attribute.element_name }</li>								
+									<li id="${ attribute.element }">${ attribute.element_name }</li>								
 								
 									<c:if test="${fn:length(allAttributes) - 1 == rowCounter.index}">  
          								</ul>
@@ -154,13 +154,14 @@
 					appendTo: "body",
 					helper: "clone"
 				});
-				$( "#cart ol" ).droppable({
+				$( "#cart ul" ).droppable({
 					activeClass: "ui-state-default",
 					hoverClass: "ui-state-hover",
 					accept: ":not(.ui-sortable-helper)",
 					drop: function( event, ui ) {
 						$( this ).find( ".placeholder" ).remove();
 						$( "<li></li>" ).text( ui.draggable.text() ).appendTo( this );
+						
 					}
 				}).sortable({
 					items: "li:not(.placeholder)",
@@ -168,6 +169,7 @@
 						// gets added unintentionally by droppable interacting with sortable
 						// using connectWithSortable fixes this, but doesn't allow you to customize active/hoverClass options
 						$( this ).removeClass( "ui-state-default" );
+						
 					}
 				});
 				

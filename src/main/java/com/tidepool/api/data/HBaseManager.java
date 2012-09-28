@@ -485,24 +485,26 @@ public class HBaseManager {
 
 	public List<CodedAttributeGroup> getCodedAttributeGroup(String id) {
 		List<CodedAttributeGroup> groups = new ArrayList<CodedAttributeGroup>();		
-		ResultScanner scanner  = null;
 		try {
 			HTableInterface table = pool.getTable(elementGroupTable);
 			Get get  = new Get(Bytes.toBytes(id));
 			Result result = table.get(get);		
 			for(byte[] currentFamily: result.getMap().keySet()) {				
 				for(byte[] mapId : result.getMap().get(currentFamily).keySet()) {
-					CodedAttributeGroup attribute = new CodedAttributeGroup();					
-					attribute.element_group_id = id;
-					attribute.element_group = Bytes.toString(mapId);
-					groups.add(attribute);
+					String value = Bytes.toString(mapId);
+					if (value != null && (!value.equals("element_group_description") && !value.equals("element_group_id"))) {
+						CodedAttributeGroup attribute = new CodedAttributeGroup();					
+						attribute.element_group_id = id;
+						attribute.element_group = value;
+						groups.add(attribute);
+					}
 				}
 			}
 
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
-			
+
 		}				
 		return groups;		
 	}
@@ -521,10 +523,13 @@ public class HBaseManager {
 				List<CodedAttributeGroup> groups = new ArrayList<CodedAttributeGroup>();
 				for(byte[] currentFamily: result.getMap().keySet()) {				
 					for(byte[] mapId : result.getMap().get(currentFamily).keySet()) {
-						CodedAttributeGroup attribute = new CodedAttributeGroup();					
-						attribute.element_group_id = Bytes.toString(result.getRow());
-						attribute.element_group = Bytes.toString(mapId);
-						groups.add(attribute);
+						String value = Bytes.toString(mapId);
+						if (value != null && (!value.equals("element_group_description") && !value.equals("element_group_id"))) {
+							CodedAttributeGroup attribute = new CodedAttributeGroup();					
+							attribute.element_group_id = Bytes.toString(result.getRow());
+							attribute.element_group = Bytes.toString(mapId);
+							groups.add(attribute);
+						}
 					}
 				}
 				codingGroup.setAttributes(groups);
@@ -695,10 +700,13 @@ public class HBaseManager {
 			List<CodedAttributeGroup> groups = new ArrayList<CodedAttributeGroup>();
 			for(byte[] currentFamily: result.getMap().keySet()) {				
 				for(byte[] mapId : result.getMap().get(currentFamily).keySet()) {
-					CodedAttributeGroup attribute = new CodedAttributeGroup();					
-					attribute.element_group_id = Bytes.toString(result.getRow());
-					attribute.element_group = Bytes.toString(mapId);
-					groups.add(attribute);
+					String value = Bytes.toString(mapId);
+					if (value != null && (!value.equals("element_group_description") && !value.equals("element_group_id"))) {
+						CodedAttributeGroup attribute = new CodedAttributeGroup();					
+						attribute.element_group_id = Bytes.toString(result.getRow());
+						attribute.element_group = Bytes.toString(mapId);
+						groups.add(attribute);
+					}
 				}
 			}
 			codingGroup.setAttributes(groups);				

@@ -657,6 +657,11 @@ public class HBaseManager {
 			byte[] val = result.getValue(family_name_column, TrainingItem.folder_name_column);
 			trainingItem.setFolderName(Bytes.toString(val));
 		}
+		
+		if (result.containsColumn(family_name_column, TrainingItem.element_folder_name_column)) {
+			byte[] val = result.getValue(family_name_column, TrainingItem.element_folder_name_column);
+			trainingItem.setElementFolderName(Bytes.toString(val));
+		}
 	}
 	
 	public void saveTrainingItem(TrainingItem item) {		

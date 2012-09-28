@@ -56,15 +56,11 @@ public class AccountTest {
 	public void testAccountSave() {
 		
 		Account account = hBaseManager.getAccountFromEmail("jshoop@tidepool.co"); 		
-		assertNotNull(account);
-		
+		assertNotNull(account);		
 		account.setFirstName("Joseph");
-		account.setRegistrationLevel(3);
-		
-		account.setElementGroupId("0");
-		
-		hBaseManager.saveAccount(account);
-		
+		account.setRegistrationLevel(3);		
+		account.setElementGroupId("0");		
+		hBaseManager.saveAccount(account);		
 		account = hBaseManager.getAccountFromEmail("jshoop@tidepool.co"); 		
 		assertNotNull(account);
 		assertTrue(account.getFirstName().equals("Joseph"));

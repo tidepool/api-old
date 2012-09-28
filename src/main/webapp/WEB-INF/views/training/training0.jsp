@@ -164,7 +164,7 @@
 			$(document).ready(function () {				
 				
 				$("#imageCanvas").drawImage({
-					  source: "${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.pictureId}",					  
+					  source: "${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}",					  
 					  x: 0, y: 0,					  
 					  fromCenter: false,
 					  load:drawBox							

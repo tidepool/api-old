@@ -11,6 +11,7 @@ public class TrainingItem implements Serializable {
 	public static final byte[] picture_id_column = Bytes.toBytes("picture_id");
 	public static final byte[] bucket_name_column = Bytes.toBytes("bucket_name");
 	public static final byte[] folder_name_column = Bytes.toBytes("folder_name");
+	public static final byte[] element_folder_name_column = Bytes.toBytes("element_folder_name");
 	
 	public CodedItem codedItem;
 
@@ -18,6 +19,7 @@ public class TrainingItem implements Serializable {
 	public String pictureId;
 	public String bucketName;
 	public String folderName;
+	public String elementFolderName;
 	
 	public String name;
 	
@@ -67,6 +69,14 @@ public class TrainingItem implements Serializable {
 
 	public void setFolderName(String folderName) {
 		this.folderName = folderName;
+	}
+
+	public String getElementFolderName() {
+		return elementFolderName;
+	}
+
+	public void setElementFolderName(String elementFolderName) {
+		this.elementFolderName = elementFolderName;
 	}
 	
 }

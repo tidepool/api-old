@@ -68,7 +68,7 @@
     </div>
 
     <div class="container">
-		<input type="hidden" name="explicitId" id="explicitId" value="${ explicitId }">
+		<input type="hidden" name="explicitId" id="explicitId" value="${ codedItem.picture_id }">
 		<input type="hidden" name="currentPage" id="currentPage" value="${ currentPage }">
 		<input type="hidden" name="buttonPanelSize" id="buttonPanelSize" value="${fn:length(codedAttributes)}">
 		<input type="hidden" name="buttonPanelIndex" id="buttonPanelIndex" value="1">
@@ -76,11 +76,12 @@
   			<h1></h1>
   			<p>Please select as many attributes from the following photo:</p>
   			
-  			<p>
-  			<div >
-	  			<img id="jcrop_target" src="${cdn_url}55098795410639527_laxmM6oX_b.jpg">
-	  		</div>
-	  		
+  			<p>  			
+  				<div >
+	  				<img id="jcrop_target" src="${cdn_url}/tidepool-data/${codedItem.bucket_name}/${codedItem.folder_name}/${codedItem.picture_id}">
+	  			</div>
+	  		</p>
+	  				  		
 	  		<p>
 		  		<div style="display:none" id="highlightAlert" class="alert alert-success">
 	  					Please highlight the associated attribute by dragging the mouse on the picture.		

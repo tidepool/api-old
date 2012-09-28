@@ -23,6 +23,7 @@ import com.tidepool.api.authentication.AccountService;
 import com.tidepool.api.data.HBaseManager;
 import com.tidepool.api.model.Account;
 import com.tidepool.api.model.CodedAttribute;
+import com.tidepool.api.model.CodedItem;
 import com.tidepool.api.model.CodingEvent;
 import com.tidepool.api.model.CodingGroup;
 import com.tidepool.api.model.TrainingItem;
@@ -80,11 +81,12 @@ public class ImplicitCodingController {
 		
 		buildAttributeMap();
 				
-		model.addAttribute("cdn_url", cdnUrl);
+		model.addAttribute("cdn_url", trainingCdnUrl);
 		
-		//TODO: Get the photo:
-		model.addAttribute("explicitId", "10001");
-				
+		CodedItem codedItem = hBaseManager.getRandomCodedItem();
+		model.addAttribute("codedItem", codedItem);
+		
+		
 		//TODO: Get the attributes allowed.
 		List<CodedAttribute> allCodedAttributes = new ArrayList<CodedAttribute>();
 		

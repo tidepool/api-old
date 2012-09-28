@@ -316,7 +316,7 @@ public class HBaseTest {
 	}
 	
 	
-	//@Test
+	@Test
 	public void testGetRandomExplicitCoding() {
 		
 		CodedItem item0 = hBaseManager.getRandomCodedItem();		
@@ -324,6 +324,8 @@ public class HBaseTest {
 		
 		CodedItem item1 = hBaseManager.getRandomCodedItem();		
 		assertNotNull(item1);
+		
+		System.out.println(" Item 0 " + item0.picture_id + " "  + item0.folder_name + " Item 1 " + item1.picture_id);
 		
 		assertFalse(item1.id.equals(item0.id));
 		
@@ -403,6 +405,12 @@ public class HBaseTest {
 		assertTrue(codedGroups.size() > 0);
 		
 		
+	}
+	
+		
+	@Test
+	public void testTime() {
+		hBaseManager.testTime();
 	}
 	
 }

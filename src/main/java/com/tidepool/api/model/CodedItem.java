@@ -4,9 +4,12 @@ import java.io.Serializable;
 import java.lang.reflect.Field;
 import java.util.HashMap;
 
+import org.apache.hadoop.hbase.util.Bytes;
+
 public class CodedItem implements Serializable {
 
 	private static final long serialVersionUID = 1L;
+	
 	
 	public HashMap<String, Highlight> highlightMap = new HashMap<String, Highlight>();
 	
@@ -36,8 +39,13 @@ public class CodedItem implements Serializable {
 	public String id;
 	public String pic_name;
 	public String picture_id;
+	public String bucket_name;
+	public String folder_name;
+	
 	public String primary_color_word;
 	
+	
+	//Elements. To generate see the HBaseTest class.
 	public int asymmetrical;
 	public int mountain;
 	public int filtered;
@@ -196,6 +204,24 @@ public class CodedItem implements Serializable {
 	}
 	public void setHighlightMap(HashMap<String, Highlight> highlightMap) {
 		this.highlightMap = highlightMap;
+	}
+	public String getPicture_id() {
+		return picture_id;
+	}
+	public void setPicture_id(String picture_id) {
+		this.picture_id = picture_id;
+	}
+	public String getBucket_name() {
+		return bucket_name;
+	}
+	public void setBucket_name(String bucket_name) {
+		this.bucket_name = bucket_name;
+	}
+	public String getFolder_name() {
+		return folder_name;
+	}
+	public void setFolder_name(String folder_name) {
+		this.folder_name = folder_name;
 	}
 	
 	

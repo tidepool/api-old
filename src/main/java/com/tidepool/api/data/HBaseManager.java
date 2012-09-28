@@ -5,6 +5,9 @@ import java.lang.reflect.Field;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Random;
+
+import javax.swing.text.DateFormatter;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
@@ -326,8 +329,8 @@ public class HBaseManager {
 
 	public CodedItem getRandomCodedItem() {		
 		CodedItem codedItem = null;
-		ResultScanner scanner  = null;
-		RandomRowFilter filter = new RandomRowFilter(0.1F);
+		ResultScanner scanner  = null;		
+		RandomRowFilter filter = new RandomRowFilter(.01F);
 		try {
 			HTableInterface table = pool.getTable(explicitImageTable);
 			Scan scan = new Scan();
@@ -336,14 +339,17 @@ public class HBaseManager {
 			for (Result result : scanner) {			
 				codedItem = new CodedItem();								
 				mapResultToCodedItem(codedItem, result);
-				return codedItem;				
+				if (codedItem.getPicture_id() != null) {
+					return codedItem;				
+				}				
 			}
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {			
 			scanner.close();
-		}		
-		return codedItem;	
+		}
+		
+		return 	getRandomCodedItem();
 	}
 	
 	
@@ -717,5 +723,19 @@ public class HBaseManager {
 		return codingGroup;		
 	}
 	
+	
+	public void testTime() {
 		
+		HTableInterface table = pool.getTable("time_test");
+		Put put = new Put(Bytes.toBytes(1));
+		put.add(family_name_column, Bytes.toBytes("time_column"), Bytes.toBytes(System.currentTimeMillis()));
+		put.add(family_name_column, Bytes.toBytes("time_column_formt"), Bytes.toBytes(new DateFormatter().getFormat().format(System.currentTimeMillis())));
+		try {
+			table.put(put);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
 }

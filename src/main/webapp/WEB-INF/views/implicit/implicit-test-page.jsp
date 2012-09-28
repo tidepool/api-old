@@ -91,13 +91,11 @@
 	  		<p>
 	  		<div>		  			
 	  			<c:forEach var="rollups" items="${codedAttributes}" varStatus="rollupCounter">
-	  				<div id="buttonToolbar${ rollupCounter.count }" class="btn-toolbar" <c:if test="${ rollupCounter.count gt 1 }">style="display:none"</c:if> >	  				
-	  					<c:forEach var="attribute" items="${rollups}" varStatus="rowCounter">
-							<div class="btn-group">
-								<button class="attribute btn" tidepool-highlightable="${ attribute.highlightable }" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>							
-							</div>
+	  				<span id="buttonToolbar${ rollupCounter.count }" class="btn-toolbar" <c:if test="${ rollupCounter.count gt 1 }">style="display:none"</c:if> >	  				
+	  					<c:forEach var="attribute" items="${rollups}" varStatus="rowCounter">							
+								<button class="attribute btn" tidepool-highlightable="${ attribute.highlightable }" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>														
 		  				</c:forEach>
-	  				</div>
+	  				</span>
 	  			</c:forEach>	
 	  		</div>
 	  		</p>
@@ -183,11 +181,13 @@
 						 });						
 					} else {
 						//$("#buttonToolbar" + currentButtonGroupIndex).hide("slide", { direction: "left" }, 1000);
-						$("#buttonToolbar" + currentButtonGroupIndex).hide("slow");
-						currentButtonGroupIndex++;
-						$('#buttonPanelIndex').val(currentButtonGroupIndex);
-						//$("#buttonToolbar" + currentButtonGroupIndex).show();
-						$("#buttonToolbar" + currentButtonGroupIndex).show("slow");
+						$("#buttonToolbar" + currentButtonGroupIndex).hide("slow", function() {
+							currentButtonGroupIndex++;
+							$('#buttonPanelIndex').val(currentButtonGroupIndex);
+							//$("#buttonToolbar" + currentButtonGroupIndex).show();
+							$("#buttonToolbar" + currentButtonGroupIndex).show("slow");	
+						});
+						
 					}
 				});
 				

@@ -174,7 +174,7 @@ public class ImplicitCodingController {
 		
 		List<CodedAttribute> allCodedAttributes = new ArrayList<CodedAttribute>();
 		
-		TrainingItem trainingItem =  hBaseManager.getTrainingItem("11");
+		TrainingItem trainingItem =  hBaseManager.getTrainingItem("1");
 		
 		for (String attributeName : attributeMap.keySet()) {
 			
@@ -230,10 +230,10 @@ public class ImplicitCodingController {
 		} else {
 			return "redirect:/signin";
 		}	
-
+		buildAttributeMap();
 		Map parameterMap = request.getParameterMap();
 		HashMap<String, CodedAttribute> codedMap = new HashMap<String, CodedAttribute>();			
-		TrainingItem trainingItem =  hBaseManager.getTrainingItem("11");
+		TrainingItem trainingItem =  hBaseManager.getTrainingItem("1");
 		for(String attribute : attributeMap.keySet()) {
 			if (trainingItem.getCodedItem().isAttributeActive(attribute)) {
 				codedMap.put(attribute, attributeMap.get(attribute));

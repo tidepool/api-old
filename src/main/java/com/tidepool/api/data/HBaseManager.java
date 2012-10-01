@@ -3,6 +3,8 @@ package com.tidepool.api.data;
 import java.io.IOException;
 import java.lang.reflect.Field;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Random;
@@ -36,6 +38,7 @@ import com.tidepool.api.model.CodedItem;
 import com.tidepool.api.model.CodingEvent;
 import com.tidepool.api.model.CodingGroup;
 import com.tidepool.api.model.Highlight;
+import com.tidepool.api.model.MainGroup;
 import com.tidepool.api.model.Photo;
 import com.tidepool.api.model.TrainingItem;
 
@@ -327,7 +330,26 @@ public class HBaseManager {
 		}		
 		return codedItem;	
 	}
+	
+	public CodedItem getImageItemFromId(String id) {		
+		CodedItem codedItem = null;
+		try {
+			HTableInterface table = pool.getTable(explicitImageTable);
+			Get get = new Get(Bytes.toBytes(id));
 
+			Result result = table.get(get);		
+			codedItem = new CodedItem();								
+			mapResultToCodedItem(codedItem, result);
+			return codedItem;				
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {			
+			
+		}		
+		return codedItem;	
+	}
+	
+	
 	public CodedItem getRandomCodedItem() {		
 		CodedItem codedItem = null;
 		ResultScanner scanner  = null;		
@@ -599,6 +621,7 @@ public class HBaseManager {
 
 	public List<TrainingItem> getTrainingSetsForMainGroup(String id) {
 		List<TrainingItem> trainingSet = new ArrayList<TrainingItem>();			
+		
 		ResultScanner scanner  = null;
 		SingleColumnValueFilter filter = new SingleColumnValueFilter(
 				family_name_column,
@@ -625,6 +648,15 @@ public class HBaseManager {
 			scanner.close();
 		}
 
+		Collections.sort(trainingSet, new Comparator<TrainingItem>() {
+			public int compare(TrainingItem arg0, TrainingItem arg1) {
+				
+				return (new Integer(arg0.getTrainingId()).compareTo(new Integer(arg1.getTrainingId())));
+			
+			}
+			
+		});
+		
 		return trainingSet;
 	}
 	
@@ -780,5 +812,46 @@ public class HBaseManager {
 			e.printStackTrace();
 		}	
 	}
+	
+	
+	
+	public List<MainGroup> getMainGroups() {
+		List<MainGroup> groups = new ArrayList<MainGroup>();			
+		ResultScanner scanner  = null;
+		try {
+			HTableInterface table = pool.getTable(elementMainTable);
+			Scan scan = new Scan();
+			scanner = table.getScanner(scan);		
+			for (Result result : scanner) {
+				MainGroup main = new MainGroup();
+				main.setId(Bytes.toString(result.getRow()));
+				
+				if (result.containsColumn(family_name_column,MainGroup.element_name_column)) {
+					byte[] val = result.getValue(family_name_column, MainGroup.element_name_column);
+					main.setName(Bytes.toString(val));
+				}
+				
+				if (result.containsColumn(family_name_column,MainGroup.element_label_column)) {
+					byte[] val = result.getValue(family_name_column, MainGroup.element_label_column);
+					main.setLabel(Bytes.toString(val));
+				}
+				
+				if (result.containsColumn(family_name_column,MainGroup.element_description_column)) {
+					byte[] val = result.getValue(family_name_column, MainGroup.element_description_column);
+					main.setDescription(Bytes.toString(val));
+				}
+				
+				groups.add(main);			
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			scanner.close();
+		}
+
+		return groups;
+	}
+	
+	
 	
 }

@@ -26,6 +26,7 @@ import com.tidepool.api.model.CodedAttribute;
 import com.tidepool.api.model.CodedItem;
 import com.tidepool.api.model.CodingEvent;
 import com.tidepool.api.model.CodingGroup;
+import com.tidepool.api.model.MainGroup;
 import com.tidepool.api.model.TrainingItem;
 
 @Controller
@@ -58,12 +59,8 @@ public class ImplicitCodingController {
 		this.hBaseManager = hBaseManager;
 	}
 	
-	@RequestMapping(value="/test", method=RequestMethod.GET)
-	public String getTestPage(HttpServletRequest request, 
-								@RequestParam(required=false) String owner, 
-								@RequestParam(required=false) Integer currentPage, 
-								Model model) {			
-		
+	@RequestMapping(value="/survey", method=RequestMethod.GET)
+	public String getSurvey(HttpServletRequest request,  Model model) {					
 		Account account = null;
 		if ((account = accountService.getAccount()) != null) {
 			model.addAttribute("account", accountService.getAccount());
@@ -79,13 +76,51 @@ public class ImplicitCodingController {
 		}
 		
 		
+		buildAttributeMap();				
+		model.addAttribute("cdn_url", trainingCdnUrl);		
+		CodedItem codedItem = hBaseManager.getRandomCodedItem();
+		model.addAttribute("codedItem", codedItem);		
+		List<MainGroup> mainList =  hBaseManager.getMainGroups();		
+		model.addAttribute("codedAttributes", mainList);
+		
+		
+		return "implicit/main-group-page";
+	}
+	
+	
+	@RequestMapping(value="/mainPost", method=RequestMethod.POST)
+	public String postSurvey(HttpServletRequest request, 
+								@RequestParam(required=true) String explicitId, 															
+								Model model) {
+		
+		CodedItem item = hBaseManager.getImageItemFromId(explicitId);
+		model.addAttribute("codedItem",item);
+				
+		return getTestPage(request, item, model);	
+		
+	}
+	@RequestMapping(value="/test", method=RequestMethod.GET)
+	public String getTestPage(HttpServletRequest request,
+			@RequestParam(required=false) CodedItem codedItem, 
+			Model model) {			
+		
+		Account account = null;
+		if ((account = accountService.getAccount()) != null) {
+			model.addAttribute("account", accountService.getAccount());
+		} else {
+			return "redirect:/signin";
+		}
+		
+		if (!account.isAdmin() && account.getRegistrationLevel() < REGISTRATION_LIMIT) {
+			if (account.getRegistrationLevel() == 0) {
+				return "redirect:/register";
+			}
+			return "redirect:/training" + (account.getRegistrationLevel() - 1);
+		}
+				
 		buildAttributeMap();
 				
 		model.addAttribute("cdn_url", trainingCdnUrl);
-		
-		CodedItem codedItem = hBaseManager.getRandomCodedItem();
-		model.addAttribute("codedItem", codedItem);
-		
 		
 		//TODO: Get the attributes allowed.
 		List<CodedAttribute> allCodedAttributes = new ArrayList<CodedAttribute>();
@@ -175,10 +210,10 @@ public class ImplicitCodingController {
 			currentItem = ci + 1;
 		}
 		
-		if (currentItem == trainingItems.size() - 1) {
+		if (currentItem >= trainingItems.size() - 1) {
 			account.setRegistrationLevel(REGISTRATION_LIMIT);
 			hBaseManager.saveAccount(account);
-			return "redirect:test";
+			return "redirect:survey";
 		}
 		
 		TrainingItem trainingItem =  trainingItems.get(currentItem);

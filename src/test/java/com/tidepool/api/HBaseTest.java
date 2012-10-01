@@ -1,6 +1,8 @@
 package com.tidepool.api;
 
-import static org.junit.Assert.*;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -8,7 +10,6 @@ import java.util.List;
 
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.KeyValue;
 import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Result;
@@ -22,7 +23,6 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.test.context.ContextConfiguration;
 import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
-import com.tidepool.api.controller.ImplicitCodingController;
 import com.tidepool.api.data.HBaseManager;
 import com.tidepool.api.model.CodedAttribute;
 import com.tidepool.api.model.CodedAttributeGroup;
@@ -30,6 +30,7 @@ import com.tidepool.api.model.CodedItem;
 import com.tidepool.api.model.CodingEvent;
 import com.tidepool.api.model.CodingGroup;
 import com.tidepool.api.model.Highlight;
+import com.tidepool.api.model.MainGroup;
 import com.tidepool.api.model.TrainingItem;
 
 @RunWith(SpringJUnit4ClassRunner.class)
@@ -376,7 +377,7 @@ public class HBaseTest {
 		assertTrue(items.size() > 0);
 		
 		for (TrainingItem item : items) {
-			System.out.println("Item: " + item.getPictureId() + "  folder: " + item.getFolderName());
+			System.out.println("Id  : " + item.getTrainingId() +  " Item: " + item.getPictureId() + "  folder: " + item.getFolderName());
 		}
 		
 		items = hBaseManager.getTrainingSetsForMainGroup("100");
@@ -384,6 +385,18 @@ public class HBaseTest {
 				
 	}
 	
+	
+	@Test
+	public void testMainGroups() {
+		List<MainGroup> items = hBaseManager.getMainGroups();
+		assertTrue(items.size() > 0);
+		
+		for (MainGroup item : items) {
+			System.out.println("Id  : " + item.getId() +  " Item: " + item.getName() );
+		}
+		
+				
+	}
 	
 	
 	@Test

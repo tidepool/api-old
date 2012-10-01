@@ -68,7 +68,7 @@
     </div>
 
     <div class="container">
-		<input type="hidden" name="explicitId" id="explicitId" value="${ codedItem.id }">
+		
 		<input type="hidden" name="currentPage" id="currentPage" value="${ currentPage }">
 		<input type="hidden" name="buttonPanelSize" id="buttonPanelSize" value="${fn:length(codedAttributes)}">
 		<input type="hidden" name="buttonPanelIndex" id="buttonPanelIndex" value="1">
@@ -88,24 +88,25 @@
 				</div>
 	  		</p>
 	  		
-	  		<p>
-	  		<div>		  			
-	  			<c:forEach var="rollups" items="${codedAttributes}" varStatus="rollupCounter">
-	  				<span id="buttonToolbar${ rollupCounter.count }" class="btn-toolbar" <c:if test="${ rollupCounter.count gt 1 }">style="display:none"</c:if> >	  				
-	  					<c:forEach var="attribute" items="${rollups}" varStatus="rowCounter">							
-								<button class="attribute btn" tidepool-highlightable="${ attribute.highlightable }" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>														
-		  				</c:forEach>
-	  				</span>
-	  			</c:forEach>	
-	  		</div>
-	  		</p>
-	  		
-	  		<p>
-	  		<div>		
-	  			<textarea id="textInput" class="attributeInput" name="textinput" rows="3" placeholder="Describe the image you see.."></textarea>
-	  			<button class="btn btn-success" id="nextButton">Next</button>
-  			</div>
-  			</p>  			
+	  		 <form class="form-horizontal" action="<c:url value="/mainPost" />" method="post">
+		  		 <input type="hidden" name="explicitId" id="explicitId" value="${ codedItem.id }">	
+		  		<p>
+		  		<div>		  			
+		  					  			
+		  			<c:forEach var="attribute" items="${codedAttributes}" varStatus="rowCounter">							
+						<button class="attribute btn" tidepool-highlightable="true" data-placement="bottom" data-trigger="hover" data-content="${ attribute.description }" id="${ attribute.name }">${ attribute.label}</button>														
+			  						<input type="hidden" id="${ attribute.name }_field" name="button${ rowCounter.index }">
+			  		</c:forEach>
+		  						  				
+		  		</div>
+		  		</p>
+		  		
+		  		<p>
+		  		<div>			  			
+		  			<button class="btn btn-success" id="nextButton">Next</button>
+	  			</div>
+	  			</p>
+  			</form>  			
 		</div>
 		
       <footer>
@@ -141,15 +142,14 @@
 	    var currentAttribute;
 	    function showCoords(c) {
 	    	
-	    	$.post(contextPath + "/json/saveattribute.ajax", { explicitId:$("#explicitId").val(), 
+	    	$.post(contextPath + "/json/saveattribute.ajax", {  explicitId:$("#explicitId").val(), 
 	    														attributeId:currentAttribute,
 	    														x0:c.x, 
  	    														y0:c.y, 
  	    														x1:c.x2,
  	    														y1:c.y2,	
  	    														height:c.height, 
-	    														width:c.weight }, function(attribute) {	
-	    	
+	    														width:c.weight }, function(attribute) {	    	
 	    															$('#highlightAlert').hide();		
 	    															jcrop_api.release();													
 	    	});			
@@ -165,31 +165,6 @@
 					  jcrop_api = this;
 				});
 				
-				$("#nextButton").click(function() {	
-					
-					if ($('#textInput').val() != '') {
-						$.post(contextPath + "/json/saveattribute.ajax", { explicitId:$("#explicitId").val(), attributeComment:$('#textInput').val()}, function(attribute) {	
-							$('#textInput').hide();		    			 														 
-					 	});
-					}
-					var currentButtonGroupCount = $('#buttonPanelSize').val();
-					var currentButtonGroupIndex = $('#buttonPanelIndex').val();
-					
-					if (currentButtonGroupIndex == (currentButtonGroupCount - 1)) {
-						$.post(contextPath + "/json/saveattribute.ajax", { explicitId:$("#explicitId").val(), attributeComment:$('#textInput').val()}, function(attribute) {	
-							window.location.href = contextPath + "/test";		    			 														 
-						 });						
-					} else {
-						//$("#buttonToolbar" + currentButtonGroupIndex).hide("slide", { direction: "left" }, 1000);
-						$("#buttonToolbar" + currentButtonGroupIndex).hide("slow", function() {
-							currentButtonGroupIndex++;
-							$('#buttonPanelIndex').val(currentButtonGroupIndex);
-							//$("#buttonToolbar" + currentButtonGroupIndex).show();
-							$("#buttonToolbar" + currentButtonGroupIndex).show("slow");	
-						});
-						
-					}
-				});
 				
 				$('.attribute').popover();
 				
@@ -216,6 +191,8 @@
 					    		button.addClass('active') 					    	
 					    	}	 														 
 						 });
+				    	
+				    	return false;
 				    });
 				}); 
 			});

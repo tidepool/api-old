@@ -223,6 +223,12 @@ public class CodedItem implements Serializable {
 	public void setFolder_name(String folder_name) {
 		this.folder_name = folder_name;
 	}
+	public String getId() {
+		return id;
+	}
+	public void setId(String id) {
+		this.id = id;
+	}
 	
 	
 	

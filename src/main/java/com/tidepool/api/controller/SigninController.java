@@ -26,7 +26,7 @@ public class SigninController {
 		if (account == null) {
 			return "signin/signin";
 		}
-		return "redirect:/test";
+		return "redirect:/survey";
 		
 	}
 	

@@ -69,20 +69,35 @@
 
     <div class="container">
 	
-		<div class="hero-unit">			  			
-				<p>The highlighted regions specify the following attributes.</p>  				  					
-				<p>
-					<div>
-						<canvas id="imageCanvas" height="630px" width="630px"></canvas>
-					</div>	
-  				</p>
-  				
-  				<p>
-  					<div class="btn-group">
-	  					<a  href="<c:url value="/training1?ci=${currentTrainingItem }" />"><button type="submit" class="btn btn-success" id="nextButton">Next</button></a>
+		<div class="hero-unit">			
+  			<h1></h1>
+  			<p>Now you try...Select attribute buttons that match the all the highlighted regions.</p>
+  			
+  			<p>
+	  		<div>		  			
+	  			<div class="btn-toolbar">
+	  			    <form class="form-horizontal" action="<c:url value="/training1Post" />" method="post">
+	  				<c:forEach var="attribute" items="${codedAttributes}" varStatus="rowCounter">
+						<div class="btn-group">
+							<button class="attribute btn" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>							
+							<input type="hidden" id="${ attribute.element }_field" name="button${ rowCounter.index }">
+						</div>
+	  				</c:forEach>	  				
+	  				<div class="btn-group">
+	  					<button type="submit" class="btn btn-success" id="nextButton">OK</button>
 	  				</div>
-	  			</p>	
-    
+	  				<input type="hidden" id="ci" name="ci" value="${ currentTrainingItem }">
+	  				</form>
+	  			</div>	  			
+	  		</div>
+	  		</p> 	
+     	
+  			<p>
+  				<div>
+					<canvas id="imageCanvas" height="700px" width="700px"></canvas>
+				</div>	
+     		</p>
+     	
      	</div>
       
       <footer>
@@ -153,6 +168,21 @@
 					  x: 0, y: 0,					  
 					  fromCenter: false,
 					  load:drawBox							
+				});
+				
+				$('.attribute').each(function() {
+					var button = $(this);
+				    $(this).click(function() {					 		
+				    	if (button.is('.active')) {
+				    		$('#' + button.attr('id') + '_field').val("");
+				    		button.removeClass('active');
+				    	} else {
+				    		$('#' + button.attr('id') + '_field').val(button.attr('id'));
+				    		button.addClass('active');
+				    	}
+				    	
+				    	return false;
+				    });
 				});
 									
 			});

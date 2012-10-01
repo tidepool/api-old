@@ -58,8 +58,9 @@ public class HBaseManager {
 	
 	private final String implicitElementTable = "implicit_element";
 	private final String accountTable = "user_attributes";
-	private final String elementDescriptionTable = "element_description";
+	private final String elementDetailTable = "element_detail";
 	private final String elementGroupTable = "element_group";
+	private final String elementMainTable = "element_main";
 	private final String explicitEventTable= "explicit_event";
 	private final String explicitImageTable= "explicit_image";
 	private final String countersTable= "counters";
@@ -455,7 +456,7 @@ public class HBaseManager {
 		List<CodedAttribute> attributes = new ArrayList<CodedAttribute>();			
 		ResultScanner scanner  = null;
 		try {
-			HTableInterface table = pool.getTable(elementDescriptionTable);
+			HTableInterface table = pool.getTable(elementDetailTable);
 			Scan scan = new Scan();
 			scanner = table.getScanner(scan);		
 			for (Result result : scanner) {			
@@ -596,6 +597,37 @@ public class HBaseManager {
 		
 	}
 
+	public List<TrainingItem> getTrainingSetsForMainGroup(String id) {
+		List<TrainingItem> trainingSet = new ArrayList<TrainingItem>();			
+		ResultScanner scanner  = null;
+		SingleColumnValueFilter filter = new SingleColumnValueFilter(
+				family_name_column,
+				TrainingItem.element_group_id_column,
+				CompareOp.EQUAL,
+				Bytes.toBytes(id)
+		);
+		try {
+			HTableInterface table = pool.getTable(trainingImageTable);
+			Scan scan = new Scan();
+			scan.setFilter(filter);
+			scanner = table.getScanner(scan);		
+			for (Result result : scanner) {
+				TrainingItem trainingItem = new TrainingItem();	
+				mapTrainingSet(trainingItem, result);
+				CodedItem attribute = new CodedItem();
+				mapResultToCodedItem(attribute, result);
+				trainingItem.setCodedItem(attribute);
+				trainingSet.add(trainingItem);			
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			scanner.close();
+		}
+
+		return trainingSet;
+	}
+	
 	public List<TrainingItem> getTrainingSets() {
 		List<TrainingItem> trainingSet = new ArrayList<TrainingItem>();			
 		ResultScanner scanner  = null;
@@ -662,6 +694,12 @@ public class HBaseManager {
 			byte[] val = result.getValue(family_name_column, TrainingItem.element_folder_name_column);
 			trainingItem.setElementFolderName(Bytes.toString(val));
 		}
+		
+		if (result.containsColumn(family_name_column, TrainingItem.element_group_id_column)) {
+			byte[] val = result.getValue(family_name_column, TrainingItem.element_group_id_column);
+			trainingItem.setElementGroupId(Bytes.toString(val));
+		}
+		
 	}
 	
 	public void saveTrainingItem(TrainingItem item) {		

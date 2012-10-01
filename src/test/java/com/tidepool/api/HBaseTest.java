@@ -370,6 +370,21 @@ public class HBaseTest {
 		}		
 	}
 	
+	@Test
+	public void testTrainingItemsFromMain() {
+		List<TrainingItem> items = hBaseManager.getTrainingSetsForMainGroup("1");
+		assertTrue(items.size() > 0);
+		
+		for (TrainingItem item : items) {
+			System.out.println("Item: " + item.getPictureId() + "  folder: " + item.getFolderName());
+		}
+		
+		items = hBaseManager.getTrainingSetsForMainGroup("100");
+		assertTrue(items.size() == 0);
+				
+	}
+	
+	
 	
 	@Test
 	public void testCodedItemActive() {

@@ -156,8 +156,44 @@ public class ImplicitCodingController {
 	
 	
 	@RequestMapping(value="/training0", method=RequestMethod.GET)
-	public String getTraining0(HttpServletRequest request, 
-			@RequestParam(required=false) String owner, 
+	public String getTraining0(HttpServletRequest request, 			
+			@RequestParam(required=false) Integer ci, 
+			Model model) {		
+		
+		Account account = null;
+		if ((account = accountService.getAccount()) != null) {
+			model.addAttribute("account", accountService.getAccount());
+		} else {
+			return "redirect:/signin";
+		}
+		
+				
+		List<TrainingItem> trainingItems = hBaseManager.getTrainingSetsForMainGroup(account.getElementGroupId());
+		
+		Integer currentItem = 0;
+		if (ci != null) {
+			currentItem = ci + 1;
+		}
+		
+		if (currentItem == trainingItems.size() - 1) {
+			account.setRegistrationLevel(REGISTRATION_LIMIT);
+			hBaseManager.saveAccount(account);
+			return "redirect:test";
+		}
+		
+		TrainingItem trainingItem =  trainingItems.get(currentItem);
+		model.addAttribute("trainingItem", trainingItem);
+		model.addAttribute("cdn_url", trainingCdnUrl);				
+		model.addAttribute("currentTrainingItem", currentItem);
+		
+		return "training/training0";
+	}
+	
+	
+	
+	@RequestMapping(value="/training1", method=RequestMethod.GET)
+	public String getTraining1(HttpServletRequest request, 
+			@RequestParam(required=false) Integer ci,  
 			@RequestParam(required=false) Integer currentPage, 
 			Model model) {		
 
@@ -170,14 +206,17 @@ public class ImplicitCodingController {
 		
 		buildAttributeMap();
 		
-		//TODO: Replace with actual training logic.
-		
+		Integer currentItem = 0;
+		if (ci != null) {
+			currentItem = ci + 1;
+		}
+				
 		List<CodedAttribute> allCodedAttributes = new ArrayList<CodedAttribute>();
-		
-		TrainingItem trainingItem =  hBaseManager.getTrainingItem("1");
-		
-		for (String attributeName : attributeMap.keySet()) {
 			
+		List<TrainingItem> trainingItems = hBaseManager.getTrainingSetsForMainGroup(account.getElementGroupId());
+		TrainingItem trainingItem =  trainingItems.get(currentItem);
+		
+		for (String attributeName : attributeMap.keySet()) {			
 			if (trainingItem.getCodedItem().isAttributeActive(attributeName)) {
 				allCodedAttributes.add(attributeMap.get(attributeName));
 			}
@@ -207,21 +246,19 @@ public class ImplicitCodingController {
 		
 		model.addAttribute("trainingItem", trainingItem);
 		model.addAttribute("cdn_url", trainingCdnUrl);
-			
-		return "training/training0";
+		model.addAttribute("currentTrainingItem", currentItem);	
+		return "training/training1";
 	}
 	
 	
-	
-	
-
-	@RequestMapping(value="/training0Post", method=RequestMethod.POST)
-	public String postTraining0(HttpServletRequest request, 
+	@RequestMapping(value="/training1Post", method=RequestMethod.POST)
+	public String postTraining1(HttpServletRequest request, 
 			@RequestParam(required=true) String button0, 
 			@RequestParam(required=true) String button1, 
 			@RequestParam(required=true) String button2,
 			@RequestParam(required=true) String button3, 
-			@RequestParam(required=true) String button4, 
+			@RequestParam(required=true) String button4,
+			@RequestParam(required=true) Integer ci,
 			Model model) {		
 
 		Account account = null;
@@ -230,10 +267,16 @@ public class ImplicitCodingController {
 		} else {
 			return "redirect:/signin";
 		}	
+		
+		
+		int currentItem = ci;
 		buildAttributeMap();
 		Map parameterMap = request.getParameterMap();
 		HashMap<String, CodedAttribute> codedMap = new HashMap<String, CodedAttribute>();			
-		TrainingItem trainingItem =  hBaseManager.getTrainingItem("1");
+		
+		List<TrainingItem> trainingItems = hBaseManager.getTrainingSetsForMainGroup(account.getElementGroupId());
+		TrainingItem trainingItem =  trainingItems.get(currentItem);
+		
 		for(String attribute : attributeMap.keySet()) {
 			if (trainingItem.getCodedItem().isAttributeActive(attribute)) {
 				codedMap.put(attribute, attributeMap.get(attribute));
@@ -245,46 +288,27 @@ public class ImplicitCodingController {
 		Iterator keyIterator = parameterMap.keySet().iterator();
 		while (keyIterator.hasNext()) {
 			String paramKey = (String)keyIterator.next();
-			String parameterValue = request.getParameter(paramKey);
-			if (!StringUtils.isEmpty(parameterValue) ) {
-				if (codedMap.containsKey(parameterValue)) {
-					passCount++;
-				} else {
-					extraAnswer = true;
-				}				
+			String parameterValue = request.getParameter(paramKey);			
+			if (paramKey.indexOf("button") >= 0) {
+				if (!StringUtils.isEmpty(parameterValue)) {
+					if (codedMap.containsKey(parameterValue)) {
+						passCount++;
+					} else {
+						extraAnswer = true;
+					}				
+				}
 			}
 		}
 
 
-		if (passCount == codedMap.size() && !extraAnswer) {
-			account.setRegistrationLevel(REGISTRATION_LIMIT);
-			hBaseManager.saveAccount(account);
-			return "redirect:/test";
+		if (passCount == codedMap.size() && !extraAnswer) {			
+			return getTraining0(request, currentItem++, model);
 		}
 
-		return "redirect:/training0";
+		return getTraining0(request, currentItem, model);
 	}
 
-		
-	
-	@RequestMapping(value="/training1", method=RequestMethod.GET)
-	public String getTraining1(HttpServletRequest request, 
-			@RequestParam(required=false) String owner, 
-			@RequestParam(required=false) Integer currentPage, 
-			Model model) {		
-		
-		return "training/training1";
-	}
 	
 	
-
-	@RequestMapping(value="/training1", method=RequestMethod.GET)
-	public String getTraining2(HttpServletRequest request, 
-			@RequestParam(required=false) String owner, 
-			@RequestParam(required=false) Integer currentPage, 
-			Model model) {		
-
-		return "training/training3";
-	}
 	
 }

@@ -185,31 +185,18 @@ public class HBaseTest {
 
 	}
 	
-
-	//@Test
-	public void testGetAllPhotos() {			
-		assertTrue(hBaseManager.getAllPhotos().size() > 0);
-		
-	}
 	
-	//@Test
-	public void testOnePhotoFromPicName() {
-			
-		assertNotNull(hBaseManager.getPhotoFromPicName("55098795410639527_laxmM6oX_b.jpg"));
-		
-	}
-	
-	//@Test
+	@Test
 	public void testMapCodedItem() {
 		
-		CodedItem item = hBaseManager.getCodedItemFromId("55098795410639527_laxmM6oX_b.jpg"); 
+		CodedItem item = hBaseManager.getCodedItemFromId("1"); 
 		assertNotNull(item);
 	}
 	
 	//@Test
 	public void testPutCodedItem() {
 		
-		CodedItem item = hBaseManager.getCodedItemFromId("55098795410639527_laxmM6oX_b.jpg"); 
+		CodedItem item = hBaseManager.getCodedItemFromId("1"); 
 		assertNotNull(item);		
 		hBaseManager.setCodedItem(item);
 		

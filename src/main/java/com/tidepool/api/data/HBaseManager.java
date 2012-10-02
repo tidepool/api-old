@@ -7,7 +7,6 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Random;
 
 import javax.swing.text.DateFormatter;
 
@@ -311,25 +310,21 @@ public class HBaseManager {
 	
 	public CodedItem getCodedItemFromId(String id) {		
 		CodedItem codedItem = null;
-		ResultScanner scanner  = null;
-		Filter filter = new ValueFilter(CompareFilter.CompareOp.EQUAL, new SubstringComparator(id));
+
 		try {
 			HTableInterface table = pool.getTable(implicitElementTable);
-			Scan scan = new Scan();
-			scan.setFilter(filter);
-			scanner = table.getScanner(scan);		
-			for (Result result : scanner) {			
-				codedItem = new CodedItem();								
-				mapResultToCodedItem(codedItem, result);
-				return codedItem;				
-			}
+			Get get = new Get(Bytes.toBytes(id));		
+			Result result = table.get(get);
+
+			codedItem = new CodedItem();								
+			mapResultToCodedItem(codedItem, result);
+
 		} catch(Exception e) {
 			e.printStackTrace();
-		} finally {			
-			scanner.close();
-		}		
+		} finally {}		
 		return codedItem;	
 	}
+	
 	
 	public CodedItem getImageItemFromId(String id) {		
 		CodedItem codedItem = null;

@@ -186,6 +186,15 @@
 				$('.attribute').each(function() {
 					var button = $(this);
 				    $(this).click(function() {
+				    	
+				    	if (button.is('.active')) {
+				    		$('#' + button.attr('id') + '_field').val("");
+				    		button.removeClass('active');
+				    	} else {
+				    		$('#' + button.attr('id') + '_field').val(button.attr('id'));
+				    		button.addClass('active');				    		
+				    	}
+				    	
 				    	var indexString = button.attr('name');
 				    	var index = indexString.substring(indexString.indexOf("_") + 1, indexString.length);				    	
 				    	drawBox(index);				    	

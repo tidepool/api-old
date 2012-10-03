@@ -26,6 +26,7 @@ import com.tidepool.api.model.CodedAttribute;
 import com.tidepool.api.model.CodedItem;
 import com.tidepool.api.model.CodingEvent;
 import com.tidepool.api.model.CodingGroup;
+import com.tidepool.api.model.Highlight;
 import com.tidepool.api.model.MainGroup;
 import com.tidepool.api.model.TrainingItem;
 
@@ -189,6 +190,42 @@ public class ImplicitCodingController {
 			return event;
 	}
 	
+	@RequestMapping(value="/json/savetrainingattribute.ajax", method=RequestMethod.POST)
+	public @ResponseBody CodingEvent logTrainingEvent(
+			HttpServletRequest request,
+			@RequestParam(required=true) String explicitId,
+			@RequestParam(required=false) String attributeId,
+			@RequestParam(required=false) String attributeValue,
+			@RequestParam(required=false) String attributeComment,
+			@RequestParam(required=false) String x0,
+			@RequestParam(required=false) String y0,
+			@RequestParam(required=false) String x1,
+			@RequestParam(required=false) String y1,
+			@RequestParam(required=false) String width,
+			@RequestParam(required=false) String height
+			) {		
+		
+		Account account = null;
+		if ((account = accountService.getAccount()) == null) 
+			return null;
+			
+			CodingEvent event = new CodingEvent();
+			event.user_id = account.getUserId();
+			event.picture_id = explicitId;
+			event.element = attributeId;
+			event.element_value = attributeValue;
+			event.x0 = x0;
+			event.y0 = y0;
+			event.x1 = x1;
+			event.y1 = y1;
+			event.width = width;
+			event.height = height;
+			event.text = attributeComment;
+			
+			hBaseManager.logTrainingEvent(event);			
+			return event;
+	}
+	
 	
 	@RequestMapping(value="/training0", method=RequestMethod.GET)
 	public String getTraining0(HttpServletRequest request, 			
@@ -296,12 +333,7 @@ public class ImplicitCodingController {
 	
 	
 	@RequestMapping(value="/training1Post", method=RequestMethod.POST)
-	public String postTraining1(HttpServletRequest request, 
-			@RequestParam(required=true) String button0, 
-			@RequestParam(required=true) String button1, 
-			@RequestParam(required=true) String button2,
-			@RequestParam(required=true) String button3, 
-			@RequestParam(required=true) String button4,
+	public String postTraining1(HttpServletRequest request, 			
 			@RequestParam(required=true) Integer ci,
 			Model model) {		
 
@@ -336,12 +368,30 @@ public class ImplicitCodingController {
 			if (paramKey.indexOf("button") >= 0) {
 				if (!StringUtils.isEmpty(parameterValue)) {
 					if (codedMap.containsKey(parameterValue)) {
-						passCount++;
+						String coordString = request.getParameter("coord"+ parameterValue);
+						if (!StringUtils.isEmpty(coordString)) {
+							String[] coordArray = coordString.split(",");
+							if (coordArray.length == 4) {
+								
+								Highlight testHighlight = new Highlight();
+								testHighlight.setX0(Integer.parseInt(coordArray[0]));
+								testHighlight.setY0(Integer.parseInt(coordArray[1]));
+								testHighlight.setX1(Integer.parseInt(coordArray[2]));
+								testHighlight.setY1(Integer.parseInt(coordArray[3]));
+								
+								Highlight answerHighlight = trainingItem.getCodedItem().getHighlightMap().get(parameterValue);
+								if (answerHighlight != null) {
+									double score = scoreHighlight(answerHighlight, testHighlight);
+									
+									passCount++;
+								}								
+							}							
+						}
 					} else {
 						extraAnswer = true;
 					}				
 				}
-			}
+			} 
 		}
 
 
@@ -352,7 +402,18 @@ public class ImplicitCodingController {
 		return getTraining0(request, currentItem, model);
 	}
 
-	
+	protected double scoreHighlight(Highlight answer, Highlight test) {		
+		int score = 0;
+		for (int y = (int)test.getY0(); y < test.getY1(); y++) {
+			for(int x = (int)test.getX0(); x < test.getX1(); x++) {			
+				if (y >= answer.getY0() && y <= answer.getY1() &&
+					x >= answer.getX0() && x <= answer.getX1()) {					
+					score++;
+				}
+			}	
+		}		
+		return (score == 0) ? 0 : (score/(answer.getX1() - answer.getX0()) * (answer.getY1() - answer.getY0()));
+	}
 	
 	
 }

@@ -68,6 +68,7 @@ public class HBaseManager {
 	private final String countersTable= "counters";
 		
 	private final String trainingImageTable= "explicit_training_image";
+	private final String trainingEventTable= "explicit_training_event";
 	
 	private final byte[] family_name_column = Bytes.toBytes("cf");
 	
@@ -592,6 +593,32 @@ public class HBaseManager {
 	}
 	
 	
+	public void logTrainingEvent(CodingEvent event) {
+		Class<CodingEvent> codedItemClass = CodingEvent.class;			
+		try {
+			HTableInterface table = pool.getTable(trainingEventTable);
+			Put put = new Put(Bytes.toBytes(event.user_id));			
+			for (Field field : codedItemClass.getFields()) {
+				if (field.getType().equals(Integer.TYPE)) {					
+					put.add(family_name_column, Bytes.toBytes(field.getName()), Bytes.toBytes(field.getInt(event)));
+				}
+				if (field.getType().equals(String.class)) {					
+					String value = (String)field.get(event);					
+					if (value != null) {
+						put.add(family_name_column, Bytes.toBytes(field.getName()), Bytes.toBytes(value));
+					}
+				}
+			}
+			table.put(put);
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {			
+			
+		}	
+	}
+	
+	
 	public List<Account> getAccounts() {
 		List<Account> accounts = new ArrayList<Account>();		
 		ResultScanner scanner  = null;		
@@ -676,6 +703,13 @@ public class HBaseManager {
 			scanner.close();
 		}
 
+		Collections.sort(trainingSet, new Comparator<TrainingItem>() {
+			public int compare(TrainingItem arg0, TrainingItem arg1) {				
+				return (new Integer(arg0.getTrainingId()).compareTo(new Integer(arg1.getTrainingId())));			
+			}
+			
+		});
+		
 		return trainingSet;
 	}
 

@@ -78,7 +78,7 @@
   			
   			<p>  			
   				<div >
-	  				<img id="jcrop_target" src="${cdn_url}/tidepool-data/${codedItem.bucket_name}/${codedItem.folder_name}/${codedItem.picture_id}">
+	  				<img class="imageViewer" id="jcrop_target" src="${cdn_url}/tidepool-data/${codedItem.bucket_name}/${codedItem.folder_name}/${codedItem.picture_id}">
 	  			</div>
 	  		</p>
 	  				  		
@@ -136,17 +136,22 @@
     
 	
 	<script>
+		var SCALE_VALUE = 0.50;
 	    var contextPath = "${pageContext.request.contextPath}";
 	    var jcrop_api;
 	    var currentAttribute;
 	    function showCoords(c) {
 	    	
+	    	var inputx0 = c.x / SCALE_VALUE;
+	    	var inputy0 = c.y / SCALE_VALUE;
+	    	var inputx1 = c.x2 / SCALE_VALUE;
+	    	var inputy1 = c.y2 / SCALE_VALUE;
 	    	$.post(contextPath + "/json/saveattribute.ajax", { explicitId:$("#explicitId").val(), 
 	    														attributeId:currentAttribute,
-	    														x0:c.x, 
- 	    														y0:c.y, 
- 	    														x1:c.x2,
- 	    														y1:c.y2,	
+	    														x0:inputx0, 
+		    													y0:inputy0, 
+		    													x1:inputx1,
+		    													y1:inputy1,		
  	    														height:c.height, 
 	    														width:c.weight }, function(attribute) {	
 	    	
@@ -158,8 +163,7 @@
 		(function ($) {
 			$(document).ready(function () {
 				
-				$('#jcrop_target').Jcrop({
-					//onChange: showCoords,
+				$('#jcrop_target').Jcrop({					
 					onSelect: showCoords
 				}, function(){
 					  jcrop_api = this;
@@ -180,11 +184,10 @@
 							window.location.href = contextPath + "/test";		    			 														 
 						 });						
 					} else {
-						//$("#buttonToolbar" + currentButtonGroupIndex).hide("slide", { direction: "left" }, 1000);
+						
 						$("#buttonToolbar" + currentButtonGroupIndex).hide("slow", function() {
 							currentButtonGroupIndex++;
-							$('#buttonPanelIndex').val(currentButtonGroupIndex);
-							//$("#buttonToolbar" + currentButtonGroupIndex).show();
+							$('#buttonPanelIndex').val(currentButtonGroupIndex);							
 							$("#buttonToolbar" + currentButtonGroupIndex).show("slow");	
 						});
 						

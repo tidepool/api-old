@@ -78,7 +78,7 @@
   			
   			<p>  			
   				<div >
-	  				<img id="jcrop_target" src="${cdn_url}/tidepool-data/${codedItem.bucket_name}/${codedItem.folder_name}/${codedItem.picture_id}">
+	  				<img class="imageViewer" id="jcrop_target" src="${cdn_url}/tidepool-data/${codedItem.bucket_name}/${codedItem.folder_name}/${codedItem.picture_id}">
 	  			</div>
 	  		</p>
 	  				  		
@@ -91,20 +91,18 @@
 	  		 <form class="form-horizontal" action="<c:url value="/mainPost" />" method="post">
 		  		 <input type="hidden" name="explicitId" id="explicitId" value="${ codedItem.id }">	
 		  		<p>
-		  		<div>		  			
-		  					  			
-		  			<c:forEach var="attribute" items="${codedAttributes}" varStatus="rowCounter">							
-						<button class="attribute btn" tidepool-highlightable="true" data-placement="bottom" data-trigger="hover" data-content="${ attribute.description }" id="${ attribute.name }">${ attribute.label}</button>														
-			  						<input type="hidden" id="${ attribute.name }_field" name="button${ rowCounter.index }">
-			  		</c:forEach>
-		  						  				
-		  		</div>
+			  		<div>		  						  					  			
+			  			<c:forEach var="attribute" items="${codedAttributes}" varStatus="rowCounter">							
+							<button class="attribute btn" tidepool-highlightable="true" data-placement="bottom" data-trigger="hover" data-content="${ attribute.description }" id="${ attribute.name }">${ attribute.label}</button>														
+				  						<input type="hidden" id="${ attribute.name }_field" name="button${ rowCounter.index }">
+				  		</c:forEach>			  						  			
+			  		</div>
 		  		</p>
 		  		
 		  		<p>
-		  		<div>			  			
-		  			<button class="btn btn-success" id="nextButton">Next</button>
-	  			</div>
+			  		<div>			  			
+			  			<button class="btn btn-success" id="nextButton">Next</button>
+		  			</div>
 	  			</p>
   			</form>  			
 		</div>
@@ -137,17 +135,22 @@
     
 	
 	<script>
+		var SCALE_VALUE = 0.50;
 	    var contextPath = "${pageContext.request.contextPath}";
 	    var jcrop_api;
 	    var currentAttribute;
 	    function showCoords(c) {
 	    	
+	    	var inputx0 = c.x / SCALE_VALUE;
+	    	var inputy0 = c.y / SCALE_VALUE;
+	    	var inputx1 = c.x2 / SCALE_VALUE;
+	    	var inputy1 = c.y2 / SCALE_VALUE;
 	    	$.post(contextPath + "/json/saveattribute.ajax", {  explicitId:$("#explicitId").val(), 
 	    														attributeId:currentAttribute,
-	    														x0:c.x, 
- 	    														y0:c.y, 
- 	    														x1:c.x2,
- 	    														y1:c.y2,	
+	    														x0:inputx0, 
+		    													y0:inputy0, 
+		    													x1:inputx1,
+		    													y1:inputy1,	
  	    														height:c.height, 
 	    														width:c.weight }, function(attribute) {	    	
 	    															$('#highlightAlert').hide();		
@@ -158,8 +161,7 @@
 		(function ($) {
 			$(document).ready(function () {
 				
-				$('#jcrop_target').Jcrop({
-					//onChange: showCoords,
+				$('#jcrop_target').Jcrop({					
 					onSelect: showCoords
 				}, function(){
 					  jcrop_api = this;

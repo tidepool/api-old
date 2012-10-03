@@ -71,7 +71,17 @@
 	
 		<div class="hero-unit">			
   			<h1></h1>
-  			<p>Now you try...Select attribute buttons that match the all the highlighted regions.</p>
+  			<p>Now you try...Click the attribute button, and highlight the corresponding area.</p>
+  			
+  			<p>
+		  		<div style="display:none" id="highlightAlert" class="alert alert-success">
+	  				Now highlight the associated attribute by dragging the mouse over the photo.		
+				</div>
+	  		</p>
+  			
+  			<p>
+	  			<img class="imageViewer" id="jcrop_target" src="${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}">
+	  		</p>
   			
   			<p>
 	  		<div>		  			
@@ -81,6 +91,7 @@
 						<div class="btn-group">
 							<button class="attribute btn" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>							
 							<input type="hidden" id="${ attribute.element }_field" name="button${ rowCounter.index }">
+							<input type="hidden" id="${ attribute.element }_coord" name="coord${ attribute.element }">
 						</div>
 	  				</c:forEach>	  				
 	  				<div class="btn-group">
@@ -91,12 +102,6 @@
 	  			</div>	  			
 	  		</div>
 	  		</p> 	
-     	
-  			<p>
-  				<div>
-					<canvas id="imageCanvas" height="700px" width="700px"></canvas>
-				</div>	
-     		</p>
      	
      	</div>
       
@@ -121,53 +126,40 @@
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-button.js"/>"></script>
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-collapse.js"/>"></script>
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-carousel.js"/>"></script>
-	 <script src="<c:url value="/resources/bootstrap/js/jcanvas.min.js"/>"></script>
+	<script src="<c:url value="/resources/bootstrap/js/jcanvas.min.js"/>"></script>
+	<script src="<c:url value="/resources/js/jquery.Jcrop.min.js"/>"></script>
 	<script>
-	
-		var boxen = [
-					<c:forEach var="highlight" items="${trainingItem.codedItem.highlightMap}">
-						[
-							[${highlight.value.x0}, ${highlight.value.y0}],
-							[${highlight.value.x0}, ${highlight.value.y1}],
-							[${highlight.value.x1}, ${highlight.value.y1}],
-							[${highlight.value.x1}, ${highlight.value.y0}],
-							[${highlight.value.x0}, ${highlight.value.y0}]						
-						]<c:if test="${fn:length(allAttributes) - 1 != rowCounter.index}">,</c:if>
-						
-					</c:forEach>
-		             ];
-	
-	     function drawBox() {
-	    	 
-	    	 var obj = {
-					  strokeStyle: "#EE0000",
-					  strokeWidth: 2,
-					  rounded: true
-					};
-
-		
-			for (var box=0; box<boxen.length; box+=1) {
-				var pts = boxen[box];
-				
-				for (var p=0; p<pts.length; p+=1) {
-			  		obj['x'+(p+1)] = pts[p][0];
-			  		obj['y'+(p+1)] = pts[p][1];
-				}
-			
-				$("#imageCanvas").drawLine(obj);
-			}
-			
-	    	 	    	 
-	     }
+		var SCALE_VALUE = 0.50;
+	    var contextPath = "${pageContext.request.contextPath}";
+	    var jcrop_api;
+	    var currentAttribute;
+	    function showCoords(c) {
+	    	
+	    	var inputx0 = c.x / SCALE_VALUE;
+	    	var inputy0 = c.y / SCALE_VALUE;
+	    	var inputx1 = c.x2 / SCALE_VALUE;
+	    	var inputy1 = c.y2 / SCALE_VALUE;
+	    	$.post(contextPath + "/json/savetrainingattribute.ajax", { explicitId:$("#ci").val(), 
+	    															attributeId:currentAttribute,
+	    															x0:inputx0, 
+		    														y0:inputy0, 
+		    														x1:inputx1,
+		    														y1:inputy1,		
+		    														height:c.height, 
+	    															width:c.weight }, function(attribute) {	    																
+	    																$('#'  + currentAttribute +"_coord").val(inputx0 + ',' + inputy0 + "," + inputx1 + "," + inputy1);	
+	    																$('#highlightAlert').hide();		
+	    																jcrop_api.release();													
+	    	});			
+		};
 	
 		(function ($) {
 			$(document).ready(function () {				
-				
-				$("#imageCanvas").drawImage({
-					  source: "${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}",					  
-					  x: 0, y: 0,					  
-					  fromCenter: false,
-					  load:drawBox							
+					
+				$('#jcrop_target').Jcrop({					
+					onSelect: showCoords
+				}, function(){
+					  jcrop_api = this;
 				});
 				
 				$('.attribute').each(function() {
@@ -179,6 +171,8 @@
 				    	} else {
 				    		$('#' + button.attr('id') + '_field').val(button.attr('id'));
 				    		button.addClass('active');
+				    		currentAttribute = button.attr("id");
+			    			$('#highlightAlert').show();
 				    	}
 				    	
 				    	return false;

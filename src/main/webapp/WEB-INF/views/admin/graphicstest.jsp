@@ -71,8 +71,9 @@
 		<div>			  			
 				<p>UGH.</p>  				  					
 				<p>
-					<div id="canvasContainer"></div>	
-  				</p>  				    
+					<div id="canvasContainer"></div>				
+  				</p>
+  				<p><button id="testButton">Hit</button></p>  				    
      	</div>
       
       <footer>
@@ -108,8 +109,8 @@
 				//1.Get the image via JS
 				var img = new Image();
 				img.onload = function() {  					
-  					imgHeight = this.height * 0.4;
-  					imgWidth = this.width * 0.4;
+  					imgHeight = this.height * 0.65;
+  					imgWidth = this.width * 0.65;
 									
   					//2.Add the canvas to the DOM
   					$('<canvas>').attr({
@@ -127,8 +128,25 @@
   						  fromCenter: false,  						  					
   					});
 				}
-				img.src = '${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}';
-							
+				img.src = '${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}';							
+			
+				
+				//Test drawing
+				$('#testButton').each(function() {
+					var button = $(this);
+				    $(this).click(function() {					 		
+				    	
+				    	$("#imageCanvas").drawRect({
+				    		  fillStyle: "#000",
+				    		  x: 50, y: 50,
+				    		  width: 200,
+				    		  height: 100,
+				    		  fromCenter: false
+				    		});
+				    	
+				    	return false;
+				    });
+				});			
 			});
 		})(jQuery);		
 	</script>

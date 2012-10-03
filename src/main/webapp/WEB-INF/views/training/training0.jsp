@@ -70,19 +70,27 @@
     <div class="container">
 	
 		<div class="hero-unit">			  			
-				<p>The highlighted regions specify the following attributes.</p>  				  					
+				<p>Training</p>  				  					
 				<p>
-					<div>
-						<canvas id="imageCanvas" height="630px" width="630px"></canvas>
-					</div>	
+					<div id="canvasContainer"></div>	
   				</p>
   				
   				<p>
-  					<div class="btn-group">
-	  					<a  href="<c:url value="/training1?ci=${currentTrainingItem }" />"><button type="submit" class="btn btn-success" id="nextButton">Next</button></a>
-	  				</div>
-	  			</p>	
-    
+			  		<div>		  			
+			  			<div class="btn-toolbar">			  			    
+			  				<c:forEach var="attribute" items="${codedAttributes}" varStatus="rowCounter">
+								<div class="btn-group">
+									<button class="attribute btn" name="button_${ rowCounter.index }" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>									
+								</div>
+			  				</c:forEach>	  				
+			  				<div class="btn-group">
+	  							<a  href="<c:url value="/training1?ci=${currentTrainingItem }" />"><button type="submit" class="btn btn-success" id="nextButton">Next</button></a>
+	  						</div>
+			  				<input type="hidden" id="ci" name="ci" value="${ currentTrainingItem }">			  				
+			  			</div>	  			
+			  		</div>
+	  			</p>
+  				  				
      	</div>
       
       <footer>
@@ -108,21 +116,23 @@
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-carousel.js"/>"></script>
 	 <script src="<c:url value="/resources/bootstrap/js/jcanvas.min.js"/>"></script>
 	<script>
+		
+		var SCALE_VALUE = 0.50;
 	
 		var boxen = [
 					<c:forEach var="highlight" items="${trainingItem.codedItem.highlightMap}">
 						[
-							[${highlight.value.x0}, ${highlight.value.y0}],
-							[${highlight.value.x0}, ${highlight.value.y1}],
-							[${highlight.value.x1}, ${highlight.value.y1}],
-							[${highlight.value.x1}, ${highlight.value.y0}],
-							[${highlight.value.x0}, ${highlight.value.y0}]						
+							[${highlight.value.x0 } * SCALE_VALUE, ${highlight.value.y0 } * SCALE_VALUE],
+							[${highlight.value.x0 } * SCALE_VALUE, ${highlight.value.y1 } * SCALE_VALUE],
+							[${highlight.value.x1 } * SCALE_VALUE, ${highlight.value.y1 } * SCALE_VALUE],
+							[${highlight.value.x1 } * SCALE_VALUE, ${highlight.value.y0 } * SCALE_VALUE],
+							[${highlight.value.x0 } * SCALE_VALUE, ${highlight.value.y0 } * SCALE_VALUE]						
 						]<c:if test="${fn:length(allAttributes) - 1 != rowCounter.index}">,</c:if>
 						
 					</c:forEach>
 		             ];
 	
-	     function drawBox() {
+	     function drawBox(box) {
 	    	 
 	    	 var obj = {
 					  strokeStyle: "#EE0000",
@@ -130,8 +140,6 @@
 					  rounded: true
 					};
 
-		
-			for (var box=0; box<boxen.length; box+=1) {
 				var pts = boxen[box];
 				
 				for (var p=0; p<pts.length; p+=1) {
@@ -140,20 +148,53 @@
 				}
 			
 				$("#imageCanvas").drawLine(obj);
-			}
-			
-	    	 	    	 
+			 	    	 
 	     }
 	
 		(function ($) {
 			$(document).ready(function () {				
 				
-				$("#imageCanvas").drawImage({
-					  source: "${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}",					  
-					  x: 0, y: 0,					  
-					  fromCenter: false,
-					  load:drawBox							
-				});
+				
+				var imgHeight = 0;
+				var imgWidth = 0;
+				
+				//1.Get the image via JS
+				var img = new Image();
+				img.onload = function() {  					
+  					imgHeight = this.height * SCALE_VALUE;
+  					imgWidth = this.width * SCALE_VALUE;
+									
+  					//2.Add the canvas to the DOM
+  					$('<canvas>').attr({
+  					    id: "imageCanvas",
+  					    width: imgWidth + 'px',
+  	  					height: imgHeight + 'px'
+  					}).appendTo('#canvasContainer');
+  					
+  					//3.Add the jcanvas bullshit				
+  					$("#imageCanvas").drawImage({
+  						  source: "${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}",					  
+  						  x: 0, y: 0,
+  						  width: imgWidth,
+  						  height: imgHeight,
+  						  fromCenter: false,  						  					
+  					});
+				}
+				img.src = '${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}';							
+			
+				
+				//Test drawing
+				$('.attribute').each(function() {
+					var button = $(this);
+				    $(this).click(function() {
+				    	var indexString = button.attr('name');
+				    	var index = indexString.substring(indexString.indexOf("_") + 1, indexString.length);				    	
+				    	drawBox(index);				    	
+				    	return false;
+				    });
+				});	
+				
+				
 									
 			});
 		})(jQuery);		

@@ -202,13 +202,22 @@ public class ImplicitCodingController {
 			return "redirect:/signin";
 		}
 		
-				
-		List<TrainingItem> trainingItems = hBaseManager.getTrainingSetsForMainGroup(account.getElementGroupId());
-		
 		Integer currentItem = 0;
 		if (ci != null) {
 			currentItem = ci + 1;
 		}
+		
+		buildAttributeMap();
+		List<CodedAttribute> allCodedAttributes = new ArrayList<CodedAttribute>();
+		List<TrainingItem> trainingItems = hBaseManager.getTrainingSetsForMainGroup(account.getElementGroupId());
+		TrainingItem trainingItem =  trainingItems.get(currentItem);
+
+		for (String attributeName : attributeMap.keySet()) {			
+			if (trainingItem.getCodedItem().isAttributeActive(attributeName)) {
+				allCodedAttributes.add(attributeMap.get(attributeName));
+			}
+		}
+		model.addAttribute("codedAttributes", allCodedAttributes);
 		
 		if (currentItem >= trainingItems.size() - 1) {
 			account.setRegistrationLevel(REGISTRATION_LIMIT);
@@ -216,7 +225,7 @@ public class ImplicitCodingController {
 			return "redirect:survey";
 		}
 		
-		TrainingItem trainingItem =  trainingItems.get(currentItem);
+		
 		model.addAttribute("trainingItem", trainingItem);
 		model.addAttribute("cdn_url", trainingCdnUrl);				
 		model.addAttribute("currentTrainingItem", currentItem);

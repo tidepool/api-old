@@ -382,7 +382,7 @@ public class ImplicitCodingController {
 								Highlight answerHighlight = trainingItem.getCodedItem().getHighlightMap().get(parameterValue);
 								if (answerHighlight != null) {
 									double score = scoreHighlight(answerHighlight, testHighlight);
-									
+									System.out.println("Score" + score);
 									passCount++;
 								}								
 							}							
@@ -412,7 +412,7 @@ public class ImplicitCodingController {
 				}
 			}	
 		}		
-		return (score == 0) ? 0 : (score/(answer.getX1() - answer.getX0()) * (answer.getY1() - answer.getY0()));
+		return (score == 0) ? 0 : score/((answer.getX1() - answer.getX0()) * (answer.getY1() - answer.getY0()));
 	}
 	
 	

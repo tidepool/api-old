@@ -131,7 +131,7 @@
 	<script>
 		var SCALE_VALUE = 0.50;
 	    var contextPath = "${pageContext.request.contextPath}";
-	    var jcrop_api;
+	    var jcrop_api = null;
 	    var currentAttribute;
 	    function showCoords(c) {
 	    	
@@ -152,19 +152,24 @@
 	    																jcrop_api.release();													
 	    	});			
 		};
-	
+		
+		function initializeJCrop() {
+			$('#jcrop_target').Jcrop({					
+				onSelect: showCoords
+			}, function(){
+				  jcrop_api = this;
+			});
+		}
+		
 		(function ($) {
 			$(document).ready(function () {				
-					
-				$('#jcrop_target').Jcrop({					
-					onSelect: showCoords
-				}, function(){
-					  jcrop_api = this;
-				});
-				
+									
 				$('.attribute').each(function() {
 					var button = $(this);
 				    $(this).click(function() {					 		
+				    	if (jcrop_api == null) {
+				    		initializeJCrop();
+				    	}
 				    	if (button.is('.active')) {
 				    		$('#' + button.attr('id') + '_field').val("");
 				    		button.removeClass('active');

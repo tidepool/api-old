@@ -81,7 +81,7 @@
 	  				</p>
 	  				
 	  				<p>
-	  					<img class="imageViewer" id="jcrop_target" src="${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}">
+	  					<img  id="jcrop_target" src="${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}">
 	  				</p>
 	  				
 	  				
@@ -150,13 +150,12 @@
 	 <script src="<c:url value="/resources/js/jquery-ui.min.js"/>"></script>
 	<script>
 		
-		var SCALE_VALUE = 0.50;
+		var SCALE_VALUE = 1;
 		var contextPath = "${pageContext.request.contextPath}";
 	    var jcrop_api;
 	    var currentAttribute;
 	    
 	    function showCoords(c) {
-	    	
 	    	var inputx0 = c.x / SCALE_VALUE;
 	    	var inputy0 = c.y / SCALE_VALUE;
 	    	var inputx1 = c.x2 / SCALE_VALUE;
@@ -215,10 +214,8 @@
 		
 		
 		(function ($) {
-			$(document).ready(function () {				
-				
-				$('#jcrop_target').Jcrop({
-					//onChange: showCoords,
+			$(document).ready(function () {
+				$('#jcrop_target').Jcrop({					
 					onSelect: showCoords
 				}, function(){
 					  jcrop_api = this;
@@ -230,9 +227,10 @@
 				//1.Get the image via JS
 				var img = new Image();
 				img.onload = function() {  					
-  					imgHeight = this.height * SCALE_VALUE;
-  					imgWidth = this.width * SCALE_VALUE;
-									
+  				imgHeight = this.height * SCALE_VALUE;
+  				imgWidth = this.width * SCALE_VALUE;
+					
+  					
   					//2.Add the canvas to the DOM
   					$('<canvas>').attr({
   					    id: "imageCanvas",

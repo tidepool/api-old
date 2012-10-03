@@ -269,6 +269,24 @@ public class AdminController {
 
 	}
 	
+	@RequestMapping(value="/admin/graphicstest", method=RequestMethod.GET)
+	public String getGraphicsTest(HttpServletRequest request,			
+			Model model) {
+
+		Account account =  accountService.getAccount();	
+		if (account == null || !account.isAdmin()) {
+			return "signin/signin";
+		}			
+		model.addAttribute("account", account);
+		
+		TrainingItem trainingSet = hBaseManager.getTrainingItem("1");
+		
+		model.addAttribute("trainingItem", trainingSet);
+		model.addAttribute("cdn_url", cdnUrl);
+		
+		return "admin/graphicstest";
+	}
+	
 	private void buildAttributeMap() {
 		if (attributeMap == null) {
 			attributeMap = hBaseManager.getCodedElementsMap();

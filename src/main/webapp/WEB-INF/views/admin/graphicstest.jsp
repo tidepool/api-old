@@ -9,20 +9,20 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Tidepool(Admin) Training Sets</title>   
+    <title>Tidepool Survey</title>
+    
     <meta name="description" content="">
     <meta name="author" content="">
 
     <!-- Le styles -->
     <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />" rel="stylesheet">
-    <link href="<c:url value="/resources/bootstrap/css/tidepool.css" />" rel="stylesheet">
     <style type="text/css">
       body {
         padding-top: 60px;
         padding-bottom: 40px;
       }
     </style>
-   
+    <link href="<c:url value="/resources/bootstrap/css/bootstrap-responsive.css" />" rel="stylesheet">
 
   </head>
 
@@ -36,10 +36,11 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="<c:url value="/" />">Tidepool(Admin) Training Sets</a>
+          <a class="brand" href="<c:url value="/" />">Tidepool Training</a>
           <div class="nav-collapse">
             <ul class="nav">                            
-             	<li class="dropdown"><a href="#" class="dropdown-toggle"
+             <c:if test="${ account.admin}">
+	            <li class="dropdown"><a href="#" class="dropdown-toggle"
 							data-toggle="dropdown">Admin<b class="caret"></b></a>
 							<ul class="dropdown-menu">
 								<li><a href="<c:url value="/admin/createAccount" />">Create Account</a>
@@ -58,6 +59,7 @@
 								</li>
 							</ul>
 						</li>
+			</c:if>
             </ul>
             <p class="navbar-text pull-right">Logged in as <a href="/">${account.email}</a> | <a href="<c:url value="/signout" />">logout</a></p>
           </div><!--/.nav-collapse -->
@@ -65,22 +67,15 @@
       </div>
     </div>
 
-    <div class="container">
-		<table class="table">
-			<tr><th>Id</th><th>Photo</th><th>Attributes</th><th></th></tr>
-			<c:forEach  var="trainingItem" items="${trainingSets}" varStatus="trainingSetCounter">
-				<tr>
-					<td>${ trainingItem.trainingId }</td>
-					<td><img class="imageViewer" src="${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}"></td>
-					<td>
-						<a href="<c:url value="/admin/trainingEditor?trainingId=${ trainingItem.trainingId}" />"><button class="btn btn-mini btn-primary" type="button">Edit</button></a>
-					</td>
-				</tr>
-				
-			</c:forEach>
-		</table>
-		
-		<footer>
+    <div>	
+		<div>			  			
+				<p>UGH.</p>  				  					
+				<p>
+					<div id="canvasContainer"></div>	
+  				</p>  				    
+     	</div>
+      
+      <footer>
         <p>&copy; Tidepool 2012</p>
       </footer>
 
@@ -101,15 +96,42 @@
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-button.js"/>"></script>
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-collapse.js"/>"></script>
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-carousel.js"/>"></script>
+	 <script src="<c:url value="/resources/bootstrap/js/jcanvas.min.js"/>"></script>
+	<script>
 	
-	<script>	
 		(function ($) {
 			$(document).ready(function () {				
 				
+				var imgHeight = 0;
+				var imgWidth = 0;
+				
+				//1.Get the image via JS
+				var img = new Image();
+				img.onload = function() {  					
+  					imgHeight = this.height * 0.4;
+  					imgWidth = this.width * 0.4;
+									
+  					//2.Add the canvas to the DOM
+  					$('<canvas>').attr({
+  					    id: "imageCanvas",
+  					    width: imgWidth + 'px',
+  	  					height: imgHeight + 'px'
+  					}).appendTo('#canvasContainer');
+  					
+  					//3.Add the jcanvas bullshit				
+  					$("#imageCanvas").drawImage({
+  						  source: "${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}",					  
+  						  x: 0, y: 0,
+  						  width: imgWidth,
+  						  height: imgHeight,
+  						  fromCenter: false,  						  					
+  					});
+				}
+				img.src = '${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}';
+							
 			});
 		})(jQuery);		
 	</script>
-
 
   </body>
 

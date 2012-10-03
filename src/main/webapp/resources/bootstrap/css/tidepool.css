@@ -9,3 +9,6 @@
 .container, .navbar-fixed-top .container, .navbar-fixed-bottom .container {
     width: 1302px;
 }
+
+
+.imageViewer { width:40%; height: auto; }

@@ -112,6 +112,8 @@ public class AdminController {
 		buildAttributeMap();
 		
 		TrainingItem trainingSet = hBaseManager.getTrainingItem(trainingId);
+		
+		//TODO: Only set attributes needed.
 		List<CodedAttribute> attributes = new ArrayList<CodedAttribute>();
 		for (String attributeName : attributeMap.keySet()) {
 			CodedAttribute attribute = attributeMap.get(attributeName).clone();			

@@ -100,7 +100,7 @@
 				  			<div>
 				  				<c:forEach var="attribute" items="${allAttributes}" varStatus="rowCounter">
 									
-									<c:if test="${rowCounter.index == 0 or rowCounter.index % 3 == 0}">     	
+									<c:if test="${rowCounter.index == 0 or rowCounter.index % 1 == 0}">     	
      									<c:if test="${rowCounter.index != 0}">
      										</div>
      									</c:if>

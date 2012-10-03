@@ -70,25 +70,7 @@
 		<input type="hidden" id="trainingId" value="${ trainingItem.trainingId }">
 		<div class="hero-unit">			  			
   			<div class="row">	  				  			
-	  			<%-- <div class="span-4">
-		  			
-		  			<p>Current Coded Attributes</p>
-		  			
-		  			<p>
-		  				<div>
-							<canvas id="imageCanvas" height="300px" width="300px"></canvas>
-						</div>	
-		     		</p>
-		     	
-		     		<p>
-		     		 Attributes:
-		     		 <c:forEach var="attribute" items="${codedAttributes}" varStatus="rowCounter">
-		     		 	<div>${ attribute.element_name }</div>
-		     		 </c:forEach>
-		     		</p>
-		    		 	
-	     		</div> --%>
-	     		
+	  		
 	     		<div class="span-4">
 	  				<p>Edit Attributes</p>
 	  				
@@ -99,16 +81,16 @@
 	  				</p>
 	  				
 	  				<p>
-	  				 <img id="jcrop_target" src="${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}">
+	  					<img class="imageViewer" id="jcrop_target" src="${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}">
 	  				</p>
 	  				
 	  				
 	  				<p>Current Highlights</p>			
-	  				<p>
-  						<div>
-							<canvas id="imageCanvas" height="630px" width="630px"></canvas>
-						</div>	
-     				</p>
+	  				
+  					<p>
+						<div id="canvasContainer"></div>	
+  					</p>
+     				
 	  				
 	  			</div>
 	     		
@@ -188,15 +170,16 @@
 		};
 	 	
 		
+		var SCALE_VALUE = 0.50;
 		
 		var boxen = [
 						<c:forEach var="highlight" items="${trainingItem.codedItem.highlightMap}">
 							[
-								[${highlight.value.x0}, ${highlight.value.y0}],
-								[${highlight.value.x0}, ${highlight.value.y1}],
-								[${highlight.value.x1}, ${highlight.value.y1}],
-								[${highlight.value.x1}, ${highlight.value.y0}],
-								[${highlight.value.x0}, ${highlight.value.y0}]						
+								[${highlight.value.x0 } * SCALE_VALUE, ${highlight.value.y0 } * SCALE_VALUE],
+								[${highlight.value.x0 } * SCALE_VALUE, ${highlight.value.y1 } * SCALE_VALUE],
+								[${highlight.value.x1 } * SCALE_VALUE, ${highlight.value.y1 } * SCALE_VALUE],
+								[${highlight.value.x1 } * SCALE_VALUE, ${highlight.value.y0 } * SCALE_VALUE],
+								[${highlight.value.x0 } * SCALE_VALUE, ${highlight.value.y0 } * SCALE_VALUE]						
 							]<c:if test="${fn:length(allAttributes) - 1 != rowCounter.index}">,</c:if>
 							
 						</c:forEach>
@@ -220,9 +203,7 @@
 					}
 				
 					$("#imageCanvas").drawLine(obj);
-				}
-				
-		    	 	    	 
+				}						    	 	    	 
 		     }
 		
 		
@@ -237,12 +218,34 @@
 					  jcrop_api = this;
 				});
 				
-				$("#imageCanvas").drawImage({
-					  source: "${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}",					  
-					  x: 0, y: 0,					  
-					  fromCenter: false,
-					  load:drawBox							
-				});
+				var imgHeight = 0;
+				var imgWidth = 0;
+				
+				//1.Get the image via JS
+				var img = new Image();
+				img.onload = function() {  					
+  					imgHeight = this.height * SCALE_VALUE;
+  					imgWidth = this.width * SCALE_VALUE;
+									
+  					//2.Add the canvas to the DOM
+  					$('<canvas>').attr({
+  					    id: "imageCanvas",
+  					    width: imgWidth + 'px',
+  	  					height: imgHeight + 'px'
+  					}).appendTo('#canvasContainer');
+  					
+  					//3.Add the jcanvas bullshit				
+  					$("#imageCanvas").drawImage({
+  						  source: "${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}",					  
+  						  x: 0, y: 0,
+  						  width: imgWidth,
+  						  height: imgHeight,
+  						  fromCenter: false,  						  					
+  					});
+  					
+  					drawBox();
+				}
+				img.src = '${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}';
 				
 				
 				$("#nextButton").click(function() {	

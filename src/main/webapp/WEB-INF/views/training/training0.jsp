@@ -153,8 +153,7 @@
 	
 		(function ($) {
 			$(document).ready(function () {				
-				
-				
+								
 				var imgHeight = 0;
 				var imgWidth = 0;
 				
@@ -193,9 +192,7 @@
 				    	return false;
 				    });
 				});	
-				
-				
-									
+								
 			});
 		})(jQuery);		
 	</script>

@@ -267,21 +267,21 @@ public class ImplicitCodingController {
 		}
 		
 		
-		ArrayList<CodedAttribute> attributeMapList = new ArrayList<CodedAttribute>(attributeMap.values());
-		Random random = new Random();
-		while (allCodedAttributes.size() < 6) {			
-			CodedAttribute attribute = attributeMapList.get(random.nextInt(attributeMapList.size()));			
-			boolean contains = false;
-			for (CodedAttribute codedAttribute : allCodedAttributes) {
-				if (codedAttribute.element.endsWith(attribute.element)) {
-					contains = true;
-					continue;
-				}
-			}
-			if (!contains) {
-				allCodedAttributes.add(attribute);
-			}			
-		}
+//		ArrayList<CodedAttribute> attributeMapList = new ArrayList<CodedAttribute>(attributeMap.values());
+//		Random random = new Random();
+//		while (allCodedAttributes.size() < 6) {			
+//			CodedAttribute attribute = attributeMapList.get(random.nextInt(attributeMapList.size()));			
+//			boolean contains = false;
+//			for (CodedAttribute codedAttribute : allCodedAttributes) {
+//				if (codedAttribute.element.endsWith(attribute.element)) {
+//					contains = true;
+//					continue;
+//				}
+//			}
+//			if (!contains) {
+//				allCodedAttributes.add(attribute);
+//			}			
+//		}
 		
 		model.addAttribute("codedAttributes", allCodedAttributes);
 				

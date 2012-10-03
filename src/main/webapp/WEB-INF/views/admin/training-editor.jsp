@@ -149,28 +149,34 @@
 	 <script src="<c:url value="/resources/js/jquery.Jcrop.min.js"/>"></script>
 	 <script src="<c:url value="/resources/js/jquery-ui.min.js"/>"></script>
 	<script>
-	
+		
+		var SCALE_VALUE = 0.50;
 		var contextPath = "${pageContext.request.contextPath}";
 	    var jcrop_api;
 	    var currentAttribute;
+	    
 	    function showCoords(c) {
+	    	
+	    	var inputx0 = c.x / SCALE_VALUE;
+	    	var inputy0 = c.y / SCALE_VALUE;
+	    	var inputx1 = c.x2 / SCALE_VALUE;
+	    	var inputy1 = c.y2 / SCALE_VALUE;
 	    	
 	    	$.post(contextPath + "/admin/json/savetraining.ajax", { trainingId:$("#trainingId").val(), 
 	    														attributeId:currentAttribute,
-	    														x0:c.x, 
-		    													y0:c.y, 
-		    													x1:c.x2,
-		    													y1:c.y2,	
+	    														x0:inputx0, 
+		    													y0:inputy0, 
+		    													x1:inputx1,
+		    													y1:inputy1,	
 		    													height:c.height, 
-	    														width:c.weight }, function(attribute) {	
-	    	
+	    														width:c.weight }, function(attribute) {	    	
 	    															$('#highlightAlert').hide();		
 	    															jcrop_api.release();													
-	    	});			
+	    														});			
 		};
 	 	
 		
-		var SCALE_VALUE = 0.50;
+		
 		
 		var boxen = [
 						<c:forEach var="highlight" items="${trainingItem.codedItem.highlightMap}">

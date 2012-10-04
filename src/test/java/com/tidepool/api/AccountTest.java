@@ -46,8 +46,8 @@ public class AccountTest {
 		assertNotNull(account.getFirstName());
 		assertNotNull(account.getLastName());
 		
-		account.setRegistrationLevel(1);
-		account.setElementGroupId("1");
+		account.setRegistrationLevel(3);
+		account.setElementGroupId("2");
 		hBaseManager.saveAccount(account);
 		
 	}

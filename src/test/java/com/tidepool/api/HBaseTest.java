@@ -428,4 +428,20 @@ public class HBaseTest {
 		hBaseManager.testTime();
 	}
 	
+	
+	@Test
+	public void testGetCodedAttributeForGroup() {
+		List<CodedAttribute> attributeList = hBaseManager.getCodedElementsForGroup("2");				
+		assertTrue(attributeList.size() > 0);
+		
+		for (CodedAttribute attribute : attributeList) {
+			assertNotNull(attribute);
+			assertNotNull(attribute.element_group_id);
+			assertNotNull(attribute.element);
+			assertNotNull(attribute.element_description);
+		}
+		
+		
+	}
+	
 }

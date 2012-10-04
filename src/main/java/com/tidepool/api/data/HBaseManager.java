@@ -487,10 +487,35 @@ public class HBaseManager {
 		} finally {
 			scanner.close();
 		}
-		
-		
 		return attributes;
 	}
+	
+	public List<CodedAttribute> getCodedElementsForGroup(String groupId) {
+		List<CodedAttribute> attributes = new ArrayList<CodedAttribute>();			
+		ResultScanner scanner  = null;
+		SingleColumnValueFilter filter = new SingleColumnValueFilter(
+				family_name_column,
+				CodedAttribute.element_group_id_column,
+				CompareOp.EQUAL,
+				Bytes.toBytes(groupId));
+		try {
+			HTableInterface table = pool.getTable(elementDetailTable);
+			Scan scan = new Scan();
+			scan.setFilter(filter);
+			scanner = table.getScanner(scan);		
+			for (Result result : scanner) {			
+				CodedAttribute attribute = new CodedAttribute();
+				mapResultToCodedAttribute(attribute, result);
+				attributes.add(attribute);			
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			scanner.close();
+		}
+		return attributes;
+	}
+	
 	
 	private void mapResultToCodedAttribute(CodedAttribute codedAttribute, Result result) throws IllegalAccessException {
 		Class<CodedAttribute> codedItemClass = CodedAttribute.class;

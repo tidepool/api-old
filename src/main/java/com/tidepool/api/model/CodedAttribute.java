@@ -2,13 +2,18 @@ package com.tidepool.api.model;
 
 import java.io.Serializable;
 
+import org.apache.hadoop.hbase.util.Bytes;
+
 public class CodedAttribute implements Serializable, Cloneable {
 
 	private static final long serialVersionUID = 1L;
+	public static final byte[] element_group_id_column = Bytes.toBytes("element_group_id");
+	
 	
 	public String element_name;
 	public String element;
 	public String element_description;
+	public String element_group_id;
 	public boolean highlightable = true;
 	public boolean active = false;
 	
@@ -52,6 +57,14 @@ public class CodedAttribute implements Serializable, Cloneable {
 	}
 	public void setActive(boolean active) {
 		this.active = active;
+	}
+
+	public String getElement_group_id() {
+		return element_group_id;
+	}
+
+	public void setElement_group_id(String element_group_id) {
+		this.element_group_id = element_group_id;
 	}
 	
 	

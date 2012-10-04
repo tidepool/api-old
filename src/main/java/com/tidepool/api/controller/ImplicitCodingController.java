@@ -124,7 +124,7 @@ public class ImplicitCodingController {
 		model.addAttribute("cdn_url", trainingCdnUrl);
 		
 		//TODO: Get the attributes allowed.
-		List<CodedAttribute> allCodedAttributes = new ArrayList<CodedAttribute>();
+		List<CodedAttribute> allCodedAttributes = hBaseManager.getCodedElementsForGroup(account.getElementGroupId());
 		
 		List<List<CodedAttribute>> rollupList = new ArrayList<List<CodedAttribute>>();
 		int subListSize = 0;
@@ -132,7 +132,7 @@ public class ImplicitCodingController {
 		List<CodedAttribute> subList = new ArrayList<CodedAttribute>();
 		
 		//TODO: Change to actual groups.
-		for (CodedAttribute attribute : attributeMap.values()) {
+		for (CodedAttribute attribute :  allCodedAttributes) {
 			if ((subList.size() != 0) && (subList.size() % PAGE_LIMIT == 0) || (listSize == allCodedAttributes.size() - 1)) {
 				subListSize = 0;
 				rollupList.add(subList);

@@ -403,16 +403,29 @@ public class ImplicitCodingController {
 	}
 
 	protected double scoreHighlight(Highlight answer, Highlight test) {		
+		
 		int score = 0;
-		for (int y = (int)test.getY0(); y < test.getY1(); y++) {
-			for(int x = (int)test.getX0(); x < test.getX1(); x++) {			
-				if (y >= answer.getY0() && y <= answer.getY1() &&
-					x >= answer.getX0() && x <= answer.getX1()) {					
+		
+		double startAx = (answer.getX0() > answer.getX1()) ? answer.getX0() : answer.getX1();
+		double endAx = (answer.getX1() < answer.getX0()) ? answer.getX0() : answer.getX1();
+		double startAy = (answer.getY0() > answer.getY1()) ? answer.getY0() : answer.getY1();
+		double endAy = (answer.getY1() < answer.getY0()) ? answer.getY0() : answer.getY1();
+		
+		double startTx = (test.getX0() > test.getX1()) ? test.getX0() : test.getX1();
+		double endTx = (test.getX1() < test.getX0()) ? test.getX0() : test.getX1();
+		double startTy = (test.getY0() > test.getY1()) ? test.getY0() : test.getY1();
+		double endTy = (test.getY1() < test.getY0()) ? test.getY0() : test.getY1();
+		
+		for (int y = (int)startTy; y < endTy; y++) {
+			for(int x = (int)startTx; x < endTx; x++) {			
+				if (y >= startAx && y <= endAx &&
+					x >= startAy && x <= endAy) {					
 					score++;
 				}
 			}	
-		}		
-		return (score == 0) ? 0 : score/((answer.getX1() - answer.getX0()) * (answer.getY1() - answer.getY0()));
+		}	
+				
+		return (score == 0) ? 0 : score/((endAx - startAx) * (endAy - startAy));
 	}
 	
 	

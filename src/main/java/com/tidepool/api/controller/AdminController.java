@@ -115,12 +115,12 @@ public class AdminController {
 		
 		//TODO: Only set attributes needed.
 		List<CodedAttribute> attributes = new ArrayList<CodedAttribute>();
-		for (String attributeName : attributeMap.keySet()) {
-			CodedAttribute attribute = attributeMap.get(attributeName).clone();			
+		for (String attributeName : attributeMap.keySet()) {			
 			if (trainingSet.getCodedItem().isAttributeActive(attributeName)) {
+				CodedAttribute attribute = attributeMap.get(attributeName).clone();			
 				attribute.setActive(true);
-			}
-			attributes.add(attribute);
+				attributes.add(attribute);
+			}			
 		}
 		
 		model.addAttribute("allAttributes", attributes);

@@ -402,12 +402,13 @@ public class HBaseManager {
 	public void saveCodedItemLog(CodedItemLog log) {
 		
 		try {
+						
+			HTableInterface counter = pool.getTable(countersTable);
+			long nextCounter = counter.incrementColumnValue(Bytes.toBytes("7"), family_name_column, Bytes.toBytes(explicitImageLogTable), 1);
+			log.setId(nextCounter);
+			
 			HTableInterface table = pool.getTable(explicitImageLogTable);
 			Put put = new Put(Bytes.toBytes(log.getId()));
-			
-			HTableInterface counter = pool.getTable(countersTable);
-			long nextCounter = counter.incrementColumnValue(Bytes.toBytes("7"), family_name_column, Bytes.toBytes(accountTable), 1);
-			log.setId(nextCounter);
 			
 			if (log.getExplicitImageId() != null) {
 				put.add(family_name_column, CodedItemLog.explicit_image_id_column, Bytes.toBytes(log.getExplicitImageId()));

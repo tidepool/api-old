@@ -76,13 +76,13 @@ public class ImplicitCodingController {
 			}
 			return "redirect:/training" + (account.getRegistrationLevel() - 1);
 		}
-		
-		
+				
 		buildAttributeMap();				
 		model.addAttribute("cdn_url", trainingCdnUrl);		
 		CodedItem codedItem = hBaseManager.getRandomCodedItem(account.getUserId(), account.getExplicitImageFolder());
 		CodedItemLog log = new CodedItemLog();
 		log.setUserId(account.getUserId());
+		log.setFolderType(account.getExplicitImageFolder());
 		log.setExplicitImageId(codedItem.getId());
 		hBaseManager.saveCodedItemLog(log);
 		model.addAttribute("codedItem", codedItem);		

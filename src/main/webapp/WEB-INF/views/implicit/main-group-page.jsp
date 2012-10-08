@@ -78,7 +78,7 @@
   			
   			<p>  			
   				<div >
-	  				<img class="imageViewer" id="jcrop_target" src="${cdn_url}/tidepool-data/${codedItem.bucket_name}/${codedItem.folder_name}/${codedItem.picture_id}">
+	  				<img class="imageViewer" id="jcrop_target" src="${cdn_url}/${codedItem.bucket_name}/${codedItem.folder_name}/${codedItem.picture_id}">
 	  			</div>
 	  		</p>
 	  				  		

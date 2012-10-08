@@ -412,7 +412,8 @@ public class HBaseManager {
 			if (log.getExplicitImageId() != null) {
 				put.add(family_name_column, CodedItemLog.explicit_image_id_column, Bytes.toBytes(log.getExplicitImageId()));
 			}
-						
+			
+			put.add(family_name_column,CodedItemLog.folder_type_column, Bytes.toBytes(log.getFolderType()));
 			put.add(family_name_column,CodedItemLog.user_id_column, Bytes.toBytes(log.getUserId()));				
 			table.put(put);		
 								
@@ -430,7 +431,7 @@ public class HBaseManager {
 		List<Filter> filters = new ArrayList<Filter>();
 		SingleColumnValueFilter filter0 = new SingleColumnValueFilter(
 				family_name_column,
-				CodedItemLog.explicit_image_id_column,
+				CodedItemLog.folder_type_column,
 				CompareOp.EQUAL,
 				Bytes.toBytes(folder)
 		);
@@ -459,7 +460,12 @@ public class HBaseManager {
 					byte[] val = result.getValue(family_name_column, CodedItemLog.explicit_image_id_column);
 					log.setExplicitImageId(Bytes.toString(val));
 				}
-								
+					
+				if (result.containsColumn(family_name_column, CodedItemLog.folder_type_column)) {
+					byte[] val = result.getValue(family_name_column, CodedItemLog.folder_type_column);
+					log.setFolderType(Bytes.toString(val));
+				}
+				
 				if (result.containsColumn(family_name_column, CodedItemLog.user_id_column)) {
 					byte[] val = result.getValue(family_name_column, CodedItemLog.user_id_column);
 					log.setUserId(Bytes.toLong(val));

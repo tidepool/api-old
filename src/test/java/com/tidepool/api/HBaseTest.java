@@ -324,13 +324,24 @@ public class HBaseTest {
 	@Test
 	public void testCodedItemLog() {
 		
+		//assertTrue(hBaseManager.getCodedItemsForUserAndFolder(0L, "test").size() == 0);
 		CodedItemLog log = new CodedItemLog();		
 		log.setExplicitImageId("test");
+		log.setFolderType("work_type");
 		log.setUserId(0L);
 		hBaseManager.saveCodedItemLog(log);
-		assertTrue(hBaseManager.getCodedItemsForUserAndFolder(0L, "test").size() > 0);
-
+		assertTrue(hBaseManager.getCodedItemsForUserAndFolder(0L, "work_type").size() > 0);
+		
 	}
+	
+	@Test
+	public void testCodedItemLog1() {
+		
+		assertTrue(hBaseManager.getCodedItemsForUserAndFolder(0, "work_type").size() > 0);
+		
+		
+	}
+	
 	
 	//@Test
 	public void testTrainingItem() {

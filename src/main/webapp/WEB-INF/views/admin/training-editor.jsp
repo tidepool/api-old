@@ -68,6 +68,9 @@
 
     <div class="container">
 		<input type="hidden" id="trainingId" value="${ trainingItem.trainingId }">
+		
+		<a href="<c:url value="/admin/trainingSets"/>">Training Sets &raquo</a> Editor
+		
 		<div class="hero-unit">			  			
   			<div class="row">	  				  			
 	  		
@@ -109,7 +112,7 @@
       								
       								</c:if>
 																		
-										<button class='attribute btn <c:if test="${ attribute.active }">active</c:if>' tidepool-highlightable="${ attribute.highlightable }" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>							
+										<button class='attribute btn'  tidepool-highlightable="${ attribute.highlightable }" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>							
 									
 									<c:if test="${fn:length(allAttributes) - 1 == rowCounter.index}">  
          								</div>

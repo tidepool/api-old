@@ -27,6 +27,7 @@ import com.tidepool.api.data.HBaseManager;
 import com.tidepool.api.model.CodedAttribute;
 import com.tidepool.api.model.CodedAttributeGroup;
 import com.tidepool.api.model.CodedItem;
+import com.tidepool.api.model.CodedItemLog;
 import com.tidepool.api.model.CodingEvent;
 import com.tidepool.api.model.CodingGroup;
 import com.tidepool.api.model.Highlight;
@@ -307,10 +308,10 @@ public class HBaseTest {
 	@Test
 	public void testGetRandomExplicitCoding() {
 		
-		CodedItem item0 = hBaseManager.getRandomCodedItem();		
+		CodedItem item0 = hBaseManager.getRandomCodedItem(0, null);		
 		assertNotNull(item0);
 		
-		CodedItem item1 = hBaseManager.getRandomCodedItem();		
+		CodedItem item1 = hBaseManager.getRandomCodedItem(0, null);		
 		assertNotNull(item1);
 		
 		System.out.println(" Item 0 " + item0.picture_id + " "  + item0.folder_name + " Item 1 " + item1.picture_id);
@@ -319,7 +320,19 @@ public class HBaseTest {
 		
 	}
 	
+	
 	@Test
+	public void testCodedItemLog() {
+		
+		CodedItemLog log = new CodedItemLog();		
+		log.setExplicitImageId("test");
+		log.setUserId(0L);
+		hBaseManager.saveCodedItemLog(log);
+		assertTrue(hBaseManager.getCodedItemsForUserAndFolder(0L, "test").size() > 0);
+
+	}
+	
+	//@Test
 	public void testTrainingItem() {
 		
 		String trainingId = "1-test";
@@ -348,7 +361,7 @@ public class HBaseTest {
 	}
 	
 	
-	@Test
+	//@Test
 	public void testTrainingItems() {
 		List<TrainingItem> items = hBaseManager.getTrainingSets(); 
 		assertTrue(items.size() > 0);
@@ -358,7 +371,7 @@ public class HBaseTest {
 		}		
 	}
 	
-	@Test
+	//@Test
 	public void testTrainingItemsFromMain() {
 		List<TrainingItem> items = hBaseManager.getTrainingSetsForMainGroup("1");
 		assertTrue(items.size() > 0);

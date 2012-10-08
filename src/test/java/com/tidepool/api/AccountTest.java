@@ -47,7 +47,7 @@ public class AccountTest {
 		assertNotNull(account.getLastName());
 		
 		account.setRegistrationLevel(3);
-		account.setElementGroupId("2");
+		account.setElementGroupId("1");
 		hBaseManager.saveAccount(account);
 		
 	}
@@ -86,7 +86,7 @@ public class AccountTest {
 	}
 	
 	
-	//@Test
+	@Test
 	public void testGetAccounts() {
 		List<Account> accounts = hBaseManager.getAccounts(); 
 		assertTrue(accounts.size() > 0);

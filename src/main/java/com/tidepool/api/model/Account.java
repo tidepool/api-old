@@ -22,7 +22,8 @@ public class Account implements Serializable, UserDetails {
 	public static final byte[] zipcode_column = Bytes.toBytes("zipcode");
 	public static final byte[] birth_year_column = Bytes.toBytes("birth_year");
 	public static final byte[] element_group_id_column = Bytes.toBytes("element_group_id");
-	public static final byte[] registration_level_column = Bytes.toBytes("registration_level");
+	public static final byte[] registration_level_id_column = Bytes.toBytes("registration_level_id_column");
+	public static final byte[] explicit_image_folder_column = Bytes.toBytes("explicit_image_folder");
 	
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_USER = "ROLE_USER";
@@ -43,14 +44,14 @@ public class Account implements Serializable, UserDetails {
 	private String password;
 	private String firstName;
 	private String lastName;
-	private String role;
+	private Integer role;
 	private String elementGroupId;
 	private int registrationLevel = 0;
 	private String gender;
 	private String education;
 	private String birthYear;
 	private String zipCode;
-	
+	private String explicitImageFolder;
 	
 		
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -101,11 +102,11 @@ public class Account implements Serializable, UserDetails {
 		this.password = password;
 	}
 
-	public String getRole() {
+	public Integer getRole() {
 		return role;
 	}
 
-	public void setRole(String role) {
+	public void setRole(Integer role) {
 		this.role = role;
 	}
 
@@ -184,6 +185,14 @@ public class Account implements Serializable, UserDetails {
 	
 	public boolean isAdmin() {
 		return getElementGroupId().equals("0");
+	}
+
+	public String getExplicitImageFolder() {
+		return explicitImageFolder;
+	}
+
+	public void setExplicitImageFolder(String explicitImageFolder) {
+		this.explicitImageFolder = explicitImageFolder;
 	}
 	
 }

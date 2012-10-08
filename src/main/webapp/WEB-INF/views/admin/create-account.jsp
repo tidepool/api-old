@@ -103,6 +103,14 @@
 				</div>
 			</div>
 
+
+			<div class="control-group">
+				<label class="control-label" for="folder">Image Folder</label>
+				<div class="controls">
+					<input type="text" id="folder" name="folder" placeholder="Image Folder">
+				</div>
+			</div>
+	
 			<div class="control-group">
 				<div class="controls">				
 					<button type="submit" class="btn">Next</button>

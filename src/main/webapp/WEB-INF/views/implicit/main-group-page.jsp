@@ -92,9 +92,9 @@
 		  		 <input type="hidden" name="explicitId" id="explicitId" value="${ codedItem.id }">	
 		  		<p>
 			  		<div>		  						  					  			
-			  			<c:forEach var="attribute" items="${codedAttributes}" varStatus="rowCounter">							
-							<button class="attribute btn" tidepool-highlightable="true" data-placement="bottom" data-trigger="hover" data-content="${ attribute.description }" id="${ attribute.name }">${ attribute.label}</button>														
-				  						<input type="hidden" id="${ attribute.name }_field" name="button${ rowCounter.index }">
+			  			<c:forEach var="attribute" items="${mainList}" varStatus="rowCounter">							
+							<button class="attribute btn" tidepool-highlightable="false" data-placement="bottom" data-trigger="hover" data-content="${ attribute.description }" id="${ attribute.id }">${ attribute.label}</button>														
+				  			<input type="hidden" id="${ attribute.id }_field" name="${ attribute.id }_field">
 				  		</c:forEach>			  						  			
 			  		</div>
 		  		</p>
@@ -175,10 +175,11 @@
 				    $(this).click(function() {					    	
 				    					    	
 				    	if (button.is('.active')) {
-				    		var buttonStatus = "inactive"; 					    	 
+				    		var buttonStatus = "inactive";				    		
+				    		$("#" + button.attr("id") +  "_field").val("");				    		
 				    	} else {
-				    		var buttonStatus = "active";
-				    		
+				    		var buttonStatus = "active";				    		
+				    		$("#" + button.attr("id") + "_field").val(button.attr("id"));
 				    		if (button.attr('tidepool-highlightable') == "true") {
 				    			currentAttribute = button.attr("id");
 				    			$('#highlightAlert').show();

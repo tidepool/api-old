@@ -10,6 +10,7 @@ import java.util.List;
 
 import javax.swing.text.DateFormatter;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
 import org.apache.hadoop.hbase.client.Get;
@@ -22,6 +23,7 @@ import org.apache.hadoop.hbase.client.Scan;
 import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
 import org.apache.hadoop.hbase.filter.Filter;
+import org.apache.hadoop.hbase.filter.FilterList;
 import org.apache.hadoop.hbase.filter.RandomRowFilter;
 import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.apache.hadoop.hbase.filter.SubstringComparator;
@@ -34,6 +36,7 @@ import com.tidepool.api.model.Account;
 import com.tidepool.api.model.CodedAttribute;
 import com.tidepool.api.model.CodedAttributeGroup;
 import com.tidepool.api.model.CodedItem;
+import com.tidepool.api.model.CodedItemLog;
 import com.tidepool.api.model.CodingEvent;
 import com.tidepool.api.model.CodingGroup;
 import com.tidepool.api.model.Highlight;
@@ -65,6 +68,7 @@ public class HBaseManager {
 	private final String elementMainTable = "element_main";
 	private final String explicitEventTable= "explicit_event";
 	private final String explicitImageTable= "explicit_image";
+	private final String explicitImageLogTable= "explicit_image_log";
 	private final String countersTable= "counters";
 		
 	private final String trainingImageTable= "explicit_training_image";
@@ -181,10 +185,16 @@ public class HBaseManager {
 			account.setZipCode(Bytes.toString(val));					
 		}
 						
-		if (result.containsColumn(family_name_column, Account.registration_level_column)) {
-			byte[] val = result.getValue(family_name_column, Account.registration_level_column);
+		if (result.containsColumn(family_name_column, Account.registration_level_id_column)) {
+			byte[] val = result.getValue(family_name_column, Account.registration_level_id_column);
 			account.setRegistrationLevel(Bytes.toInt(val));					
 		}
+		
+		if (result.containsColumn(family_name_column, Account.explicit_image_folder_column)) {
+			byte[] val = result.getValue(family_name_column, Account.explicit_image_folder_column);
+			account.setExplicitImageFolder(Bytes.toString(val));					
+		}
+		
 	}
 	
 	public void saveAccount(Account account) {
@@ -224,10 +234,14 @@ public class HBaseManager {
 				put.add(family_name_column, Account.zipcode_column, Bytes.toBytes(account.getZipCode()));
 			}
 			
-			put.add(family_name_column, Account.registration_level_column, Bytes.toBytes(account.getRegistrationLevel()));
+			put.add(family_name_column, Account.registration_level_id_column, Bytes.toBytes(account.getRegistrationLevel()));
 			
 			if (account.getElementGroupId() != null) {
 				put.add(family_name_column, Account.element_group_id_column, Bytes.toBytes(account.getElementGroupId()));
+			}
+			
+			if (account.getExplicitImageFolder()!= null) {
+				put.add(family_name_column, Account.explicit_image_folder_column, Bytes.toBytes(account.getExplicitImageFolder()));
 			}
 			
 			table.put(put);			
@@ -346,10 +360,132 @@ public class HBaseManager {
 	}
 	
 	
-	public CodedItem getRandomCodedItem() {		
+	public CodedItem getFolderCodedItem(long userId, String folderType) {
+		
+		SingleColumnValueFilter filter = new SingleColumnValueFilter(
+				family_name_column,
+				Bytes.toBytes("folder_name"),
+				CompareOp.EQUAL,
+				Bytes.toBytes(folderType)
+		);
+		
+		CodedItem codedItem = null;
+		ResultScanner scanner  = null;				
+		
+		List<CodedItemLog> alreadyCoded = getCodedItemsForUserAndFolder(userId, folderType);
+		HashMap<String, CodedItemLog> alreadyCodedMap = new HashMap<String, CodedItemLog>();
+		for (CodedItemLog log : alreadyCoded) {
+			alreadyCodedMap.put(log.getExplicitImageId(), log);
+		}
+		
+		try {
+			HTableInterface table = pool.getTable(explicitImageTable);
+			Scan scan = new Scan();
+			scan.setFilter(filter);
+			scanner = table.getScanner(scan);		
+			for (Result result : scanner) {			
+				codedItem = new CodedItem();								
+				mapResultToCodedItem(codedItem, result);
+				if (codedItem.getPicture_id() != null && !alreadyCodedMap.containsKey(codedItem.getId())) {
+					return codedItem;				
+				}				
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {			
+			scanner.close();
+		}
+		
+		return codedItem;
+	}
+	
+	public void saveCodedItemLog(CodedItemLog log) {
+		
+		try {
+			HTableInterface table = pool.getTable(explicitImageLogTable);
+			Put put = new Put(Bytes.toBytes(log.getId()));
+			
+			HTableInterface counter = pool.getTable(countersTable);
+			long nextCounter = counter.incrementColumnValue(Bytes.toBytes("7"), family_name_column, Bytes.toBytes(accountTable), 1);
+			log.setId(nextCounter);
+			
+			if (log.getExplicitImageId() != null) {
+				put.add(family_name_column, CodedItemLog.explicit_image_id_column, Bytes.toBytes(log.getExplicitImageId()));
+			}
+						
+			put.add(family_name_column,CodedItemLog.user_id_column, Bytes.toBytes(log.getUserId()));				
+			table.put(put);		
+								
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {			
+			
+		}
+	}
+	
+	public List<CodedItemLog> getCodedItemsForUserAndFolder(long id, String folder) {
+		
+		List<CodedItemLog> logs = new ArrayList<CodedItemLog>();
+		
+		List<Filter> filters = new ArrayList<Filter>();
+		SingleColumnValueFilter filter0 = new SingleColumnValueFilter(
+				family_name_column,
+				CodedItemLog.explicit_image_id_column,
+				CompareOp.EQUAL,
+				Bytes.toBytes(folder)
+		);
+		filters.add(filter0);
+		
+		SingleColumnValueFilter filter1 = new SingleColumnValueFilter(
+				family_name_column,
+				CodedItemLog.user_id_column,
+				CompareOp.EQUAL,
+				Bytes.toBytes(id)
+		);
+		filters.add(filter1);
+		FilterList filterList = new FilterList(filters);
+		
+		HTableInterface table = pool.getTable(explicitImageLogTable);
+		Scan scan = new Scan();
+		scan.setFilter(filterList);
+		ResultScanner scanner = null;
+		try {
+			scanner = table.getScanner(scan);
+			for (Result result : scanner) {
+				
+				CodedItemLog log = new CodedItemLog();
+				log.setId(Bytes.toLong(result.getRow()));
+				if (result.containsColumn(family_name_column, CodedItemLog.explicit_image_id_column)) {
+					byte[] val = result.getValue(family_name_column, CodedItemLog.explicit_image_id_column);
+					log.setExplicitImageId(Bytes.toString(val));
+				}
+								
+				if (result.containsColumn(family_name_column, CodedItemLog.user_id_column)) {
+					byte[] val = result.getValue(family_name_column, CodedItemLog.user_id_column);
+					log.setUserId(Bytes.toLong(val));
+				}				
+				logs.add(log);				
+			}
+				
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {			
+			scanner.close();
+		} 
+		
+		return logs;			
+	}
+	
+	
+	public CodedItem getRandomCodedItem(long userId, String folderType) {		
+		if (!StringUtils.isEmpty(folderType)) {
+			return getFolderCodedItem(userId, folderType);
+		}
+		
 		CodedItem codedItem = null;
 		ResultScanner scanner  = null;		
 		RandomRowFilter filter = new RandomRowFilter(.01F);
+		
 		try {
 			HTableInterface table = pool.getTable(explicitImageTable);
 			Scan scan = new Scan();
@@ -368,7 +504,7 @@ public class HBaseManager {
 			scanner.close();
 		}
 		
-		return 	getRandomCodedItem();
+		return 	getRandomCodedItem(userId, folderType);
 	}
 	
 	

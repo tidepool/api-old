@@ -246,7 +246,9 @@ public class AdminController {
 			@RequestParam(required=false) String lastName,
 			@RequestParam(required=false) String email,
 			@RequestParam(required=false) String password,
-			@RequestParam(required=false) String group) {
+			@RequestParam(required=false) String group,
+			@RequestParam(required=false) String folder
+			) {
 		
 		Account account =  accountService.getAccount();				
 		if (account == null || !account.isAdmin()) {
@@ -261,7 +263,8 @@ public class AdminController {
 		newAccount.setEmail(email);
 		newAccount.setElementGroupId(group);
 		newAccount.setPassword(encoder.encodePassword(password, email));
-
+		newAccount.setExplicitImageFolder(folder);
+		
 		try {
 			hBaseManager.createAccount(newAccount);
 		} catch (Exception exception) {

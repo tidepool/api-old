@@ -24,6 +24,7 @@ import com.tidepool.api.data.HBaseManager;
 import com.tidepool.api.model.Account;
 import com.tidepool.api.model.CodedAttribute;
 import com.tidepool.api.model.CodedItem;
+import com.tidepool.api.model.CodedItemLog;
 import com.tidepool.api.model.CodingEvent;
 import com.tidepool.api.model.CodingGroup;
 import com.tidepool.api.model.Highlight;
@@ -79,10 +80,14 @@ public class ImplicitCodingController {
 		
 		buildAttributeMap();				
 		model.addAttribute("cdn_url", trainingCdnUrl);		
-		CodedItem codedItem = hBaseManager.getRandomCodedItem();
+		CodedItem codedItem = hBaseManager.getRandomCodedItem(account.getUserId(), account.getExplicitImageFolder());
+		CodedItemLog log = new CodedItemLog();
+		log.setUserId(account.getUserId());
+		log.setExplicitImageId(codedItem.getId());
+		hBaseManager.saveCodedItemLog(log);
 		model.addAttribute("codedItem", codedItem);		
 		List<MainGroup> mainList =  hBaseManager.getMainGroups();		
-		model.addAttribute("codedAttributes", mainList);
+		model.addAttribute("mainList", mainList);
 		
 		
 		return "implicit/main-group-page";
@@ -123,8 +128,16 @@ public class ImplicitCodingController {
 				
 		model.addAttribute("cdn_url", trainingCdnUrl);
 		
-		//TODO: Get the attributes allowed.
-		List<CodedAttribute> groupCodedAttributes = hBaseManager.getCodedElementsForGroup(account.getElementGroupId());
+		List<MainGroup> mainList =  hBaseManager.getMainGroups();
+		
+		List<CodedAttribute> groupCodedAttributes = new ArrayList<CodedAttribute>();
+		for (MainGroup group : mainList) {
+			if (!StringUtils.isEmpty(request.getParameter(group.getId() + "_field"))) {
+				groupCodedAttributes.addAll(hBaseManager.getCodedElementsForGroup(group.getId()));
+			}
+		}
+		
+		
 		List<CodedAttribute> allPicsAttributes = hBaseManager.getCodedElementsForGroup("1");
 		groupCodedAttributes.addAll(allPicsAttributes);
 		

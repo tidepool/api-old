@@ -173,11 +173,37 @@
 		    													height:c.height, 
 	    														width:c.weight }, function(attribute) {	    	
 	    															$('#highlightAlert').hide();		
-	    															jcrop_api.release();													
+	    															jcrop_api.release();
+	    															
+	    															$("#imageCanvas").clearCanvas();
+	    															boxen = [];
+	    															var index = 0;
+	    															for(key in attribute.codedItem.highlightMap) {	    																
+	    																var highlight = attribute.codedItem.highlightMap[key];
+	    																boxen[index] = [
+	    																                	[highlight.x0  * SCALE_VALUE, highlight.y0  * SCALE_VALUE],
+																							[highlight.x0  * SCALE_VALUE, highlight.y1  * SCALE_VALUE],
+																							[highlight.x1  * SCALE_VALUE, highlight.y1  * SCALE_VALUE],
+																							[highlight.x1  * SCALE_VALUE, highlight.y0  * SCALE_VALUE],
+																							[highlight.x0  * SCALE_VALUE, highlight.y0  * SCALE_VALUE]
+	    																                ];
+	    																index++;
+	    															}	    	
+	    															
+	    															$("#imageCanvas").drawImage({
+	    										  						  source: "${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}",					  
+	    										  						  x: 0, y: 0,
+	    										  						  width: imgWidth,
+	    										  						  height: imgHeight,
+	    										  						  fromCenter: false,  						  					
+	    										  					});
+	    										  					
+	    										  					drawBox();
 	    														});			
 		};
 	 	
-		
+		var imgHeight = 0;
+		var imgWidth = 0;
 		var boxen = [
 						<c:forEach var="highlight" items="${trainingItem.codedItem.highlightMap}">
 							[
@@ -222,8 +248,7 @@
 					  jcrop_api = this;
 				});
 				
-				var imgHeight = 0;
-				var imgWidth = 0;
+				
 				
 				//1.Get the image via JS
 				var img = new Image();

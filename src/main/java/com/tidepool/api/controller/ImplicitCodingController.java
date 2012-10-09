@@ -70,11 +70,12 @@ public class ImplicitCodingController {
 			return "redirect:/signin";
 		}
 		
-		if (!account.isAdmin() && account.getRegistrationLevel() < REGISTRATION_LIMIT) {
-			if (account.getRegistrationLevel() == 0) {
+		int level = Integer.parseInt(account.getRegistrationLevel());
+		if (!account.isAdmin() && level < REGISTRATION_LIMIT) {
+			if (level == 0) {
 				return "redirect:/register";
 			}
-			return "redirect:/training" + (account.getRegistrationLevel() - 1);
+			return "redirect:/training" + (level - 1);
 		}
 				
 		buildAttributeMap();				
@@ -117,11 +118,12 @@ public class ImplicitCodingController {
 			return "redirect:/signin";
 		}
 		
-		if (!account.isAdmin() && account.getRegistrationLevel() < REGISTRATION_LIMIT) {
-			if (account.getRegistrationLevel() == 0) {
+		int level = Integer.valueOf(account.getRegistrationLevel());
+		if (!account.isAdmin() && level < REGISTRATION_LIMIT) {
+			if (level == 0) {
 				return "redirect:/register";
 			}
-			return "redirect:/training" + (account.getRegistrationLevel() - 1);
+			return "redirect:/training" + (level - 1);
 		}
 				
 		buildAttributeMap();
@@ -275,7 +277,7 @@ public class ImplicitCodingController {
 		model.addAttribute("codedAttributes", allCodedAttributes);
 		
 		if (currentItem >= trainingItems.size() - 1) {
-			account.setRegistrationLevel(REGISTRATION_LIMIT);
+			account.setRegistrationLevel(String.valueOf(REGISTRATION_LIMIT));
 			hBaseManager.saveAccount(account);
 			return "redirect:survey";
 		}

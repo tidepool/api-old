@@ -10,7 +10,7 @@ public class CodedItemLog {
 	public static final byte[] folder_type_column = Bytes.toBytes("folder_type");
 	
 	public long id;
-	public long userId;
+	public String userId;
 	public String explicitImageId;
 	public String folderType;
 	
@@ -20,10 +20,10 @@ public class CodedItemLog {
 	public void setId(long id) {
 		this.id = id;
 	}
-	public long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
-	public void setUserId(long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 	public String getExplicitImageId() {

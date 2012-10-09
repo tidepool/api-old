@@ -46,8 +46,9 @@ public class AccountTest {
 		assertNotNull(account.getFirstName());
 		assertNotNull(account.getLastName());
 		
-		account.setRegistrationLevel(3);
+		account.setRegistrationLevel("3");
 		account.setElementGroupId("1");
+		account.setAccountStatus("0");
 		hBaseManager.saveAccount(account);
 		
 	}
@@ -59,8 +60,9 @@ public class AccountTest {
 		Account account = hBaseManager.getAccountFromEmail("jshoop@tidepool.co"); 		
 		assertNotNull(account);		
 		account.setFirstName("Joseph");
-		account.setRegistrationLevel(3);		
-		account.setElementGroupId("0");		
+		account.setRegistrationLevel("3");		
+		account.setElementGroupId("0");	
+		
 		hBaseManager.saveAccount(account);		
 		account = hBaseManager.getAccountFromEmail("jshoop@tidepool.co"); 		
 		assertNotNull(account);
@@ -93,7 +95,7 @@ public class AccountTest {
 	}
 	
 	
-	//@Test
+	@Test
 	public void testCreateAccount() {
 		Account account = new Account();
 		String email = "jshoop@tidepool.co";
@@ -102,6 +104,8 @@ public class AccountTest {
 		account.setElementGroupId("0");
 		account.setFirstName("Joe");
 		account.setLastName("Shoop");
+		account.setRegistrationLevel("3");
+		account.setAccountStatus("0");
 		
 		try {
 		account = hBaseManager.createAccount(account);

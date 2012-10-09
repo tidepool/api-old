@@ -110,6 +110,17 @@
 					<input type="text" id="folder" name="folder" placeholder="Image Folder">
 				</div>
 			</div>
+
+			<div class="control-group">
+				<label class="control-label" for="folder">Registration Level</label>
+				<div class="controls">
+					<select id="registration" name="registration" placeholder="Registration Level">
+					<option value="1" SELECTED>1 Registration</option>
+					<option value="2">2 (Training)</option>
+					<option value="3">3 (None)</option>					
+					</select>
+				</div>
+			</div>
 	
 			<div class="control-group">
 				<div class="controls">				

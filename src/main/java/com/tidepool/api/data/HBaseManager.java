@@ -134,7 +134,7 @@ public class HBaseManager {
 	}
 
 	private void mapAccount(Account account, Result result) {
-		account.setUserId(Bytes.toLong(result.getRow()));
+		account.setUserId(Bytes.toString(result.getRow()));
 		
 		if (result.containsColumn(family_name_column, Account.email_column)) {
 			byte[] val = result.getValue(family_name_column, Account.email_column);
@@ -187,12 +187,17 @@ public class HBaseManager {
 						
 		if (result.containsColumn(family_name_column, Account.registration_level_id_column)) {
 			byte[] val = result.getValue(family_name_column, Account.registration_level_id_column);
-			account.setRegistrationLevel(Bytes.toInt(val));					
+			account.setRegistrationLevel(Bytes.toString(val));					
 		}
 		
 		if (result.containsColumn(family_name_column, Account.explicit_image_folder_column)) {
 			byte[] val = result.getValue(family_name_column, Account.explicit_image_folder_column);
 			account.setExplicitImageFolder(Bytes.toString(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.account_status_column)) {
+			byte[] val = result.getValue(family_name_column, Account.account_status_column);
+			account.setAccountStatus(Bytes.toString(val));					
 		}
 		
 	}
@@ -244,6 +249,8 @@ public class HBaseManager {
 				put.add(family_name_column, Account.explicit_image_folder_column, Bytes.toBytes(account.getExplicitImageFolder()));
 			}
 			
+			put.add(family_name_column, Account.account_status_column, Bytes.toBytes(account.getAccountStatus()));
+						
 			table.put(put);			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -261,7 +268,7 @@ public class HBaseManager {
 		HTableInterface counter = pool.getTable(countersTable);
 		try {
 			long nextCounter = counter.incrementColumnValue(Bytes.toBytes("6"), family_name_column, Bytes.toBytes(accountTable), 1);
-			account.setUserId(nextCounter);
+			account.setUserId(String.valueOf(nextCounter));
 			saveAccount(account);
 		} catch (IOException e) {			
 			e.printStackTrace();
@@ -360,7 +367,7 @@ public class HBaseManager {
 	}
 	
 	
-	public CodedItem getFolderCodedItem(long userId, String folderType) {
+	public CodedItem getFolderCodedItem(String userId, String folderType) {
 		
 		SingleColumnValueFilter filter = new SingleColumnValueFilter(
 				family_name_column,
@@ -425,7 +432,7 @@ public class HBaseManager {
 		}
 	}
 	
-	public List<CodedItemLog> getCodedItemsForUserAndFolder(long id, String folder) {
+	public List<CodedItemLog> getCodedItemsForUserAndFolder(String id, String folder) {
 		
 		List<CodedItemLog> logs = new ArrayList<CodedItemLog>();
 		
@@ -469,7 +476,7 @@ public class HBaseManager {
 				
 				if (result.containsColumn(family_name_column, CodedItemLog.user_id_column)) {
 					byte[] val = result.getValue(family_name_column, CodedItemLog.user_id_column);
-					log.setUserId(Bytes.toLong(val));
+					log.setUserId(Bytes.toString(val));
 				}				
 				logs.add(log);				
 			}
@@ -484,7 +491,7 @@ public class HBaseManager {
 	}
 	
 	
-	public CodedItem getRandomCodedItem(long userId, String folderType) {		
+	public CodedItem getRandomCodedItem(String userId, String folderType) {		
 		if (!StringUtils.isEmpty(folderType)) {
 			return getFolderCodedItem(userId, folderType);
 		}

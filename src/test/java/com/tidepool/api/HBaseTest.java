@@ -292,7 +292,7 @@ public class HBaseTest {
 	public void testPutCodingEvent() {
 		
 		CodingEvent event = new CodingEvent();
-		event.user_id = 0L;
+		event.user_id = "0";
 		event.picture_id = "test-picture";
 		hBaseManager.logCodingEvent(event);
 		
@@ -308,10 +308,10 @@ public class HBaseTest {
 	@Test
 	public void testGetRandomExplicitCoding() {
 		
-		CodedItem item0 = hBaseManager.getRandomCodedItem(0, null);		
+		CodedItem item0 = hBaseManager.getRandomCodedItem("0", null);		
 		assertNotNull(item0);
 		
-		CodedItem item1 = hBaseManager.getRandomCodedItem(0, null);		
+		CodedItem item1 = hBaseManager.getRandomCodedItem("0", null);		
 		assertNotNull(item1);
 		
 		System.out.println(" Item 0 " + item0.picture_id + " "  + item0.folder_name + " Item 1 " + item1.picture_id);
@@ -328,16 +328,16 @@ public class HBaseTest {
 		CodedItemLog log = new CodedItemLog();		
 		log.setExplicitImageId("test");
 		log.setFolderType("work_type");
-		log.setUserId(0L);
+		log.setUserId("0");
 		hBaseManager.saveCodedItemLog(log);
-		assertTrue(hBaseManager.getCodedItemsForUserAndFolder(0L, "work_type").size() > 0);
+		assertTrue(hBaseManager.getCodedItemsForUserAndFolder("0", "work_type").size() > 0);
 		
 	}
 	
 	@Test
 	public void testCodedItemLog1() {
 		
-		assertTrue(hBaseManager.getCodedItemsForUserAndFolder(0, "work_type").size() > 0);
+		assertTrue(hBaseManager.getCodedItemsForUserAndFolder("0", "work_type").size() > 0);
 		
 		
 	}
@@ -414,7 +414,7 @@ public class HBaseTest {
 	public void testCodedItemActive() {
 		
 		CodedItem item = new CodedItem();
-		item.night_life = 1;
+		item.night_life = "1";
 		
 		assertTrue(item.isAttributeActive("night_life"));
 		assertFalse(item.isAttributeActive("movement"));
@@ -430,7 +430,7 @@ public class HBaseTest {
 		assertNotNull(attributeMap);
 		
 		for(String name : attributeMap.keySet()) {
-			System.out.println("public int " + name + ";");
+			System.out.println("public String " + name + ";");
 		}
 		
 		

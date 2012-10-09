@@ -247,7 +247,8 @@ public class AdminController {
 			@RequestParam(required=false) String email,
 			@RequestParam(required=false) String password,
 			@RequestParam(required=false) String group,
-			@RequestParam(required=false) String folder
+			@RequestParam(required=false) String folder,
+			@RequestParam(required=false) String registration
 			) {
 		
 		Account account =  accountService.getAccount();				
@@ -264,6 +265,8 @@ public class AdminController {
 		newAccount.setElementGroupId(group);
 		newAccount.setPassword(encoder.encodePassword(password, email));
 		newAccount.setExplicitImageFolder(folder);
+		newAccount.setRegistrationLevel(registration);
+		newAccount.setAccountStatus("0");
 		
 		try {
 			hBaseManager.createAccount(newAccount);

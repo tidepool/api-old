@@ -22,8 +22,9 @@ public class Account implements Serializable, UserDetails {
 	public static final byte[] zipcode_column = Bytes.toBytes("zipcode");
 	public static final byte[] birth_year_column = Bytes.toBytes("birth_year");
 	public static final byte[] element_group_id_column = Bytes.toBytes("element_group_id");
-	public static final byte[] registration_level_id_column = Bytes.toBytes("registration_level_id_column");
+	public static final byte[] registration_level_id_column = Bytes.toBytes("registration_level_id");
 	public static final byte[] explicit_image_folder_column = Bytes.toBytes("explicit_image_folder");
+	public static final byte[] account_status_column = Bytes.toBytes("account_status");
 	
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_USER = "ROLE_USER";
@@ -38,7 +39,7 @@ public class Account implements Serializable, UserDetails {
 		authorities.add(userAuth);
 	}
 	
-	private Long userId;
+	private String userId;
 	private String username;
 	private String email;	
 	private String password;
@@ -46,12 +47,13 @@ public class Account implements Serializable, UserDetails {
 	private String lastName;
 	private Integer role;
 	private String elementGroupId;
-	private int registrationLevel = 0;
+	private String registrationLevel = "0";
 	private String gender;
 	private String education;
 	private String birthYear;
 	private String zipCode;
 	private String explicitImageFolder;
+	private String accountStatus;
 	
 		
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -134,19 +136,19 @@ public class Account implements Serializable, UserDetails {
 		this.lastName = lastName;
 	}
 
-	public Long getUserId() {
+	public String getUserId() {
 		return userId;
 	}
 
-	public void setUserId(Long userId) {
+	public void setUserId(String userId) {
 		this.userId = userId;
 	}
 
-	public int getRegistrationLevel() {
+	public String getRegistrationLevel() {
 		return registrationLevel;
 	}
 
-	public void setRegistrationLevel(int registrationLevel) {
+	public void setRegistrationLevel(String registrationLevel) {
 		this.registrationLevel = registrationLevel;
 	}
 
@@ -193,6 +195,14 @@ public class Account implements Serializable, UserDetails {
 
 	public void setExplicitImageFolder(String explicitImageFolder) {
 		this.explicitImageFolder = explicitImageFolder;
+	}
+
+	public String getAccountStatus() {
+		return accountStatus;
+	}
+
+	public void setAccountStatus(String accountStatus) {
+		this.accountStatus = accountStatus;
 	}
 	
 }

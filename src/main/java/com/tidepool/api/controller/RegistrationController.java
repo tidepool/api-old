@@ -63,7 +63,7 @@ public class RegistrationController {
 		account.setEducation(education);
 		account.setZipCode(zipcode);
 		account.setBirthYear(birthYear);		
-		account.setRegistrationLevel(1);
+		account.setRegistrationLevel("1");
 		
 		hBaseManager.saveAccount(account);
 		

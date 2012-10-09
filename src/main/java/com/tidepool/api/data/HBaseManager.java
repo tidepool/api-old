@@ -743,10 +743,14 @@ public class HBaseManager {
 	
 	
 	public void logCodingEvent(CodingEvent event) {
-		Class<CodingEvent> codedItemClass = CodingEvent.class;			
+		
+		HTableInterface counter = pool.getTable(countersTable);
+		Put put = null;
 		try {
-			HTableInterface table = pool.getTable(explicitEventTable);
-			Put put = new Put(Bytes.toBytes(event.user_id));			
+			long nextCounter = counter.incrementColumnValue(Bytes.toBytes("9"), family_name_column, Bytes.toBytes(accountTable), 1);			
+			put = new Put(Bytes.toBytes(String.valueOf(nextCounter)));		
+			Class<CodingEvent> codedItemClass = CodingEvent.class;				
+			HTableInterface table = pool.getTable(explicitEventTable);			
 			for (Field field : codedItemClass.getFields()) {
 				if (field.getType().equals(Integer.TYPE)) {					
 					put.add(family_name_column, Bytes.toBytes(field.getName()), Bytes.toBytes(field.getInt(event)));

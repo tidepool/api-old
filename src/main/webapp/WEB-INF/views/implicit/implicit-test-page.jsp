@@ -160,14 +160,17 @@
 	    	});			
 		};
 		
+		function initializeJCrop() {
+			$('#jcrop_target').Jcrop({					
+				onSelect: showCoords
+			}, function(){
+				  jcrop_api = this;
+			});
+		}
+		
 		(function ($) {
 			$(document).ready(function () {
 				
-				$('#jcrop_target').Jcrop({					
-					onSelect: showCoords
-				}, function(){
-					  jcrop_api = this;
-				});
 				
 				$("#nextButton").click(function() {	
 					
@@ -199,7 +202,11 @@
 				$('.attribute').each(function() {
 					var button = $(this);
 				    $(this).click(function() {					    	
-				    					    	
+				    	
+				    	if (jcrop_api == null) {
+				    		initializeJCrop();
+				    	}
+				    	
 				    	if (button.is('.active')) {
 				    		var buttonStatus = "inactive"; 					    	 
 				    	} else {

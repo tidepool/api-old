@@ -178,8 +178,6 @@
 		};
 	 	
 		
-		
-		
 		var boxen = [
 						<c:forEach var="highlight" items="${trainingItem.codedItem.highlightMap}">
 							[

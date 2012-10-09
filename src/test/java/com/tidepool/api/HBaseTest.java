@@ -288,19 +288,19 @@ public class HBaseTest {
 	}
 	
 	
-	//@Test
+	@Test
 	public void testPutCodingEvent() {
 		
-		CodingEvent event = new CodingEvent();
-		event.user_id = "0";
-		event.picture_id = "test-picture";
-		hBaseManager.logCodingEvent(event);
+		for (int i = 0; i < 100; i ++) {
+			CodingEvent event = new CodingEvent();
+			event.user_id = "0";
+			event.picture_id = "test-picture";
+			event.x0 = "23";
+			event.x1 = "21";
+			hBaseManager.logCodingEvent(event);
+		}
 		
-		event.x0 = "23";
-		event.x1 = "21";
-		hBaseManager.logCodingEvent(event);
-	
-		event.width = null;
+		
 		
 	}
 	

@@ -39,9 +39,9 @@ public class AccountTest {
 	
 	@Test
 	public void testResetRegistration() {
-		Account account = hBaseManager.getAccountFromEmail("jjingles@tidepool.com"); 		
+		Account account = hBaseManager.getAccountFromEmail("jjingles@tidepool.co"); 		
 		assertNotNull(account);
-		assertTrue(account.getEmail().equals("jjingles@tidepool.com"));
+		assertTrue(account.getEmail().equals("jjingles@tidepool.co"));
 		assertNotNull(account.getPassword());
 		assertNotNull(account.getFirstName());
 		assertNotNull(account.getLastName());
@@ -95,7 +95,7 @@ public class AccountTest {
 	}
 	
 	
-	@Test
+	//@Test
 	public void testCreateAccount() {
 		Account account = new Account();
 		String email = "jshoop@tidepool.co";

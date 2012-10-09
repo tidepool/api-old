@@ -86,9 +86,9 @@ public class ImplicitCodingController {
 		log.setFolderType(account.getExplicitImageFolder());
 		log.setExplicitImageId(codedItem.getId());
 		hBaseManager.saveCodedItemLog(log);
-		model.addAttribute("codedItem", codedItem);		
-		List<MainGroup> mainList =  hBaseManager.getMainGroups();		
-		model.addAttribute("mainList", mainList);
+		model.addAttribute("codedItem", codedItem);	
+		List<MainGroup> mainList =  hBaseManager.getMainGroups();			
+		model.addAttribute("mainList", mainList.subList(2, mainList.size()));
 		
 		
 		return "implicit/main-group-page";

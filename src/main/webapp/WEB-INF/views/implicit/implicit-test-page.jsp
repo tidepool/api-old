@@ -181,7 +181,7 @@
 					
 					if (currentButtonGroupIndex == (currentButtonGroupCount - 1)) {
 						$.post(contextPath + "/json/saveattribute.ajax", { explicitId:$("#explicitId").val(), attributeComment:$('#textInput').val()}, function(attribute) {	
-							window.location.href = contextPath + "/test";		    			 														 
+							window.location.href = contextPath + "/survey";		    			 														 
 						 });						
 					} else {
 						

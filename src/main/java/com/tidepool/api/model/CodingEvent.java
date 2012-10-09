@@ -9,8 +9,7 @@ public class CodingEvent implements Serializable {
 	public String id;
 	public String user_id;
 	public String picture_id;
-	public String element;
-	public String element_value;
+	public String element;	
 	public String text;
 	public String x0;
 	public String y0;

@@ -180,7 +180,7 @@
 					if ($('#textInput').val() != '') {
 						$.post(contextPath + "/json/saveattribute.ajax", { explicitId:$("#explicitId").val(), attributeComment:$('#textInput').val()}, function(attribute) {	
 							$('#textInput').hide();
-							$('#textInput').val("");
+							$('#textInput').val('');
 					 	});
 					}
 					

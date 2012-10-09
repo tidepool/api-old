@@ -197,7 +197,6 @@ public class ImplicitCodingController {
 			event.user_id = account.getUserId();
 			event.picture_id = explicitId;
 			event.element = attributeId;
-			event.element_value = attributeValue;
 			event.x0 = x0;
 			event.y0 = y0;
 			event.x1 = x1;
@@ -235,8 +234,7 @@ public class ImplicitCodingController {
 			CodingEvent event = new CodingEvent();
 			event.user_id = account.getUserId();
 			event.picture_id = explicitId;
-			event.element = attributeId;
-			event.element_value = attributeValue;
+			event.element = attributeId;			
 			event.x0 = x0;
 			event.y0 = y0;
 			event.x1 = x1;

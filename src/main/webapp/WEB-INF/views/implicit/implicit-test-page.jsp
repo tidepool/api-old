@@ -156,7 +156,10 @@
 	    														width:c.weight }, function(attribute) {	
 	    	
 	    															$('#highlightAlert').hide();		
-	    															jcrop_api.release();													
+	    															jcrop_api.release();	    															
+	    															jcrop_api.disable();
+	    															//jcrop_api.destroy();
+	    															//jcrop_api = null;
 	    	});			
 		};
 		
@@ -176,9 +179,12 @@
 					
 					if ($('#textInput').val() != '') {
 						$.post(contextPath + "/json/saveattribute.ajax", { explicitId:$("#explicitId").val(), attributeComment:$('#textInput').val()}, function(attribute) {	
-							$('#textInput').hide();		    			 														 
+							$('#textInput').hide();
+							$('#textInput').val("");
 					 	});
 					}
+					
+				
 					var currentButtonGroupCount = $('#buttonPanelSize').val();
 					var currentButtonGroupIndex = $('#buttonPanelIndex').val();
 					
@@ -206,7 +212,7 @@
 				    	if (jcrop_api == null) {
 				    		initializeJCrop();
 				    	}
-				    	
+				    	jcrop_api.enable();
 				    	if (button.is('.active')) {
 				    		var buttonStatus = "inactive"; 					    	 
 				    	} else {

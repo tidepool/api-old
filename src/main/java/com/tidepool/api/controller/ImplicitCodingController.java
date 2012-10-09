@@ -204,7 +204,10 @@ public class ImplicitCodingController {
 			event.y1 = y1;
 			event.width = width;
 			event.height = height;
-			event.text = attributeComment;
+			
+			if (!StringUtils.isEmpty(attributeComment)) {
+				event.text = attributeComment;
+			}
 			
 			hBaseManager.logCodingEvent(event);			
 			return event;

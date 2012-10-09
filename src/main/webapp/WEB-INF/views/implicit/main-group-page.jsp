@@ -94,7 +94,7 @@
 			  		<div>		  						  					  			
 			  			<c:forEach var="attribute" items="${mainList}" varStatus="rowCounter">							
 							<button class="attribute btn" tidepool-highlightable="false" data-placement="bottom" data-trigger="hover" data-content="${ attribute.description }" id="${ attribute.id }">${ attribute.label}</button>														
-				  			<input type="hidden" id="${ attribute.id }_field" name="${ attribute.id }_field">
+				  			<input type="hidden" main-name="${ attribute.name }" id="${ attribute.id }_field" name="${ attribute.id }_field">
 				  		</c:forEach>			  						  			
 			  		</div>
 		  		</p>
@@ -154,18 +154,19 @@
  	    														height:c.height, 
 	    														width:c.weight }, function(attribute) {	    	
 	    															$('#highlightAlert').hide();		
-	    															jcrop_api.release();													
+	    															jcrop_api.release();
+	    															jcrop_api.disable();
 	    	});			
 		};
 		
 		(function ($) {
 			$(document).ready(function () {
 				
-				$('#jcrop_target').Jcrop({					
+				/* $('#jcrop_target').Jcrop({					
 					onSelect: showCoords
 				}, function(){
 					  jcrop_api = this;
-				});
+				}); */
 				
 				
 				$('.attribute').popover();
@@ -173,7 +174,8 @@
 				$('.attribute').each(function() {
 					var button = $(this);
 				    $(this).click(function() {					    	
-				    					    	
+				    	
+				    	
 				    	if (button.is('.active')) {
 				    		var buttonStatus = "inactive";				    		
 				    		$("#" + button.attr("id") +  "_field").val("");				    		
@@ -185,8 +187,8 @@
 				    			$('#highlightAlert').show();
 				    		}
 				    	}
-				    	
-				    	$.post(contextPath + "/json/saveattribute.ajax", { explicitId:$("#explicitId").val(), attributeId:button.attr("id"), attributeValue:buttonStatus}, function(attribute) {	
+				    	var attributeName = $("#" + button.attr('id') + "_field").attr('main-name');
+				    	$.post(contextPath + "/json/saveattribute.ajax", { explicitId:$("#explicitId").val(), attributeId:attributeName, attributeValue:buttonStatus}, function(attribute) {	
 				    		if (button.is('.active')) {
 					    		button.removeClass('active');
 					    		$('#highlightAlert').hide();

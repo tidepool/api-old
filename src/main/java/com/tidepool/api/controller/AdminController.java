@@ -157,7 +157,7 @@ public class AdminController {
 			if (!StringUtils.isEmpty(attributeValue)) {
 				try {
 					Field field = codedItemClass.getField(attributeId);
-					field.setInt(codedItem, Integer.valueOf(attributeValue));
+					field.set(codedItem, attributeValue);
 				} catch (Exception e) {
 					e.printStackTrace();
 				}

@@ -88,16 +88,14 @@
 	  				</p>
 	  				
 	  				
-	  				<p>Current Highlights</p>			
 	  				
-  					<p>
-						<div id="canvasContainer"></div>	
-  					</p>
      				
 	  				
 	  			</div>
 	     		
 	     		<div class="span-3">
+		     		
+		     		
 		     		<p>
 				  		<div>		  			
 				  			<div>
@@ -122,6 +120,13 @@
 				  			</div>
 				  		</div>
 				  	</p>
+				  	
+				  	<p>Current Highlights</p>				  				
+  					<p>
+						<div id="canvasContainer"></div>	
+  					</p>
+		     		
+		     		
 	     		</div>
 	     		
      		</div>
@@ -153,16 +158,16 @@
 	 <script src="<c:url value="/resources/js/jquery-ui.min.js"/>"></script>
 	<script>
 		
-		var SCALE_VALUE = 1;
+		var SCALE_VALUE = 0.5;
 		var contextPath = "${pageContext.request.contextPath}";
 	    var jcrop_api;
 	    var currentAttribute;
 	    
 	    function showCoords(c) {
-	    	var inputx0 = c.x / SCALE_VALUE;
-	    	var inputy0 = c.y / SCALE_VALUE;
-	    	var inputx1 = c.x2 / SCALE_VALUE;
-	    	var inputy1 = c.y2 / SCALE_VALUE;
+	    	var inputx0 = c.x;
+	    	var inputy0 = c.y;
+	    	var inputx1 = c.x2;
+	    	var inputy1 = c.y2;
 	    	
 	    	$.post(contextPath + "/admin/json/savetraining.ajax", { trainingId:$("#trainingId").val(), 
 	    														attributeId:currentAttribute,

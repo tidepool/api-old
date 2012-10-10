@@ -67,14 +67,11 @@
 
     <div class="container">
 		<table class="table">
-			<tr><th>Id</th><th>Photo</th><th>Attributes</th><th></th></tr>
+			<tr><th>Id</th><th>Photo</th></tr>
 			<c:forEach  var="trainingItem" items="${trainingSets}" varStatus="trainingSetCounter">
 				<tr>
 					<td>${ trainingItem.trainingId }</td>
-					<td><a href="<c:url value="/admin/trainingEditor?trainingId=${ trainingItem.trainingId}" />"><img class="imageViewer" src="${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}"></a></td>
-					<td>
-						<a href="<c:url value="/admin/trainingEditor?trainingId=${ trainingItem.trainingId}" />"><button class="btn btn-mini btn-primary" type="button">Edit</button></a>
-					</td>
+					<td><a href="<c:url value="/admin/trainingEditor?trainingId=${ trainingItem.trainingId}" />"><img class="imageViewer" src="${cdn_url}/${trainingItem.bucketName}/${trainingItem.folderName}/${trainingItem.elementFolderName}/${trainingItem.pictureId}"></a></td>					
 				</tr>
 				
 			</c:forEach>

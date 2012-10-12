@@ -72,6 +72,15 @@
 		<input type="hidden" name="currentPage" id="currentPage" value="${ currentPage }">
 		<input type="hidden" name="buttonPanelSize" id="buttonPanelSize" value="${fn:length(codedAttributes)}">
 		<input type="hidden" name="buttonPanelIndex" id="buttonPanelIndex" value="1">
+		
+		<c:if test="${ empty codedItem }">			 
+			<div class="hero-unit">			
+	  			<h1></h1>
+	  			<p>This image set is complete. Thanks for your help!</p>
+	  		</div>
+		</c:if>
+		
+		<c:if test="${ not empty codedItem  }">
 		<div class="hero-unit">			
   			<h1></h1>
   			<p>Please select as many attributes from the following photo:</p>
@@ -106,6 +115,7 @@
 	  			</p>
   			</form>  			
 		</div>
+		</c:if>
 		
       <footer>
         <p>&copy; Tidepool 2012</p>

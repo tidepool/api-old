@@ -72,41 +72,52 @@
 		<input type="hidden" name="currentPage" id="currentPage" value="${ currentPage }">
 		<input type="hidden" name="buttonPanelSize" id="buttonPanelSize" value="${fn:length(codedAttributes)}">
 		<input type="hidden" name="buttonPanelIndex" id="buttonPanelIndex" value="1">
-		<div class="hero-unit">			
-  			<h1></h1>
-  			<p>Please select as many attributes from the following photo:</p>
-  			
-  			<p>  			
-  				<div >
-	  				<img class="imageViewer" id="jcrop_target" src="${cdn_url}/${codedItem.bucket_name}/${codedItem.folder_name}/${codedItem.picture_id}">
-	  			</div>
-	  		</p>
-	  				  		
-	  		<p>
-		  		<div style="display:none" id="highlightAlert" class="alert alert-success">
-	  					Please highlight the associated attribute by dragging the mouse on the picture.		
-				</div>
-	  		</p>
-	  		
-	  		<p>
-	  		<div>		  			
-	  			<c:forEach var="rollups" items="${codedAttributes}" varStatus="rollupCounter">
-	  				<span id="buttonToolbar${ rollupCounter.count }" class="btn-toolbar" <c:if test="${ rollupCounter.count gt 1 }">style="display:none"</c:if> >	  				
-	  					<c:forEach var="attribute" items="${rollups}" varStatus="rowCounter">							
-								<button class="attribute btn" tidepool-highlightable="${ attribute.highlightable }" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>														
-		  				</c:forEach>
-	  				</span>
-	  			</c:forEach>	
+		
+		<c:if test="${ empty codedItem }">			 
+			<div class="hero-unit">			
+	  			<h1></h1>
+	  			<p>This image set is complete. Thanks for your help!</p>
 	  		</div>
-	  		</p>
-	  		
-	  		<p>
-	  		<div>		
-	  			<textarea id="textInput" class="attributeInput" name="textinput" rows="3" placeholder="Describe the image you see.."></textarea>
-	  			<button class="btn btn-success" id="nextButton">Next</button>
-  			</div>
-  			</p>  			
-		</div>
+		</c:if>
+		
+		<c:if test="${ not empty codedItem  }">
+			<div class="hero-unit">			
+	  			<h1></h1>
+	  			<p>Please select as many attributes from the following photo:</p>
+	  			
+	  			<p>  			
+	  				<div >
+		  				<img class="imageViewer" id="jcrop_target" src="${cdn_url}/${codedItem.bucket_name}/${codedItem.folder_name}/${codedItem.picture_id}">
+		  			</div>
+		  		</p>
+		  				  		
+		  		<p>
+			  		<div style="display:none" id="highlightAlert" class="alert alert-success">
+		  					Please highlight the associated attribute by dragging the mouse on the picture.		
+					</div>
+		  		</p>
+		  		
+		  		<p>
+		  		<div>		  			
+		  			<c:forEach var="rollups" items="${codedAttributes}" varStatus="rollupCounter">
+		  				<span id="buttonToolbar${ rollupCounter.count }" class="btn-toolbar" <c:if test="${ rollupCounter.count gt 1 }">style="display:none"</c:if> >	  				
+		  					<c:forEach var="attribute" items="${rollups}" varStatus="rowCounter">							
+									<button class="attribute btn" tidepool-highlightable="${ attribute.highlightable }" data-placement="bottom" data-trigger="hover" data-content="${ attribute.element_description }" id="${ attribute.element }">${ attribute.element_name}</button>														
+			  				</c:forEach>
+		  				</span>
+		  			</c:forEach>	
+		  		</div>
+		  		</p>
+		  		
+		  		<p>
+		  		<div>
+		  		    <button class="btn btn-success" style="display:none" id="backButton">Back</button>		
+		  			<textarea id="textInput" class="attributeInput" name="textinput" rows="3" placeholder="Describe the image you see.."></textarea>
+		  			<button class="btn btn-success" id="nextButton">Next</button>
+	  			</div>
+	  			</p>  			
+			</div>
+		</c:if>
 		
       <footer>
         <p>&copy; Tidepool 2012</p>
@@ -156,8 +167,9 @@
 	    														width:c.weight }, function(attribute) {	
 	    	
 	    															$('#highlightAlert').hide();		
-	    															jcrop_api.release();	    															
-	    															jcrop_api.disable();
+	    															jcrop_api.release();
+	    															$("#" + currentAttribute).removeClass('active');
+	    															//jcrop_api.disable();
 	    															//jcrop_api.destroy();
 	    															//jcrop_api = null;
 	    	});			
@@ -173,7 +185,23 @@
 		
 		(function ($) {
 			$(document).ready(function () {
-				
+								
+				$("#backButton").click(function() {
+					var currentButtonGroupIndex = $('#buttonPanelIndex').val();
+					$("#buttonToolbar" + currentButtonGroupIndex).hide("slow", function() {						
+						currentButtonGroupIndex--;
+						$('#buttonPanelIndex').val(currentButtonGroupIndex);							
+						$("#buttonToolbar" + currentButtonGroupIndex).show("slow");	
+						
+						if (currentButtonGroupIndex == 1) {						
+							$("#backButton").hide();
+						}
+						
+					});
+					
+					
+					
+				});
 				
 				$("#nextButton").click(function() {	
 					
@@ -193,6 +221,12 @@
 							window.location.href = contextPath + "/survey";		    			 														 
 						 });						
 					} else {
+						
+						if (currentButtonGroupIndex >= 1) {
+							$("#backButton").show();
+						} else {
+							$("#backButton").hide();
+						}
 						
 						$("#buttonToolbar" + currentButtonGroupIndex).hide("slow", function() {
 							currentButtonGroupIndex++;

@@ -377,6 +377,7 @@ public class HBaseManager {
 		);
 		
 		CodedItem codedItem = null;
+		CodedItem foundCodedItem = null;
 		ResultScanner scanner  = null;				
 		
 		List<CodedItemLog> alreadyCoded = getCodedItemsForUserAndFolder(userId, folderType);
@@ -394,7 +395,8 @@ public class HBaseManager {
 				codedItem = new CodedItem();								
 				mapResultToCodedItem(codedItem, result);
 				if (codedItem.getPicture_id() != null && !alreadyCodedMap.containsKey(codedItem.getId())) {
-					return codedItem;				
+					foundCodedItem = codedItem;
+					return foundCodedItem;				
 				}				
 			}
 		} catch(Exception e) {
@@ -492,6 +494,7 @@ public class HBaseManager {
 	
 	
 	public CodedItem getRandomCodedItem(String userId, String folderType) {		
+		
 		if (!StringUtils.isEmpty(folderType)) {
 			return getFolderCodedItem(userId, folderType);
 		}

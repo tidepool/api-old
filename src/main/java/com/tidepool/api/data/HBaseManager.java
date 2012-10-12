@@ -366,6 +366,36 @@ public class HBaseManager {
 		return codedItem;	
 	}
 	
+public List<CodedItem> getFolderCodedItems(String folderType) {
+		
+		SingleColumnValueFilter filter = new SingleColumnValueFilter(
+				family_name_column,
+				Bytes.toBytes("folder_name"),
+				CompareOp.EQUAL,
+				Bytes.toBytes(folderType)
+		);
+		
+		List<CodedItem> codedItems = new ArrayList<CodedItem>();
+		ResultScanner scanner  = null;				
+		try {
+			HTableInterface table = pool.getTable(explicitImageTable);
+			Scan scan = new Scan();
+			scan.setFilter(filter);
+			scanner = table.getScanner(scan);		
+			for (Result result : scanner) {			
+				CodedItem codedItem = new CodedItem();								
+				mapResultToCodedItem(codedItem, result);
+				codedItems.add(codedItem);			
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {			
+			scanner.close();
+		}
+		
+		return codedItems;
+	}
+	
 	
 	public CodedItem getFolderCodedItem(String userId, String folderType) {
 		

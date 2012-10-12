@@ -295,6 +295,26 @@ public class AdminController {
 		return "admin/graphicstest";
 	}
 	
+	@RequestMapping(value="/admin/image-viewer", method=RequestMethod.GET)
+	public String getImageViewer(HttpServletRequest request,			
+			@RequestParam(required=false) String type,
+			Model model) {
+
+		Account account =  accountService.getAccount();	
+		if (account == null || !account.isAdmin()) {
+			return "signin/signin";
+		}			
+		model.addAttribute("account", account);
+		
+		List<CodedItem> items = hBaseManager.getFolderCodedItems(type);
+		
+		model.addAttribute("codedItems", items);
+		model.addAttribute("cdn_url", cdnUrl);
+		
+		return "admin/image-bucket-viewer";
+	}
+	
+	
 	private void buildAttributeMap() {
 		if (attributeMap == null) {
 			attributeMap = hBaseManager.getCodedElementsMap();

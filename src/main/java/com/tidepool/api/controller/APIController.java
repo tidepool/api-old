@@ -8,15 +8,15 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tidepool.api.authentication.AccountService;
 import com.tidepool.api.data.HBaseManager;
 import com.tidepool.api.model.Account;
-import com.tidepool.api.model.Photo;
+import com.tidepool.api.model.CodedItem;
 
 @Controller
 public class APIController {
@@ -38,27 +38,52 @@ public class APIController {
 		this.hBaseManager = hBaseManager;
 	}
 	
-	@RequestMapping(value="/api/list", method=RequestMethod.GET)
-	public String getPhotoList(HttpServletRequest request, @RequestParam(required=false) String owner,
-			Model model) {
-
-		Account account = null;
-		if ((account = getAccount()) != null) {
-			model.addAttribute("account", accountService.getAccount());
-		} else {
-			return "redirect:/signin";
-		}
-
-		List<Photo> photoList = hBaseManager.getAllPhotos();	
-		model.addAttribute("photos",  photoList);
-		model.addAttribute("cdn_url", cdnUrl);			
-		return "api/photo-list";
+	@RequestMapping(value="/json/session.ajax", method=RequestMethod.POST)
+	public @ResponseBody List<CodedItem> getSession(
+			 @RequestParam(required=true) String machineId,
+			 @RequestParam(required=true) String auth) {
+				
+		List<CodedItem> itemList = new ArrayList<CodedItem>();
+				
+		return itemList;
 	}
+	
+	
+	@RequestMapping(value="/json/items.ajax", method=RequestMethod.POST)
+	public @ResponseBody List<CodedItem> getItems(
+			 @RequestParam(required=true) String sessionId) {
+				
+		List<CodedItem> itemList = new ArrayList<CodedItem>();
+				
+		return itemList;
+	}
+	
+	@RequestMapping(value="/json/item.ajax", method=RequestMethod.POST)
+	public @ResponseBody CodedItem getItem(
+			 @RequestParam(required=true) String sessionId) {
+				
+		CodedItem item = new CodedItem();
+				
+		return item;
+	}
+	
 
-
+	@RequestMapping(value="/json/test.ajax", method=RequestMethod.POST)
+	public @ResponseBody CodedItem test(
+			HttpServletRequest request,
+			@RequestParam(required=true) String id) {
+			
+			CodedItem item = new CodedItem();
+			item.id = "TEST";			
+			return item;
+	}
+			
+	
 	private Account getAccount() {
 		Account account =  accountService.getAccount();		
 		return account;
 	}
+	
+	
 	
 }

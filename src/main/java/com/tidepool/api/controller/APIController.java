@@ -53,7 +53,7 @@ public class APIController {
 	public @ResponseBody List<CodedItem> getItems(
 			 @RequestParam(required=true) String sessionId) {
 				
-		List<CodedItem> itemList = new ArrayList<CodedItem>();
+		List<CodedItem> itemList = hBaseManager.getFolderCodedItems("work_type");
 				
 		return itemList;
 	}

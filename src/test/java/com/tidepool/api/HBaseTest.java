@@ -464,7 +464,16 @@ public class HBaseTest {
 			assertNotNull(attribute.element);
 			assertNotNull(attribute.element_description);
 		}
+	
+	}
+	
+	
+	@Test
+	public void testGetCodedItemsFromFolder() {
 		
+		List<CodedItem> items = hBaseManager.getFolderCodedItems("work_type");
+		assertNotNull(items);
+		assertTrue(items.size() > 0);
 		
 	}
 	

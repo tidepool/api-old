@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -17,6 +18,7 @@ import com.tidepool.api.authentication.AccountService;
 import com.tidepool.api.data.HBaseManager;
 import com.tidepool.api.model.Account;
 import com.tidepool.api.model.CodedItem;
+import com.tidepool.api.model.CodingEvent;
 
 @Controller
 public class APIController {
@@ -58,6 +60,15 @@ public class APIController {
 		return itemList;
 	}
 	
+	@RequestMapping(value="/json/assessment.ajax", method=RequestMethod.POST)
+	public @ResponseBody List<CodedItem> getAssessment(
+			 @RequestParam(required=true) String sessionId) {
+				
+		List<CodedItem> itemList = hBaseManager.getFolderCodedItems("work_type");
+				
+		return itemList;
+	}
+	
 	@RequestMapping(value="/json/item.ajax", method=RequestMethod.POST)
 	public @ResponseBody CodedItem getItem(
 			 @RequestParam(required=true) String sessionId) {
@@ -77,7 +88,70 @@ public class APIController {
 			item.id = "TEST";			
 			return item;
 	}
+	
+	
+	/*
+	 * 
+	 * Assessment code.
+	 * 
+	 * 
+	 */
+	
+	
+	@RequestMapping(value="/assess", method=RequestMethod.GET)
+	public String getAssessmentRegister(HttpServletRequest request, @RequestParam(required=false) String owner,
+			Model model) {
+		
+		return "assessment/assessment-register";
+	}
+	
+	@RequestMapping(value="/assessPost", method=RequestMethod.POST)
+	public String postAssessmentRegister(HttpServletRequest request, 
+			@RequestParam(required=false) String email,
+			Model model) {
+				
+		return "forward:assessment";
+	}
+	
+	@RequestMapping(value="/assessment", method=RequestMethod.GET)
+	public String getAssessment(HttpServletRequest request, @RequestParam(required=false) String owner,
+			Model model) {
+				
+		return "assessment/assessment";
+	}
+	
+	@RequestMapping(value="/json/assessmentevent.ajax", method=RequestMethod.POST)
+	public @ResponseBody CodingEvent logTrainingEvent(
+			HttpServletRequest request,
+			@RequestParam(required=true) String accountId,
+			@RequestParam(required=true) String explicitId,
+			@RequestParam(required=false) String attributeId,
+			@RequestParam(required=false) String attributeValue,
+			@RequestParam(required=false) String attributeComment,
+			@RequestParam(required=false) String x0,
+			@RequestParam(required=false) String y0,
+			@RequestParam(required=false) String x1,
+			@RequestParam(required=false) String y1,
+			@RequestParam(required=false) String width,
+			@RequestParam(required=false) String height
+			) {		
+		
+			CodingEvent event = new CodingEvent();
+			event.user_id = accountId;
+			event.picture_id = explicitId;
+			event.element = attributeId;			
+			event.x0 = x0;
+			event.y0 = y0;
+			event.x1 = x1;
+			event.y1 = y1;
+			event.width = width;
+			event.height = height;
+			event.text = attributeComment;
 			
+			hBaseManager.logTrainingEvent(event);			
+			return event;
+	}
+	
 	
 	private Account getAccount() {
 		Account account =  accountService.getAccount();		

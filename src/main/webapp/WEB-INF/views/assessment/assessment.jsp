@@ -1,0 +1,178 @@
+<%@page contentType="text/html;charset=UTF-8"%>
+<%@page pageEncoding="UTF-8"%>
+<%@ page session="false" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Tidepool Assessment</title>   
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />" rel="stylesheet">
+    <link href="<c:url value="/resources/bootstrap/css/tidepool.css" />" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 60px;
+        padding-bottom: 40px;
+      }
+    </style>
+   
+
+  </head>
+
+  <body>
+
+    <div class="navbar navbar-fixed-top">
+      <div class="navbar-inner">
+        <div class="container">
+          <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+            <span class="icon-bar"></span>
+          </a>
+          <a class="brand" href="<c:url value="/" />">Tidepool Assessment</a>
+          <div class="nav-collapse">
+            <ul class="nav">                            
+             	<li class="dropdown"><a href="#" class="dropdown-toggle"
+							data-toggle="dropdown">Admin<b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a href="<c:url value="/admin/createAccount" />">Create Account</a>
+								</li>
+								<li><a href="<c:url value="/admin/accounts" />">Accounts</a>
+								</li>
+								<li class="divider"></li>
+								<li class="nav-header">Training</li>
+								<li><a href="<c:url value="/admin/trainingSets" />">Training sets</a>
+								</li>							
+								</li>
+								<li class="divider"></li>
+								<li class="nav-header">Groups</li>
+								<li><a href="<c:url value="/admin/groups" />">Group List</a>
+								</li>							
+								</li>
+							</ul>
+						</li>
+            </ul>
+            <p class="navbar-text pull-right">Logged in as <a href="/">${account.email}</a> | <a href="<c:url value="/signout" />">logout</a></p>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+    </div>
+
+    <div class="container">
+		
+		<input type="hidden" name="userId" id="userId" value="{account.id}">
+			   
+        <div class="span-6" style="text-align:center; margin:20px">
+             <a href="#match" data-role="button" id="testImage0Link"><img id="testImage0" style="width: 80%; height: 30%"></a>
+        </div>
+        
+        <div class="span-6" style="text-align:center">
+            <a href="#match" data-role="button" id="testImage1Link"><img id="testImage1" style="width: 80%; height: 30%"></a>
+        </div>
+		
+			
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="<c:url value="/resources/bootstrap/js/jquery.js" />"></script>
+    <script src="<c:url value="/resources/bootstrap/js/bootstrap-transition.js"/>"></script>
+    <script src="<c:url value="/resources/bootstrap/js/bootstrap-alert.js"/>"></script>
+    <script src="<c:url value="/resources/bootstrap/js/bootstrap-modal.js"/>"></script>
+    <script src="<c:url value="/resources/bootstrap/js/bootstrap-dropdown.js"/>"></script>
+    <script src="<c:url value="/resources/bootstrap/js/bootstrap-scrollspy.js"/>"></script>
+    <script src="<c:url value="/resources/bootstrap/js/bootstrap-tab.js"/>"></script>
+    <script src="<c:url value="/resources/bootstrap/js/bootstrap-tooltip.js"/>"></script>
+    <script src="<c:url value="/resources/bootstrap/js/bootstrap-popover.js"/>"></script>
+    <script src="<c:url value="/resources/bootstrap/js/bootstrap-button.js"/>"></script>
+    <script src="<c:url value="/resources/bootstrap/js/bootstrap-collapse.js"/>"></script>
+    <script src="<c:url value="/resources/bootstrap/js/bootstrap-carousel.js"/>"></script>
+	
+	<script>
+		var testImages = [];
+		var currentImage0 = 0;
+		var currentImage1 = 1;
+		var servicesAPI = "http://localhost:8080";
+		var contentURL = "https://s3.amazonaws.com/";
+		(function ($) {
+			$(document).ready(function () {				
+				
+				$.post(servicesAPI + "/tidepoolAPI/json/assessment.ajax", 
+			    		{sessionId:'1'}, 
+			    		function(items) {		    						    			
+			    			
+			    			function updateImages() {			    				
+			    				$('#testImage0').attr('src', contentURL +  testImages[currentImage0].bucket_name + "/" + testImages[currentImage0].folder_name + "/" + testImages[currentImage0].picture_id);
+				    			$('#testImage1').attr('src', contentURL +  testImages[currentImage1].bucket_name + "/" + testImages[currentImage1].folder_name + "/" + testImages[currentImage1].picture_id);
+			    			}
+			    			
+			    			var i = 0;
+			    			$.each(items, function(index, value) {
+			    				testImages[i] = value;
+			    				i++;
+			    			});
+			    			
+			    			updateImages();
+			    			
+			    			$('#testImage0Link').click(function() {
+			    				
+			    				$.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
+			    			    		{accountId:$('#accountId').val(), explicitId:testImages[currentImage0].id}, 
+			    			    		function(items) {
+			    			    			
+			    			    		});
+			    				
+			    				if (currentImage0 == testImages.length - 1) {
+			    					return true;
+			    				}
+			    				
+			    				currentImage0 = currentImage1 + 1;
+			    				currentImage1 = currentImage0 + 1;
+			    				updateImages();
+			    				
+			    				return false;
+			    				
+			    			});
+			    			
+			    			$('#testImage1Link').click(function() {
+			    				
+			    				$.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
+			    			    		{accountId:$('#accountId').val(), explicitId:testImages[currentImage1].id}, 
+			    			    		function(items) {
+			    			    			
+			    			    		});
+			    				
+			    				if (currentImage0 == testImages.length - 1) {
+			    					return true;
+			    				}
+			    				
+			    				currentImage0 = currentImage1 + 1;
+			    				currentImage1 = currentImage0 + 1;
+			    				updateImages();
+			    				
+			    				return false;
+			    			});
+			    						    			
+			    		}).error(function(jqXHR, textStatus, errorThrown) { 
+			    				alert("error: " + jqXHR + " " + textStatus + " " + errorThrown); 
+			    		});
+				
+				
+				
+			});
+		})(jQuery);		
+	</script>
+
+
+  </body>
+
+</html>

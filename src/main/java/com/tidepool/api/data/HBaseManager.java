@@ -259,6 +259,21 @@ public class HBaseManager {
 		}	
 	}
 	
+public Account createAssessAccount(Account account) throws Exception{
+		
+		HTableInterface counter = pool.getTable(countersTable);
+		try {
+			long nextCounter = counter.incrementColumnValue(Bytes.toBytes("6"), family_name_column, Bytes.toBytes(accountTable), 1);
+			account.setUserId(String.valueOf(nextCounter));
+			saveAccount(account);
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
+		
+		return account;
+	}
+	
+	
 	public Account createAccount(Account account) throws Exception{
 		
 		if (getAccountFromEmailInternal(account.getEmail()) != null) {

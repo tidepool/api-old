@@ -9,7 +9,7 @@
 <html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Tidepool(Admin) Training Sets</title>   
+    <title>Tidepool Assess</title>   
     <meta name="description" content="">
     <meta name="author" content="">
 
@@ -36,7 +36,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="<c:url value="/" />">Tidepool(Admin) Training Sets</a>
+          <a class="brand" href="<c:url value="/" />">Tidepool Assess</a>
           <div class="nav-collapse">
             <ul class="nav">                            
              	<li class="dropdown"><a href="#" class="dropdown-toggle"
@@ -67,6 +67,30 @@
 
     <div class="container">
 		
+		<div>Welcome. Please provide us with some information about you...</div>
+		
+		<form class="form-horizontal" action="<c:url value="/assessPost" />" method="get">
+			
+			<div class="control-group">
+				<label class="control-label" for="inputFirstName">First Name</label>
+				<div class="controls">
+					<input type="text" name="j_firstname" id="inputFirstName" placeholder="First Name">
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<label class="control-label" for="inputLastName">Last Name</label>
+				<div class="controls">
+					<input type="text" name="j_lastname" id="inputLastName" placeholder="Last Name">
+				</div>
+			</div>
+			
+			<div class="control-group">
+				<div class="controls">					
+					<button type="submit" class="btn">Next</button>
+				</div>
+			</div>
+		</form>
 		
 		<footer>
         <p>&copy; Tidepool 2012</p>

@@ -15,7 +15,9 @@
 
     <!-- Le styles -->
     <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />" rel="stylesheet">
-    <link href="<c:url value="/resources/bootstrap/css/tidepool.css" />" rel="stylesheet">
+    <link href="<c:url value="/resources/bootstrap/css/tidepool.css" />" rel="stylesheet">    
+    <link href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" rel="stylesheet">
+    
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -59,7 +61,7 @@
 							</ul>
 						</li>
             </ul>
-            <p class="navbar-text pull-right">Logged in as <a href="/">${account.email}</a> | <a href="<c:url value="/signout" />">logout</a></p>
+            
           </div><!--/.nav-collapse -->
         </div>
       </div>
@@ -67,15 +69,14 @@
 
     <div class="container">
 		
-		<input type="hidden" name="userId" id="userId" value="{account.id}">
-			   
-        <div class="span-6" style="text-align:center; margin:20px">
-             <a href="#match" data-role="button" id="testImage0Link"><img id="testImage0" style="width: 80%; height: 30%"></a>
-        </div>
+		<input type="hidden" name="userId" id="userId" value="${account.userId}">
+		
+		<div id="assessThanks" style="display:none">Thanks for taking the assessment! </div>
+			
+		<table class="assess-table" style="text-align:center" id="assessTable">
+			<tr><td><a href="#match" data-role="button" id="testImage0Link"><img id="testImage0"></a></td><td> <a href="#match" data-role="button" id="testImage1Link"><img id="testImage1"></a></td></tr>
+		</table>	   
         
-        <div class="span-6" style="text-align:center">
-            <a href="#match" data-role="button" id="testImage1Link"><img id="testImage1" style="width: 80%; height: 30%"></a>
-        </div>
 		
 			
 
@@ -85,6 +86,7 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="<c:url value="/resources/bootstrap/js/jquery.js" />"></script>
+    <script src="<c:url value="/resources/js/jquery-ui.min.js" />"></script>
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-transition.js"/>"></script>
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-alert.js"/>"></script>
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-modal.js"/>"></script>
@@ -106,15 +108,78 @@
 		(function ($) {
 			$(document).ready(function () {				
 				
+				function showDialog(imageNumber) {
+					
+					var imageId = (imageNumber == 0) ? currentImage0 : currentImage1;
+					$('#dialogPhoto').attr('src', contentURL +  testImages[imageId].bucket_name + "/" + testImages[imageId].folder_name + "/" + testImages[imageId].picture_id);
+					
+					$( "#dialog-message" ).dialog({
+			            modal: true,
+			            buttons: {
+			                Ok: function() {
+			                    
+			                	if (imageNumber == 0) 
+			                		updateImage0();
+			                	else
+			                		updateImage1();
+			                	
+			                	$( this ).dialog( "close" );
+			                    			              			                    
+			                },
+			                Cancel: function() {
+			                    $( this ).dialog( "close" );
+			                }
+			            }
+			        });										
+				}
+				
+				function updateImage0() {
+					$.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
+    			    		{accountId:$('#userId').val(), explicitId:testImages[currentImage0].id}, 
+    			    		function(items) {
+    			    			
+    			    		});
+    				
+    							    				
+    				currentImage0 = currentImage1 + 1;
+    				currentImage1 = currentImage0 + 1;
+    				
+    				
+    				if (currentImage0 >= testImages.length  || currentImage1 >= testImages.length ) {
+    					$('#assessTable').hide();
+    					$('#assessThanks').show();
+    				}
+    				updateImages();
+				}
+				
+				function updateImage1() {
+
+    				$.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
+    			    		{accountId:$('#userId').val(), explicitId:testImages[currentImage1].id}, 
+    			    		function(items) {
+    			    			
+    			    		});			    				
+    							    				
+    				
+    				currentImage0 = currentImage1 + 1;
+    				currentImage1 = currentImage0 + 1;
+    							    				
+    				if (currentImage0 >= testImages.length  || currentImage1 >= testImages.length ) {
+    					$('#assessTable').hide();
+    					$('#assessThanks').show();
+    				}
+    				updateImages();
+				}
+				
+				function updateImages() {			    				
+    				$('#testImage0').attr('src', contentURL +  testImages[currentImage0].bucket_name + "/" + testImages[currentImage0].folder_name + "/" + testImages[currentImage0].picture_id);
+	    			$('#testImage1').attr('src', contentURL +  testImages[currentImage1].bucket_name + "/" + testImages[currentImage1].folder_name + "/" + testImages[currentImage1].picture_id);
+    			}
+				
 				$.post(servicesAPI + "/tidepoolAPI/json/assessment.ajax", 
 			    		{sessionId:'1'}, 
 			    		function(items) {		    						    			
-			    			
-			    			function updateImages() {			    				
-			    				$('#testImage0').attr('src', contentURL +  testImages[currentImage0].bucket_name + "/" + testImages[currentImage0].folder_name + "/" + testImages[currentImage0].picture_id);
-				    			$('#testImage1').attr('src', contentURL +  testImages[currentImage1].bucket_name + "/" + testImages[currentImage1].folder_name + "/" + testImages[currentImage1].picture_id);
-			    			}
-			    			
+			    			    			
 			    			var i = 0;
 			    			$.each(items, function(index, value) {
 			    				testImages[i] = value;
@@ -125,46 +190,22 @@
 			    			
 			    			$('#testImage0Link').click(function() {
 			    				
-			    				$.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
-			    			    		{accountId:$('#accountId').val(), explicitId:testImages[currentImage0].id}, 
-			    			    		function(items) {
-			    			    			
-			    			    		});
-			    				
-			    				if (currentImage0 == testImages.length - 1) {
-			    					return true;
-			    				}
-			    				
-			    				currentImage0 = currentImage1 + 1;
-			    				currentImage1 = currentImage0 + 1;
-			    				updateImages();
+			    				showDialog(0);
 			    				
 			    				return false;
 			    				
 			    			});
 			    			
 			    			$('#testImage1Link').click(function() {
-			    				
-			    				$.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
-			    			    		{accountId:$('#accountId').val(), explicitId:testImages[currentImage1].id}, 
-			    			    		function(items) {
-			    			    			
-			    			    		});
-			    				
-			    				if (currentImage0 == testImages.length - 1) {
-			    					return true;
-			    				}
-			    				
-			    				currentImage0 = currentImage1 + 1;
-			    				currentImage1 = currentImage0 + 1;
-			    				updateImages();
+			    							    				
+			    				showDialog(1);
 			    				
 			    				return false;
-			    			});
-			    						    			
+			    			});			    						    			
 			    		}).error(function(jqXHR, textStatus, errorThrown) { 
 			    				alert("error: " + jqXHR + " " + textStatus + " " + errorThrown); 
 			    		});
+					
 				
 				
 				
@@ -172,7 +213,13 @@
 		})(jQuery);		
 	</script>
 
+	<div style="display:none" id="dialog-message" title="Choose this photo?">
+	    <p>
+	       <img id="dialogPhoto" height="100%" width="100%">
+	    </p>
+	</div>
 
+	
   </body>
 
 </html>

@@ -105,18 +105,30 @@ public class APIController {
 		return "assessment/assessment-register";
 	}
 	
-	@RequestMapping(value="/assessPost", method=RequestMethod.POST)
+	@RequestMapping(value="/assessPost", method=RequestMethod.GET)
 	public String postAssessmentRegister(HttpServletRequest request, 
-			@RequestParam(required=false) String email,
+			@RequestParam(required=false) String firstName,
+			@RequestParam(required=false) String lastName,
 			Model model) {
-				
+						
+			try {
+				Account account = new Account();				
+				account = hBaseManager.createAssessAccount(account);
+				request.getSession().putValue("account", account);
+			} catch (Exception e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		
 		return "forward:assessment";
 	}
 	
 	@RequestMapping(value="/assessment", method=RequestMethod.GET)
 	public String getAssessment(HttpServletRequest request, @RequestParam(required=false) String owner,
 			Model model) {
-				
+		
+		model.addAttribute("account", request.getSession().getAttribute("account"));
 		return "assessment/assessment";
 	}
 	

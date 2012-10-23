@@ -247,10 +247,24 @@ public class HBaseManager {
 			
 			if (account.getExplicitImageFolder()!= null) {
 				put.add(family_name_column, Account.explicit_image_folder_column, Bytes.toBytes(account.getExplicitImageFolder()));
-			}
+			}			
 			
-			put.add(family_name_column, Account.account_status_column, Bytes.toBytes(account.getAccountStatus()));
-						
+			if (account.getAccountStatus() != null) {
+				put.add(family_name_column, Account.account_status_column, Bytes.toBytes(account.getAccountStatus()));
+			}	
+			
+			put.add(family_name_column, Account.extraverted_column, Bytes.toBytes(account.getExtraverted()));
+			put.add(family_name_column, Account.critical_column, Bytes.toBytes(account.getCritical()));
+			put.add(family_name_column, Account.dependable_column, Bytes.toBytes(account.getDependable()));
+			put.add(family_name_column, Account.anxious_column, Bytes.toBytes(account.getAnxious()));
+			put.add(family_name_column, Account.open_column, Bytes.toBytes(account.getOpen()));
+			put.add(family_name_column, Account.reserved_column, Bytes.toBytes(account.getReserved()));
+			put.add(family_name_column, Account.sympathetic_column, Bytes.toBytes(account.getSympathetic()));
+			put.add(family_name_column, Account.disorganized_column, Bytes.toBytes(account.getDisorganized()));
+			put.add(family_name_column, Account.calm_column, Bytes.toBytes(account.getCalm()));
+			put.add(family_name_column, Account.conventional_column, Bytes.toBytes(account.getConventional()));
+			
+			
 			table.put(put);			
 		} catch(Exception e) {
 			e.printStackTrace();

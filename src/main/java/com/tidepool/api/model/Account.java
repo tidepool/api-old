@@ -26,6 +26,17 @@ public class Account implements Serializable, UserDetails {
 	public static final byte[] explicit_image_folder_column = Bytes.toBytes("explicit_image_folder");
 	public static final byte[] account_status_column = Bytes.toBytes("account_status");
 	
+	public static final byte[] extraverted_column = Bytes.toBytes("extraverted");
+	public static final byte[] critical_column = Bytes.toBytes("critical");
+	public static final byte[] dependable_column = Bytes.toBytes("dependable");
+	public static final byte[] anxious_column = Bytes.toBytes("anxious");
+	public static final byte[] open_column = Bytes.toBytes("open");
+	public static final byte[] reserved_column = Bytes.toBytes("reserved");
+	public static final byte[] sympathetic_column = Bytes.toBytes("sympathetic");
+	public static final byte[] disorganized_column = Bytes.toBytes("disorganized");
+	public static final byte[] calm_column = Bytes.toBytes("calm");
+	public static final byte[] conventional_column = Bytes.toBytes("conventional");
+	
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_USER = "ROLE_USER";
 	public static final String ROLE_PRO_USER = "ROLE_PRO_USER";
@@ -55,7 +66,29 @@ public class Account implements Serializable, UserDetails {
 	private String explicitImageFolder;
 	private String accountStatus;
 	
-		
+	public int extraverted;
+	public int critical;
+	public int dependable;
+	public int anxious;
+	public int open;
+	public int reserved;
+	public int sympathetic;
+	public int disorganized;
+	public int calm;
+	public int conventional;
+	
+	public String extravertedLabel = "Extraverted, enthusiastic.";
+	public String criticalLabel = "Critical, quarrelsome.";
+	public String dependableLabel = "Dependable, self-disciplined.";
+	public String anxiousLabel = "Anxious, easily upset.";
+	public String openLabel = "Open to new experiences, complex.";
+	public String reservedLabel = "Reserved, quiet.";
+	public String sympatheticLabel = "Sympathetic, warm.";
+	public String disorganizedLabel = "Disorganized, careless.";
+	public String calmLabel = "Calm, emotionally stable.";
+	public String conventionalLabel = "Conventional, uncreative.";
+	
+	
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;
 	}
@@ -203,6 +236,166 @@ public class Account implements Serializable, UserDetails {
 
 	public void setAccountStatus(String accountStatus) {
 		this.accountStatus = accountStatus;
+	}
+
+	public int getExtraverted() {
+		return extraverted;
+	}
+
+	public void setExtraverted(int extraverted) {
+		this.extraverted = extraverted;
+	}
+
+	public int getCritical() {
+		return critical;
+	}
+
+	public void setCritical(int critical) {
+		this.critical = critical;
+	}
+
+	public int getDependable() {
+		return dependable;
+	}
+
+	public void setDependable(int dependable) {
+		this.dependable = dependable;
+	}
+
+	public int getAnxious() {
+		return anxious;
+	}
+
+	public void setAnxious(int anxious) {
+		this.anxious = anxious;
+	}
+
+	public int getOpen() {
+		return open;
+	}
+
+	public void setOpen(int open) {
+		this.open = open;
+	}
+
+	public int getReserved() {
+		return reserved;
+	}
+
+	public void setReserved(int reserved) {
+		this.reserved = reserved;
+	}
+
+	public int getSympathetic() {
+		return sympathetic;
+	}
+
+	public void setSympathetic(int sympathetic) {
+		this.sympathetic = sympathetic;
+	}
+
+	public int getDisorganized() {
+		return disorganized;
+	}
+
+	public void setDisorganized(int disorganized) {
+		this.disorganized = disorganized;
+	}
+
+	public int getCalm() {
+		return calm;
+	}
+
+	public void setCalm(int calm) {
+		this.calm = calm;
+	}
+
+	public int getConventional() {
+		return conventional;
+	}
+
+	public void setConventional(int conventional) {
+		this.conventional = conventional;
+	}
+
+	public String getExtravertedLabel() {
+		return extravertedLabel;
+	}
+
+	public void setExtravertedLabel(String extravertedLabel) {
+		this.extravertedLabel = extravertedLabel;
+	}
+
+	public String getCriticalLabel() {
+		return criticalLabel;
+	}
+
+	public void setCriticalLabel(String criticalLabel) {
+		this.criticalLabel = criticalLabel;
+	}
+
+	public String getDependableLabel() {
+		return dependableLabel;
+	}
+
+	public void setDependableLabel(String dependableLabel) {
+		this.dependableLabel = dependableLabel;
+	}
+
+	public String getAnxiousLabel() {
+		return anxiousLabel;
+	}
+
+	public void setAnxiousLabel(String anxiousLabel) {
+		this.anxiousLabel = anxiousLabel;
+	}
+
+	public String getOpenLabel() {
+		return openLabel;
+	}
+
+	public void setOpenLabel(String openLabel) {
+		this.openLabel = openLabel;
+	}
+
+	public String getReservedLabel() {
+		return reservedLabel;
+	}
+
+	public void setReservedLabel(String reservedLabel) {
+		this.reservedLabel = reservedLabel;
+	}
+
+	public String getSympatheticLabel() {
+		return sympatheticLabel;
+	}
+
+	public void setSympatheticLabel(String sympatheticLabel) {
+		this.sympatheticLabel = sympatheticLabel;
+	}
+
+	public String getDisorganizedLabel() {
+		return disorganizedLabel;
+	}
+
+	public void setDisorganizedLabel(String disorganizedLabel) {
+		this.disorganizedLabel = disorganizedLabel;
+	}
+
+	public String getCalmLabel() {
+		return calmLabel;
+	}
+
+	public void setCalmLabel(String calmLabel) {
+		this.calmLabel = calmLabel;
+	}
+
+	public String getConventionalLabel() {
+		return conventionalLabel;
+	}
+
+	public void setConventionalLabel(String conventionalLabel) {
+		this.conventionalLabel = conventionalLabel;
 	}
 	
 }

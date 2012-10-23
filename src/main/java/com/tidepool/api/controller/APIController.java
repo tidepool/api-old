@@ -102,6 +102,7 @@ public class APIController {
 	public String getAssessmentRegister(HttpServletRequest request, @RequestParam(required=false) String owner,
 			Model model) {
 		
+		model.addAttribute("account", new Account());
 		return "assessment/assessment-register";
 	}
 	
@@ -109,10 +110,35 @@ public class APIController {
 	public String postAssessmentRegister(HttpServletRequest request, 
 			@RequestParam(required=false) String firstName,
 			@RequestParam(required=false) String lastName,
+			@RequestParam(required=false) String zipCode,
+			@RequestParam(required=false) Integer extraverted,
+			@RequestParam(required=false) Integer critical,
+			@RequestParam(required=false) Integer dependable,
+			@RequestParam(required=false) Integer anxious,
+			@RequestParam(required=false) Integer open,
+			@RequestParam(required=false) Integer reserved,
+			@RequestParam(required=false) Integer sympathetic,
+			@RequestParam(required=false) Integer disorganized,
+			@RequestParam(required=false) Integer calm,
+			@RequestParam(required=false) Integer conventional,			
 			Model model) {
 						
 			try {
-				Account account = new Account();				
+				
+				Account account = new Account();
+				account.setZipCode(zipCode);
+				account.setExtraverted(extraverted);
+				account.setCritical(critical);
+				account.setDependable(dependable);
+				account.setAnxious(anxious);
+				account.setOpen(open);
+				account.setReserved(reserved);
+				account.setSympathetic(sympathetic);
+				account.setDisorganized(disorganized);
+				account.setCalm(calm);
+				account.setConventional(conventional);
+				
+				
 				account = hBaseManager.createAssessAccount(account);
 				request.getSession().putValue("account", account);
 			} catch (Exception e) {
@@ -137,6 +163,7 @@ public class APIController {
 			HttpServletRequest request,
 			@RequestParam(required=true) String accountId,
 			@RequestParam(required=true) String explicitId,
+			@RequestParam(required=true) String type,
 			@RequestParam(required=false) String attributeId,
 			@RequestParam(required=false) String attributeValue,
 			@RequestParam(required=false) String attributeComment,
@@ -151,7 +178,8 @@ public class APIController {
 			CodingEvent event = new CodingEvent();
 			event.user_id = accountId;
 			event.picture_id = explicitId;
-			event.element = attributeId;			
+			event.element = attributeId;
+			event.type = type;
 			event.x0 = x0;
 			event.y0 = y0;
 			event.x1 = x1;

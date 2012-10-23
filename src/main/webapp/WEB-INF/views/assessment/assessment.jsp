@@ -127,7 +127,17 @@
 			                    			              			                    
 			                },
 			                Cancel: function() {
+			                	
 			                    $( this ).dialog( "close" );
+			                    
+			                    if (imageNumber == 0) 
+			                		var image = currentImage0;
+			                	else
+			                		var image = currentImage1;
+			                    
+			                    $.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
+			    			    		{accountId:$('#userId').val(), explicitId:testImages[image].id, type:"cancel"}, 
+			    			    		function(items) {});			                 			               
 			                }
 			            }
 			        });										
@@ -135,7 +145,7 @@
 				
 				function updateImage0() {
 					$.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
-    			    		{accountId:$('#userId').val(), explicitId:testImages[currentImage0].id}, 
+    			    		{accountId:$('#userId').val(), explicitId:testImages[currentImage0].id, type:"selected"}, 
     			    		function(items) {
     			    			
     			    		});
@@ -155,7 +165,7 @@
 				function updateImage1() {
 
     				$.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
-    			    		{accountId:$('#userId').val(), explicitId:testImages[currentImage1].id}, 
+    			    		{accountId:$('#userId').val(), explicitId:testImages[currentImage1].id, type:"selected"}, 
     			    		function(items) {
     			    			
     			    		});			    				
@@ -190,16 +200,22 @@
 			    			
 			    			$('#testImage0Link').click(function() {
 			    				
-			    				showDialog(0);
+			    				$.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
+			    			    		{accountId:$('#userId').val(), explicitId:testImages[currentImage0].id, type:"viewed"}, 
+			    			    		function(items) {});
 			    				
+			    				showDialog(0);			    				
 			    				return false;
 			    				
 			    			});
 			    			
 			    			$('#testImage1Link').click(function() {
-			    							    				
-			    				showDialog(1);
 			    				
+			    				$.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
+			    			    		{accountId:$('#userId').val(), explicitId:testImages[currentImage1].id, type:"viewed"}, 
+			    			    		function(items) {});
+			    				
+			    				showDialog(1);			    				
 			    				return false;
 			    			});			    						    			
 			    		}).error(function(jqXHR, textStatus, errorThrown) { 

@@ -115,7 +115,8 @@
 					
 					$( "#dialog-message" ).dialog({
 			            modal: true,
-			            width:750,
+			            width:700,
+			            zIndex:10000,
 			            buttons: {
 			                Ok: function() {
 			                    
@@ -222,9 +223,7 @@
 			    		}).error(function(jqXHR, textStatus, errorThrown) { 
 			    				alert("error: " + jqXHR + " " + textStatus + " " + errorThrown); 
 			    		});
-					
-				
-				
+												
 				
 			});
 		})(jQuery);		

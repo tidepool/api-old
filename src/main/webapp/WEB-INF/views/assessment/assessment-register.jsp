@@ -36,31 +36,7 @@
             <span class="icon-bar"></span>
             <span class="icon-bar"></span>
           </a>
-          <a class="brand" href="<c:url value="/" />">Tidepool Assess</a>
-          <div class="nav-collapse">
-            <ul class="nav">                            
-             	<li class="dropdown"><a href="#" class="dropdown-toggle"
-							data-toggle="dropdown">Admin<b class="caret"></b></a>
-							<ul class="dropdown-menu">
-								<li><a href="<c:url value="/admin/createAccount" />">Create Account</a>
-								</li>
-								<li><a href="<c:url value="/admin/accounts" />">Accounts</a>
-								</li>
-								<li class="divider"></li>
-								<li class="nav-header">Training</li>
-								<li><a href="<c:url value="/admin/trainingSets" />">Training sets</a>
-								</li>							
-								</li>
-								<li class="divider"></li>
-								<li class="nav-header">Groups</li>
-								<li><a href="<c:url value="/admin/groups" />">Group List</a>
-								</li>							
-								</li>
-							</ul>
-						</li>
-            </ul>
-            <p class="navbar-text pull-right">Logged in as <a href="/">${account.email}</a> | <a href="<c:url value="/signout" />">logout</a></p>
-          </div><!--/.nav-collapse -->
+          <a class="brand" href="<c:url value="/" />">Tidepool Assess</a>          
         </div>
       </div>
     </div>

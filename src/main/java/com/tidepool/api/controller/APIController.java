@@ -64,7 +64,7 @@ public class APIController {
 	public @ResponseBody List<CodedItem> getAssessment(
 			 @RequestParam(required=true) String sessionId) {
 				
-		List<CodedItem> itemList = hBaseManager.getFolderCodedItems("work_type");
+		List<CodedItem> itemList = hBaseManager.getFolderCodedItems("match_type");
 				
 		return itemList;
 	}

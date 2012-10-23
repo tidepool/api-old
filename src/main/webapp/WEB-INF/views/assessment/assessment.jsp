@@ -74,7 +74,7 @@
 		<div id="assessThanks" style="display:none">Thanks for taking the assessment! </div>
 			
 		<table class="assess-table" style="text-align:center" id="assessTable">
-			<tr><td><a href="#match" data-role="button" id="testImage0Link"><img id="testImage0"></a></td><td> <a href="#match" data-role="button" id="testImage1Link"><img id="testImage1"></a></td></tr>
+			<tr><td><a href="#match" data-role="button" id="testImage0Link"><img id="testImage0" style="width: 70%; height: 70%"></a></td><td> <a href="#match" data-role="button" id="testImage1Link"><img id="testImage1" style="width: 70%; height: 70%"></a></td></tr>
 		</table>	   
         
 		
@@ -115,6 +115,7 @@
 					
 					$( "#dialog-message" ).dialog({
 			            modal: true,
+			            width:750,
 			            buttons: {
 			                Ok: function() {
 			                    
@@ -229,7 +230,7 @@
 		})(jQuery);		
 	</script>
 
-	<div style="display:none" id="dialog-message" title="Choose this photo?">
+	<div style="display:none; width:750px" id="dialog-message" title="Choose this photo?" class="assessPopup">
 	    <p>
 	       <img id="dialogPhoto" height="100%" width="100%">
 	    </p>

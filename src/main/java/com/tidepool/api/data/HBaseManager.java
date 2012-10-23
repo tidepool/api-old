@@ -67,7 +67,10 @@ public class HBaseManager {
 	private final String elementGroupTable = "element_group";
 	private final String elementMainTable = "element_main";
 	private final String explicitEventTable= "explicit_event";
-	private final String explicitImageTable= "explicit_image";
+	
+	//private final String explicitImageTable= "explicit_image";
+	private final String explicitImageTable= "image_content_detail";
+	
 	private final String explicitImageLogTable= "explicit_image_log";
 	private final String countersTable= "counters";
 		

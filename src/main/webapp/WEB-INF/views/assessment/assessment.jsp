@@ -71,12 +71,14 @@
 		
 		<input type="hidden" name="userId" id="userId" value="${account.userId}">
 		
-		<div id="assessThanks" style="display:none">Thanks for taking the assessment! </div>
-			
-		<table class="assess-table" style="text-align:center" id="assessTable">
-			<tr><td><a href="#match" data-role="button" id="testImage0Link"><img id="testImage0" style="width: 70%; height: 70%"></a></td><td> <a href="#match" data-role="button" id="testImage1Link"><img id="testImage1" style="width: 70%; height: 70%"></a></td></tr>
-		</table>	   
-        
+		<div id="assessThanks"  class="offset1" style="display:none"><h3>Thanks for taking the assessment! </h3></div>
+		
+		<div class="offset1" id="assessTable">
+			<p>Chose the photo you prefer:</p>	
+			<table class="assess-table" style="text-align:center" >
+				<tr><td><a href="#match" data-role="button" id="testImage0Link"><img id="testImage0" style="width: 70%; height: 70%"></a></td><td> <a href="#match" data-role="button" id="testImage1Link"><img id="testImage1" style="width: 70%; height: 70%"></a></td></tr>
+			</table>	   
+        </div>
 		
 			
 
@@ -105,6 +107,7 @@
 		var currentImage1 = 1;
 		var servicesAPI = "http://localhost:8080";
 		var contentURL = "https://s3.amazonaws.com/";
+		
 		(function ($) {
 			$(document).ready(function () {				
 				
@@ -128,7 +131,7 @@
 			                	$( this ).dialog( "close" );
 			                    			              			                    
 			                },
-			                Cancel: function() {
+			                No: function() {
 			                	
 			                    $( this ).dialog( "close" );
 			                    
@@ -160,6 +163,7 @@
     				if (currentImage0 >= testImages.length  || currentImage1 >= testImages.length ) {
     					$('#assessTable').hide();
     					$('#assessThanks').show();
+    					$( "#dialog-message" ).dialog('close');
     				}
     				updateImages();
 				}
@@ -179,6 +183,7 @@
     				if (currentImage0 >= testImages.length  || currentImage1 >= testImages.length ) {
     					$('#assessTable').hide();
     					$('#assessThanks').show();
+    					$( "#dialog-message" ).dialog('close');
     				}
     				updateImages();
 				}

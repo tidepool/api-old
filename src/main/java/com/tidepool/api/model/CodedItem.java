@@ -43,6 +43,7 @@ public class CodedItem implements Serializable {
 	public String bucket_name;
 	public String folder_name;
 	
+	public String order_id;	
 	public String asymmetrical;
 	public String filtered;
 	public String mountain;
@@ -250,7 +251,7 @@ public class CodedItem implements Serializable {
 	public void setId(String id) {
 		this.id = id;
 	}
-	
+
 	
 	
 }

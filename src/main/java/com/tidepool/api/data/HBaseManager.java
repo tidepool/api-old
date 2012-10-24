@@ -425,6 +425,12 @@ public List<CodedItem> getFolderCodedItems(String folderType) {
 			scanner.close();
 		}
 		
+		Collections.sort(codedItems, new Comparator<CodedItem>() {
+			public int compare(CodedItem o1, CodedItem o2) {
+				return new Integer(o1.order_id).compareTo(new Integer(o2.order_id));
+			}			
+		});
+				
 		return codedItems;
 	}
 	

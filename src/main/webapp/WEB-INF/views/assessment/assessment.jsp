@@ -25,7 +25,6 @@
       }
     </style>
    
-
   </head>
 
   <body>
@@ -81,7 +80,7 @@
 		var testImages = [];
 		var currentImage0 = 0;
 		var currentImage1 = 1;
-		var servicesAPI = "http://localhost:8080";
+		var servicesAPI = "${pageContext.request.contextPath}";
 		var contentURL = "https://s3.amazonaws.com/";
 		
 		(function ($) {
@@ -97,7 +96,7 @@
 			            width:700,
 			            zIndex:10000,
 			            buttons: {
-			                Ok: function() {
+			                Yes: function() {
 			                    
 			                	if (imageNumber == 0) 
 			                		updateImage0();
@@ -116,7 +115,7 @@
 			                	else
 			                		var image = currentImage1;
 			                    
-			                    $.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
+			                    $.post(servicesAPI + "/json/assessmentevent.ajax", 
 			    			    		{accountId:$('#userId').val(), explicitId:testImages[image].id, type:"cancel"}, 
 			    			    		function(items) {});			                 			               
 			                }
@@ -125,7 +124,7 @@
 				}
 				
 				function updateImage0() {
-					$.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
+					$.post(servicesAPI + "/json/assessmentevent.ajax", 
     			    		{accountId:$('#userId').val(), explicitId:testImages[currentImage0].id, type:"selected"}, 
     			    		function(items) {
     			    			
@@ -137,16 +136,17 @@
     				
     				
     				if (currentImage0 >= testImages.length  || currentImage1 >= testImages.length ) {
-    					$('#assessTable').hide();
+    					/* $('#assessTable').hide();
     					$('#assessThanks').show();
-    					$( "#dialog-message" ).dialog('close');
+    					$( "#dialog-message" ).dialog('close'); */    					
+    					window.location="<c:url value="/assessmentFeedback"/>";
     				}
     				updateImages();
 				}
 				
 				function updateImage1() {
 
-    				$.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
+    				$.post(servicesAPI + "/json/assessmentevent.ajax", 
     			    		{accountId:$('#userId').val(), explicitId:testImages[currentImage1].id, type:"selected"}, 
     			    		function(items) {
     			    			
@@ -157,9 +157,10 @@
     				currentImage1 = currentImage0 + 1;
     							    				
     				if (currentImage0 >= testImages.length  || currentImage1 >= testImages.length ) {
-    					$('#assessTable').hide();
+    					/* $('#assessTable').hide();
     					$('#assessThanks').show();
-    					$( "#dialog-message" ).dialog('close');
+    					$( "#dialog-message" ).dialog('close'); */
+    					window.location="<c:url value="/assessmentFeedback"/>";
     				}
     				updateImages();
 				}
@@ -169,7 +170,7 @@
 	    			$('#testImage1').attr('src', contentURL +  testImages[currentImage1].bucket_name + "/" + testImages[currentImage1].folder_name + "/" + testImages[currentImage1].picture_id);
     			}
 				
-				$.post(servicesAPI + "/tidepoolAPI/json/assessment.ajax", 
+				$.post(servicesAPI + "/json/assessment.ajax", 
 			    		{sessionId:'1'}, 
 			    		function(items) {		    						    			
 			    			    			
@@ -183,7 +184,7 @@
 			    			
 			    			$('#testImage0Link').click(function() {
 			    				
-			    				$.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
+			    				$.post(servicesAPI + "/json/assessmentevent.ajax", 
 			    			    		{accountId:$('#userId').val(), explicitId:testImages[currentImage0].id, type:"viewed"}, 
 			    			    		function(items) {});
 			    				
@@ -194,7 +195,7 @@
 			    			
 			    			$('#testImage1Link').click(function() {
 			    				
-			    				$.post(servicesAPI + "/tidepoolAPI/json/assessmentevent.ajax", 
+			    				$.post(servicesAPI + "/json/assessmentevent.ajax", 
 			    			    		{accountId:$('#userId').val(), explicitId:testImages[currentImage1].id, type:"viewed"}, 
 			    			    		function(items) {});
 			    				
@@ -216,7 +217,6 @@
 	    </p>
 	</div>
 
-	
   </body>
 
 </html>

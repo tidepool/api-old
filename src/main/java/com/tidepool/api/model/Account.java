@@ -37,6 +37,13 @@ public class Account implements Serializable, UserDetails {
 	public static final byte[] calm_column = Bytes.toBytes("calm");
 	public static final byte[] conventional_column = Bytes.toBytes("conventional");
 	
+	public static final byte[] artistic_appeal_column = Bytes.toBytes("artistic_appeal");
+	public static final byte[] effective_user_interface_column = Bytes.toBytes("effective_user_interface");
+	public static final byte[] interest_in_measurement_column = Bytes.toBytes("interest_in_measurement");
+	public static final byte[] understanding_personality_column = Bytes.toBytes("understanding_personality");
+	public static final byte[] interesting_dating_partners_column = Bytes.toBytes("interesting_dating_partners");
+	
+	
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_USER = "ROLE_USER";
 	public static final String ROLE_PRO_USER = "ROLE_PRO_USER";
@@ -76,6 +83,12 @@ public class Account implements Serializable, UserDetails {
 	public int disorganized;
 	public int calm;
 	public int conventional;
+	
+	public int artistic_appeal;
+	public int effective_user_interface;
+	public int interest_in_measurement;
+	public int understanding_personality;
+	public int interesting_dating_partners;
 	
 	public String extravertedLabel = "Extraverted, enthusiastic.";
 	public String criticalLabel = "Critical, quarrelsome.";
@@ -396,6 +409,46 @@ public class Account implements Serializable, UserDetails {
 
 	public void setConventionalLabel(String conventionalLabel) {
 		this.conventionalLabel = conventionalLabel;
+	}
+
+	public int getArtistic_appeal() {
+		return artistic_appeal;
+	}
+
+	public void setArtistic_appeal(int artistic_appeal) {
+		this.artistic_appeal = artistic_appeal;
+	}
+
+	public int getEffective_user_interface() {
+		return effective_user_interface;
+	}
+
+	public void setEffective_user_interface(int effective_user_interface) {
+		this.effective_user_interface = effective_user_interface;
+	}
+
+	public int getInterest_in_measurement() {
+		return interest_in_measurement;
+	}
+
+	public void setInterest_in_measurement(int interest_in_measurement) {
+		this.interest_in_measurement = interest_in_measurement;
+	}
+
+	public int getUnderstanding_personality() {
+		return understanding_personality;
+	}
+
+	public void setUnderstanding_personality(int understanding_personality) {
+		this.understanding_personality = understanding_personality;
+	}
+
+	public int getInteresting_dating_partners() {
+		return interesting_dating_partners;
+	}
+
+	public void setInteresting_dating_partners(int interesting_dating_partners) {
+		this.interesting_dating_partners = interesting_dating_partners;
 	}
 	
 }

@@ -98,6 +98,25 @@ public class HBaseManager {
 		return instance;
 	}
 
+	
+	private Account getAccountFromId(String id) {
+		Account account = null;
+				
+		try {
+			HTableInterface table = pool.getTable(accountTable);
+			Get get = new Get(Bytes.toBytes(id));					
+			Result result = table.get(get);							
+			account = new Account();				
+			mapAccount(account, result);				
+			return account;
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} 
+
+		return account;
+	}
+	
 	private Account getAccountFromEmailInternal(String email) {
 		Account account = null;
 		ResultScanner scanner  = null;
@@ -267,6 +286,12 @@ public class HBaseManager {
 			put.add(family_name_column, Account.calm_column, Bytes.toBytes(account.getCalm()));
 			put.add(family_name_column, Account.conventional_column, Bytes.toBytes(account.getConventional()));
 			
+			put.add(family_name_column, Account.artistic_appeal_column, Bytes.toBytes(account.getArtistic_appeal()));
+			put.add(family_name_column, Account.effective_user_interface_column, Bytes.toBytes(account.getEffective_user_interface()));
+			put.add(family_name_column, Account.interest_in_measurement_column, Bytes.toBytes(account.getInterest_in_measurement()));
+			put.add(family_name_column, Account.understanding_personality_column, Bytes.toBytes(account.getUnderstanding_personality()));
+			put.add(family_name_column, Account.interesting_dating_partners_column, Bytes.toBytes(account.getInteresting_dating_partners()));
+							
 			
 			table.put(put);			
 		} catch(Exception e) {
@@ -276,20 +301,20 @@ public class HBaseManager {
 		}	
 	}
 	
-public Account createAssessAccount(Account account) throws Exception{
-		
-		HTableInterface counter = pool.getTable(countersTable);
-		try {
-			long nextCounter = counter.incrementColumnValue(Bytes.toBytes("6"), family_name_column, Bytes.toBytes(accountTable), 1);
-			account.setUserId(String.valueOf(nextCounter));
-			saveAccount(account);
-		} catch (IOException e) {			
-			e.printStackTrace();
+	public Account createAssessAccount(Account account) throws Exception{
+			
+			HTableInterface counter = pool.getTable(countersTable);
+			try {
+				long nextCounter = counter.incrementColumnValue(Bytes.toBytes("6"), family_name_column, Bytes.toBytes(accountTable), 1);
+				account.setUserId(String.valueOf(nextCounter));
+				saveAccount(account);
+			} catch (IOException e) {			
+				e.printStackTrace();
+			}
+			
+			return account;
 		}
 		
-		return account;
-	}
-	
 	
 	public Account createAccount(Account account) throws Exception{
 		

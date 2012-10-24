@@ -48,10 +48,10 @@
 		
 		<div id="assessThanks"  class="offset1" style="display:none"><h3>Thanks for taking the assessment! </h3></div>
 		
-		<div class="offset1" id="assessTable">
+		<div class="offset1 span-9" id="assessTable">
 			<p>Chose the photo you prefer:</p>	
 			<table class="assess-table" style="text-align:center" >
-				<tr><td><a href="#match" data-role="button" id="testImage0Link"><img id="testImage0" style="width: 70%; height: 70%"></a></td><td> <a href="#match" data-role="button" id="testImage1Link"><img id="testImage1" style="width: 70%; height: 70%"></a></td></tr>
+				<tr><td><a href="#match" data-role="button" id="testImage0Link"><img id="testImage0" class="testImage"></a></td><td> <a href="#match" data-role="button" id="testImage1Link"><img class="testImage" id="testImage1"></a></td></tr>
 			</table>	   
         </div>
 		
@@ -82,6 +82,7 @@
 		var currentImage1 = 1;
 		var servicesAPI = "${pageContext.request.contextPath}";
 		var contentURL = "https://s3.amazonaws.com/";
+		var resizeImages = false;
 		
 		(function ($) {
 			$(document).ready(function () {				
@@ -166,8 +167,20 @@
 				}
 				
 				function updateImages() {			    				
-    				$('#testImage0').attr('src', contentURL +  testImages[currentImage0].bucket_name + "/" + testImages[currentImage0].folder_name + "/" + testImages[currentImage0].picture_id);
-	    			$('#testImage1').attr('src', contentURL +  testImages[currentImage1].bucket_name + "/" + testImages[currentImage1].folder_name + "/" + testImages[currentImage1].picture_id);
+    				
+					$('#testImage0').attr('src', contentURL +  testImages[currentImage0].bucket_name + "/" + testImages[currentImage0].folder_name + "/" + testImages[currentImage0].picture_id);    				    				
+					
+					$('#testImage1').attr('src', contentURL +  testImages[currentImage1].bucket_name + "/" + testImages[currentImage1].folder_name + "/" + testImages[currentImage1].picture_id);
+    				
+					/* if (!resizeImages) {
+						$('#testImage0').attr('width','50%');
+						$('#testImage1').attr('width','50%');
+						resizeImages = true;
+					} else {
+						$('#testImage0').attr('width','100%');
+						$('#testImage1').attr('width','100%');							
+					} */
+    				
     			}
 				
 				$.post(servicesAPI + "/json/assessment.ajax", 

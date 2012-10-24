@@ -137,13 +137,12 @@ public class APIController {
 				account.setDisorganized(disorganized);
 				account.setCalm(calm);
 				account.setConventional(conventional);
-				
-				
+								
 				account = hBaseManager.createAssessAccount(account);
-				request.getSession().putValue("account", account);
+				request.getSession().setAttribute("account", account);
 			} catch (Exception e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("Error creating account: ");
+				e.printStackTrace();	
 			}
 			
 		
@@ -202,46 +201,27 @@ public class APIController {
 	
 	@RequestMapping(value="/postAssessfeedback", method=RequestMethod.GET)
 	public String postAssessmentFeedback(HttpServletRequest request, 
-			@RequestParam(required=false) String firstName,
-			@RequestParam(required=false) String lastName,
-			@RequestParam(required=false) String zipCode,
-			@RequestParam(required=false) Integer extraverted,
-			@RequestParam(required=false) Integer critical,
-			@RequestParam(required=false) Integer dependable,
-			@RequestParam(required=false) Integer anxious,
-			@RequestParam(required=false) Integer open,
-			@RequestParam(required=false) Integer reserved,
-			@RequestParam(required=false) Integer sympathetic,
-			@RequestParam(required=false) Integer disorganized,
-			@RequestParam(required=false) Integer calm,
-			@RequestParam(required=false) Integer conventional,			
+			@RequestParam(required=false) int artistic_appeal,
+			@RequestParam(required=false) int effective_user_interface,
+			@RequestParam(required=false) int interest_in_measurement,
+			@RequestParam(required=false) int understanding_personality,
+			@RequestParam(required=false) int interesting_dating_partners,						
 			Model model) {
 						
-			try {
-				
-				Account account = new Account();
-				account.setZipCode(zipCode);
-				account.setExtraverted(extraverted);
-				account.setCritical(critical);
-				account.setDependable(dependable);
-				account.setAnxious(anxious);
-				account.setOpen(open);
-				account.setReserved(reserved);
-				account.setSympathetic(sympathetic);
-				account.setDisorganized(disorganized);
-				account.setCalm(calm);
-				account.setConventional(conventional);
-				
-				
-				account = hBaseManager.createAssessAccount(account);
-				request.getSession().putValue("account", account);
-			} catch (Exception e) {
-				// TODO Auto-generated catch block
+			try {				
+				Account account = (Account)request.getSession().getAttribute("account");
+				account.setArtistic_appeal(artistic_appeal);
+				account.setEffective_user_interface(effective_user_interface);
+				account.setInterest_in_measurement(interest_in_measurement);
+				account.setUnderstanding_personality(understanding_personality);
+				account.setInteresting_dating_partners(interesting_dating_partners);									
+				hBaseManager.saveAccount(account);
+				request.getSession().putValue("account", account);				
+			} catch (Exception e) {				
 				e.printStackTrace();
-			}
-			
+			}			
 		
-		return "forward:assessment-thanks";
+		return "assessment/assessment-thanks";
 	}
 	
 	

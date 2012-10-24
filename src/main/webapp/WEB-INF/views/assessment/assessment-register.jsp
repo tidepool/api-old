@@ -376,7 +376,7 @@
 			
 			<div class="control-group">
 				<div class="controls">					
-					<button type="submit" class="btn">Next</button>
+					<button type="submit" id="feedbackSubmit" class="btn">Next</button>
 				</div>
 			</div>
 		</form>
@@ -406,6 +406,28 @@
 	<script>	
 		(function ($) {
 			$(document).ready(function () {				
+				
+				$('#feedbackSubmit').click(function() {
+					
+					if (!$("input[name='extraverted']:checked").val() ||
+						!$("input[name='critical']:checked").val() ||		
+						!$("input[name='dependable']:checked").val() ||
+						!$("input[name='anxious']:checked").val() ||
+						!$("input[name='open']:checked").val() ||
+						!$("input[name='reserved']:checked").val() ||
+						!$("input[name='sympathetic']:checked").val() ||
+						!$("input[name='disorganized']:checked").val() ||
+						!$("input[name='calm']:checked").val() ||
+						!$("input[name='conventional']:checked").val()
+					) {
+						   alert('Please provide answers to all of the questions!');
+						}
+						else {
+						 	return true;
+						}
+					
+					return false;
+				});
 				
 			});
 		})(jQuery);		

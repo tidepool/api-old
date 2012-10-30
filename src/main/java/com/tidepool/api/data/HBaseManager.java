@@ -20,11 +20,13 @@ import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.client.Result;
 import org.apache.hadoop.hbase.client.ResultScanner;
 import org.apache.hadoop.hbase.client.Scan;
+import org.apache.hadoop.hbase.filter.BinaryComparator;
 import org.apache.hadoop.hbase.filter.CompareFilter;
 import org.apache.hadoop.hbase.filter.CompareFilter.CompareOp;
 import org.apache.hadoop.hbase.filter.Filter;
 import org.apache.hadoop.hbase.filter.FilterList;
 import org.apache.hadoop.hbase.filter.RandomRowFilter;
+import org.apache.hadoop.hbase.filter.RowFilter;
 import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.apache.hadoop.hbase.filter.SubstringComparator;
 import org.apache.hadoop.hbase.filter.ValueFilter;
@@ -38,6 +40,7 @@ import com.tidepool.api.model.CodedAttributeGroup;
 import com.tidepool.api.model.CodedItem;
 import com.tidepool.api.model.CodedItemLog;
 import com.tidepool.api.model.CodingEvent;
+import com.tidepool.api.model.CodingEventRollup;
 import com.tidepool.api.model.CodingGroup;
 import com.tidepool.api.model.Highlight;
 import com.tidepool.api.model.MainGroup;
@@ -222,6 +225,81 @@ public class HBaseManager {
 			account.setAccountStatus(Bytes.toString(val));					
 		}
 		
+		if (result.containsColumn(family_name_column, Account.extraverted_column)) {
+			byte[] val = result.getValue(family_name_column, Account.extraverted_column);
+			account.setExtraverted(Bytes.toInt(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.critical_column)) {
+			byte[] val = result.getValue(family_name_column, Account.critical_column);
+			account.setCritical(Bytes.toInt(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.dependable_column)) {
+			byte[] val = result.getValue(family_name_column, Account.dependable_column);
+			account.setDependable(Bytes.toInt(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.anxious_column)) {
+			byte[] val = result.getValue(family_name_column, Account.anxious_column);
+			account.setAnxious(Bytes.toInt(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.open_column)) {
+			byte[] val = result.getValue(family_name_column, Account.open_column);
+			account.setOpen(Bytes.toInt(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.reserved_column)) {
+			byte[] val = result.getValue(family_name_column, Account.reserved_column);
+			account.setReserved(Bytes.toInt(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.sympathetic_column)) {
+			byte[] val = result.getValue(family_name_column, Account.sympathetic_column);
+			account.setSympathetic(Bytes.toInt(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.disorganized_column)) {
+			byte[] val = result.getValue(family_name_column, Account.disorganized_column);
+			account.setDisorganized(Bytes.toInt(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.calm_column)) {
+			byte[] val = result.getValue(family_name_column, Account.calm_column);
+			account.setCalm(Bytes.toInt(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.conventional_column)) {
+			byte[] val = result.getValue(family_name_column, Account.conventional_column);
+			account.setConventional(Bytes.toInt(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.artistic_appeal_column)) {
+			byte[] val = result.getValue(family_name_column, Account.artistic_appeal_column);
+			account.setArtistic_appeal(Bytes.toInt(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.effective_user_interface_column)) {
+			byte[] val = result.getValue(family_name_column, Account.effective_user_interface_column);
+			account.setEffective_user_interface(Bytes.toInt(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.interest_in_measurement_column)) {
+			byte[] val = result.getValue(family_name_column, Account.interest_in_measurement_column);
+			account.setInterest_in_measurement(Bytes.toInt(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.understanding_personality_column)) {
+			byte[] val = result.getValue(family_name_column, Account.understanding_personality_column);
+			account.setUnderstanding_personality(Bytes.toInt(val));					
+		}
+	
+		if (result.containsColumn(family_name_column, Account.interesting_dating_partners_column)) {
+			byte[] val = result.getValue(family_name_column, Account.interesting_dating_partners_column);
+			account.setInteresting_dating_partners(Bytes.toInt(val));					
+		}
+				
 	}
 	
 	public void saveAccount(Account account) {
@@ -292,6 +370,7 @@ public class HBaseManager {
 			put.add(family_name_column, Account.understanding_personality_column, Bytes.toBytes(account.getUnderstanding_personality()));
 			put.add(family_name_column, Account.interesting_dating_partners_column, Bytes.toBytes(account.getInteresting_dating_partners()));
 							
+			put.add(family_name_column, Account.ip_column, Bytes.toBytes(account.getIp()));
 			
 			table.put(put);			
 		} catch(Exception e) {
@@ -458,7 +537,47 @@ public List<CodedItem> getFolderCodedItems(String folderType) {
 				
 		return codedItems;
 	}
-	
+
+public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String... pictureIds) {
+
+	FilterList mainListFilter = new FilterList(FilterList.Operator.MUST_PASS_ONE);	
+	SingleColumnValueFilter folderFilter = new SingleColumnValueFilter(
+			family_name_column,
+			Bytes.toBytes("folder_name"),
+			CompareOp.EQUAL,
+			Bytes.toBytes(folderType)
+	);
+
+	for (String pictureId : pictureIds) {		
+		RowFilter rowFilter = new RowFilter(CompareOp.EQUAL, new BinaryComparator(Bytes.toBytes(pictureId.toString())) );
+		FilterList rowList = new FilterList(FilterList.Operator.MUST_PASS_ALL);
+		rowList.addFilter(folderFilter);
+		rowList.addFilter(rowFilter);
+		mainListFilter.addFilter(rowList);
+	}
+
+	List<CodedItem> codedItems = new ArrayList<CodedItem>();
+	ResultScanner scanner  = null;				
+	try {
+		HTableInterface table = pool.getTable(explicitImageTable);
+		Scan scan = new Scan();
+		scan.setFilter(mainListFilter);
+		scanner = table.getScanner(scan);		
+		for (Result result : scanner) {			
+			CodedItem codedItem = new CodedItem();								
+			mapResultToCodedItem(codedItem, result);
+			codedItems.add(codedItem);			
+		}
+	} catch(Exception e) {
+		e.printStackTrace();
+	} finally {			
+		scanner.close();
+	}
+
+	return codedItems;
+}
+
+
 	
 	public CodedItem getFolderCodedItem(String userId, String folderType) {
 		
@@ -1117,8 +1236,7 @@ public List<CodedItem> getFolderCodedItems(String folderType) {
 		}	
 	}
 	
-	
-	
+
 	public List<MainGroup> getMainGroups() {
 		List<MainGroup> groups = new ArrayList<MainGroup>();			
 		ResultScanner scanner  = null;
@@ -1157,5 +1275,61 @@ public List<CodedItem> getFolderCodedItems(String folderType) {
 	}
 	
 	
+	public List<CodingEvent> getCodingEventsForAccount(String accountId) {
+		List<CodingEvent> events = new ArrayList<CodingEvent>();
+		
+		ResultScanner scanner  = null;
+		SingleColumnValueFilter filter = new SingleColumnValueFilter(
+				family_name_column,
+				CodingEvent.user_id_column,
+				CompareOp.EQUAL,
+				Bytes.toBytes(accountId)
+		);
+		try {
+			HTableInterface table = pool.getTable(explicitEventTable);
+			Scan scan = new Scan();
+			scan.setFilter(filter);
+			scanner = table.getScanner(scan);		
+			for (Result result : scanner) {
+				
+				CodingEvent event = new CodingEvent();
+				event.setId(Bytes.toString(result.getRow()));
+				event.setTimestamp(result.getColumnLatest(family_name_column, CodingEvent.user_id_column).getTimestamp());
+				
+				if (result.containsColumn(family_name_column, CodingEvent.user_id_column)) {
+					byte[] val = result.getValue(family_name_column, CodingEvent.user_id_column);
+					event.setUser_id(Bytes.toString(val));
+				}
+				
+				if (result.containsColumn(family_name_column, CodingEvent.picture_id_column)) {
+					byte[] val = result.getValue(family_name_column, CodingEvent.picture_id_column);
+					event.setPicture_id(Bytes.toString(val));
+				}
+				
+				if (result.containsColumn(family_name_column, CodingEvent.type_column)) {
+					byte[] val = result.getValue(family_name_column, CodingEvent.type_column);
+					event.setType(Bytes.toString(val));
+				}
+				events.add(event);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			scanner.close();
+		}
+		
+		Collections.sort(events, new Comparator<CodingEvent>() {
+			public int compare(CodingEvent arg0, CodingEvent arg1) {				
+				return (new Long(arg0.getTimestamp()).compareTo(new Long(arg1.getTimestamp())));			
+			}			
+		});
+		
+		return events;		
+	}
+	
+	
+	public CodingEventRollup getCodingEventRollup(String accountId) {		
+		return new CodingEventRollup(getCodingEventsForAccount(accountId));		
+	}
 	
 }

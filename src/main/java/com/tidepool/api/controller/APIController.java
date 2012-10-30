@@ -1,7 +1,9 @@
 package com.tidepool.api.controller;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.List;
+import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
@@ -17,6 +19,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import com.tidepool.api.authentication.AccountService;
 import com.tidepool.api.data.HBaseManager;
 import com.tidepool.api.model.Account;
+import com.tidepool.api.model.Bullet;
 import com.tidepool.api.model.CodedItem;
 import com.tidepool.api.model.CodingEvent;
 
@@ -96,20 +99,21 @@ public class APIController {
 	 * 
 	 * 
 	 */
-	
-	
+
 	@RequestMapping(value="/assess", method=RequestMethod.GET)
 	public String getAssessmentRegister(HttpServletRequest request, @RequestParam(required=false) String owner,
 			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
 		
 		model.addAttribute("account", new Account());
 		return "assessment/assessment-register";
 	}
 	
 	@RequestMapping(value="/assessPost", method=RequestMethod.GET)
-	public String postAssessmentRegister(HttpServletRequest request, 
-			@RequestParam(required=false) String firstName,
-			@RequestParam(required=false) String lastName,
+	public String postAssessmentRegister(HttpServletRequest request, 			
 			@RequestParam(required=false) String zipCode,
 			@RequestParam(required=false) Integer extraverted,
 			@RequestParam(required=false) Integer critical,
@@ -137,9 +141,15 @@ public class APIController {
 				account.setDisorganized(disorganized);
 				account.setCalm(calm);
 				account.setConventional(conventional);
-								
+				account.setIp(request.getRemoteAddr());				
 				account = hBaseManager.createAssessAccount(account);
 				request.getSession().setAttribute("account", account);
+				
+				CodingEvent event = new CodingEvent();
+				event.user_id = account.getUserId();
+				event.type = "start";	
+				hBaseManager.logCodingEvent(event);	
+				
 			} catch (Exception e) {
 				System.out.println("Error creating account: ");
 				e.printStackTrace();	
@@ -153,6 +163,11 @@ public class APIController {
 	public String getAssessment(HttpServletRequest request, @RequestParam(required=false) String owner,
 			Model model) {
 		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("cdn_url", cdnUrl);	
 		model.addAttribute("account", request.getSession().getAttribute("account"));
 		return "assessment/assessment";
 	}
@@ -187,13 +202,17 @@ public class APIController {
 			event.height = height;
 			event.text = attributeComment;
 			
-			hBaseManager.logTrainingEvent(event);			
+			hBaseManager.logCodingEvent(event);			
 			return event;
 	}
 	
 	
 	@RequestMapping(value="/assessmentFeedback", method=RequestMethod.GET)
 	public String getAssessmentFeedback(HttpServletRequest request, @RequestParam(required=false) String owner, Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
 		
 		model.addAttribute("account", request.getSession().getAttribute("account"));
 		return "assessment/assessment-feedback";
@@ -216,6 +235,10 @@ public class APIController {
 				account.setUnderstanding_personality(understanding_personality);
 				account.setInteresting_dating_partners(interesting_dating_partners);									
 				hBaseManager.saveAccount(account);
+				CodingEvent event = new CodingEvent();
+				event.user_id = account.getUserId();
+				event.type = "end";	
+				hBaseManager.logCodingEvent(event);
 				request.getSession().putValue("account", account);				
 			} catch (Exception e) {				
 				e.printStackTrace();
@@ -223,6 +246,58 @@ public class APIController {
 		
 		return "assessment/assessment-thanks";
 	}
+	
+	
+	@RequestMapping(value="/json/bigfivebullet.ajax", method=RequestMethod.GET)
+	public @ResponseBody List<Bullet> getBullet(HttpServletRequest request) {
+
+		ArrayList<Bullet> bullets = new ArrayList<Bullet>();
+		
+		Random random = new Random();
+		
+		Bullet bullet0 = new Bullet();
+		bullet0.setTitle("Openness");
+		bullet0.setSubtitle("Measure of Openness");
+		bullet0.setMarkers(Arrays.asList(random.nextDouble() * 250D));
+		bullet0.setRanges(Arrays.asList(random.nextDouble() * 150D, random.nextDouble() * 225D, random.nextDouble() * 300D));
+		bullet0.setMeasures(Arrays.asList(random.nextDouble() *  220D, random.nextDouble() * 270D));
+		
+		Bullet bullet1 = new Bullet();
+		bullet1.setTitle("Conscientiousness");
+		bullet1.setSubtitle("Measure of Conscientiousness");
+		bullet1.setMarkers(Arrays.asList(random.nextDouble() * 26D));
+		bullet1.setRanges(Arrays.asList(random.nextDouble() * 20D, random.nextDouble() * 25D, random.nextDouble() * 30D));
+		bullet1.setMeasures(Arrays.asList(random.nextDouble() *  21D, random.nextDouble() * 23D));
+		
+		Bullet bullet2 = new Bullet();
+		bullet2.setTitle("Extraversion");
+		bullet2.setSubtitle("Measure of Extraversion");
+		bullet2.setMarkers(Arrays.asList(random.nextDouble() * 550D));
+		bullet2.setRanges(Arrays.asList(random.nextDouble() * 350D, random.nextDouble() * 500D, random.nextDouble() * 600D));
+		bullet2.setMeasures(Arrays.asList(random.nextDouble() *  100D, random.nextDouble() * 320D));
+		
+		Bullet bullet3 = new Bullet();
+		bullet3.setTitle("Agreeableness");
+		bullet3.setSubtitle("Measure of Extraversion");
+		bullet3.setMarkers(Arrays.asList(random.nextDouble() *  550D));
+		bullet3.setRanges(Arrays.asList(random.nextDouble() *  350D, random.nextDouble() *  500D, random.nextDouble() * 600D));
+		bullet3.setMeasures(Arrays.asList(random.nextDouble() *  100D, random.nextDouble() * 320D));
+		
+		Bullet bullet4 = new Bullet();
+		bullet4.setTitle("Neuroticism");
+		bullet4.setSubtitle("Measure of Neuroticism");
+		bullet4.setMarkers(Arrays.asList(random.nextDouble() *  550D));
+		bullet4.setRanges(Arrays.asList(random.nextDouble() * 350D, random.nextDouble() * 500D, random.nextDouble() * 600D));
+		bullet4.setMeasures(Arrays.asList(random.nextDouble() * 100D, random.nextDouble() * 320D));
+				
+		bullets.add(bullet0);
+		bullets.add(bullet1);
+		bullets.add(bullet2);
+		bullets.add(bullet3);
+		bullets.add(bullet4);
+		return bullets;		
+	}
+	
 	
 	
 	private Account getAccount() {

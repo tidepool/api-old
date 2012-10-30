@@ -43,9 +43,11 @@
 
     <div class="container">
 		
-		<div class="offset1">
-			<h3>Thank you for taking the assessment.</h3>
-		</div>	
+		<div class="hero-unit">	
+			<div class="offset1">
+				<h3>Thank you for taking the assessment.</h3>
+			</div>	
+		</div>
 		
 		<footer>
         <p>&copy; Tidepool 2012</p>

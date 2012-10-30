@@ -11,7 +11,8 @@
 	
 	<util:properties id="defaultProperties">
 		
-		<prop key="tidepool.cdn.url">http://ds61wl515l8xu.cloudfront.net/experiment0/</prop>
+		<!-- <prop key="tidepool.cdn.url">http://ds61wl515l8xu.cloudfront.net/experiment0/</prop> -->
+		<prop key="tidepool.cdn.url">http://d22eap3vpui547.cloudfront.net/</prop>
 		<prop key="tidepool.training.cdn.url">https://s3.amazonaws.com</prop>								
 		<prop key="tidepool.attribute.page.limit">6</prop>
 		<prop key="tidepool.registration.limit">3</prop>

@@ -18,6 +18,9 @@
     <link href="<c:url value="/resources/bootstrap/css/tidepool.css" />" rel="stylesheet">    
     <link href="http://code.jquery.com/ui/1.9.0/themes/base/jquery-ui.css" rel="stylesheet">
     
+    <c:if test="${ not empty admin }">
+     	 <link href="<c:url value="/resources/bootstrap/css/bullet.css" />" rel="stylesheet">
+    </c:if>
     <style type="text/css">
       body {
         padding-top: 60px;
@@ -44,19 +47,22 @@
 
     <div class="container">
 		
-		<input type="hidden" name="userId" id="userId" value="${account.userId}">
-		
-		<div id="assessThanks"  class="offset1" style="display:none"><h3>Thanks for taking the assessment! </h3></div>
-		
-		<div class="offset1 span-9" id="assessTable">
-			<p>Chose the photo you prefer:</p>	
-			<table class="assess-table" style="text-align:center" >
-				<tr><td><a href="#match" data-role="button" id="testImage0Link"><img id="testImage0" class="testImage"></a></td><td> <a href="#match" data-role="button" id="testImage1Link"><img class="testImage" id="testImage1"></a></td></tr>
-			</table>	   
-        </div>
-		
+			<input type="hidden" name="userId" id="userId" value="${account.userId}">
 			
-
+			<div id="assessThanks"  class="offset1" style="display:none"><h3>Thanks for taking the assessment! </h3></div>
+			
+			<div class="offset1 span-9" id="assessTable">
+				<h3>Choose the photo you prefer:</h3>	
+				<table class="assess-table" style="text-align:center" >
+					<tr><td><a href="#match" data-role="button" id="testImage0Link"><img id="testImage0" class="testImage"></a></td><td> <a href="#match" data-role="button" id="testImage1Link"><img class="testImage" id="testImage1"></a></td></tr>
+				</table>	   
+	        </div>
+	        
+	        
+	        <c:if test="${ not empty admin }">
+	        	<div class="offset1 span-9" id="chart"></div>
+			</c:if>
+			
     </div> <!-- /container -->
 
     <!-- Le javascript
@@ -73,15 +79,20 @@
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-tooltip.js"/>"></script>
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-popover.js"/>"></script>
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-button.js"/>"></script>
-    <script src="<c:url value="/resources/bootstrap/js/bootstrap-collapse.js"/>"></script>
+    <script src="<c:url value="/resources/bootstrap/js/bootstrap-collapse.js"/>"></script>    
     <script src="<c:url value="/resources/bootstrap/js/bootstrap-carousel.js"/>"></script>
+	
+	<c:if test="${ not empty admin }">
+	    <script src="<c:url value="/resources/bootstrap/js/d3.v2.js"/>"></script>
+		<script src="<c:url value="/resources/bootstrap/js/bullet.js"/>"></script>  
+	</c:if>
 	
 	<script>
 		var testImages = [];
 		var currentImage0 = 0;
 		var currentImage1 = 1;
 		var servicesAPI = "${pageContext.request.contextPath}";
-		var contentURL = "https://s3.amazonaws.com/";
+		var contentURL = "${cdn_url}";
 		var resizeImages = false;
 		
 		(function ($) {
@@ -90,7 +101,7 @@
 				function showDialog(imageNumber) {
 					
 					var imageId = (imageNumber == 0) ? currentImage0 : currentImage1;
-					$('#dialogPhoto').attr('src', contentURL +  testImages[imageId].bucket_name + "/" + testImages[imageId].folder_name + "/" + testImages[imageId].picture_id);
+					$('#dialogPhoto').attr('src', contentURL + testImages[imageId].folder_name + "/" + testImages[imageId].picture_id);
 					
 					$( "#dialog-message" ).dialog({
 			            modal: true,
@@ -136,10 +147,7 @@
     				currentImage1 = currentImage0 + 1;
     				
     				
-    				if (currentImage0 >= testImages.length  || currentImage1 >= testImages.length ) {
-    					/* $('#assessTable').hide();
-    					$('#assessThanks').show();
-    					$( "#dialog-message" ).dialog('close'); */    					
+    				if (currentImage0 >= testImages.length  || currentImage1 >= testImages.length ) {    									
     					window.location="<c:url value="/assessmentFeedback"/>";
     				}
     				updateImages();
@@ -168,18 +176,8 @@
 				
 				function updateImages() {			    				
     				
-					$('#testImage0').attr('src', contentURL +  testImages[currentImage0].bucket_name + "/" + testImages[currentImage0].folder_name + "/" + testImages[currentImage0].picture_id);    				    				
-					
-					$('#testImage1').attr('src', contentURL +  testImages[currentImage1].bucket_name + "/" + testImages[currentImage1].folder_name + "/" + testImages[currentImage1].picture_id);
-    				
-					/* if (!resizeImages) {
-						$('#testImage0').attr('width','50%');
-						$('#testImage1').attr('width','50%');
-						resizeImages = true;
-					} else {
-						$('#testImage0').attr('width','100%');
-						$('#testImage1').attr('width','100%');							
-					} */
+					$('#testImage0').attr('src', contentURL + testImages[currentImage0].folder_name + "/" + testImages[currentImage0].picture_id);    				    									
+					$('#testImage1').attr('src', contentURL + testImages[currentImage1].folder_name + "/" + testImages[currentImage1].picture_id);    								
     				
     			}
 				
@@ -190,6 +188,11 @@
 			    			var i = 0;
 			    			$.each(items, function(index, value) {
 			    				testImages[i] = value;
+			    				
+			    				//Preload images.
+			    				var preloadImage = new Image();
+			    				preloadImage.src = contentURL + value.folder_name + "/" + value.picture_id;
+			    				
 			    				i++;
 			    			});
 			    			
@@ -199,7 +202,11 @@
 			    				
 			    				$.post(servicesAPI + "/json/assessmentevent.ajax", 
 			    			    		{accountId:$('#userId').val(), explicitId:testImages[currentImage0].id, type:"viewed"}, 
-			    			    		function(items) {});
+			    			    		function(items) {
+			    			    			<c:if test="${ not empty admin }">
+			    			    				buildChart();
+			    			    			</c:if>
+			    			    		});
 			    				
 			    				showDialog(0);			    				
 			    				return false;
@@ -210,7 +217,11 @@
 			    				
 			    				$.post(servicesAPI + "/json/assessmentevent.ajax", 
 			    			    		{accountId:$('#userId').val(), explicitId:testImages[currentImage1].id, type:"viewed"}, 
-			    			    		function(items) {});
+			    			    		function(items) {
+			    			    			<c:if test="${ not empty admin }">
+			    			    				buildChart();
+			    			    			</c:if>
+			    			    		});
 			    				
 			    				showDialog(1);			    				
 			    				return false;
@@ -219,7 +230,6 @@
 			    				alert("error: " + jqXHR + " " + textStatus + " " + errorThrown); 
 			    		});
 												
-				
 			});
 		})(jQuery);		
 	</script>

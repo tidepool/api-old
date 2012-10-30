@@ -66,10 +66,50 @@
 
     <div class="container">
 		<table class="table">
-			<tr><th>First</th><th>Last</th><th>Email</th><th>Group</th></tr>
+			<tr>
+				<th>Id</th>
+				<th>First</th>
+				<th>Last</th>
+				<th>Email</th>
+				<th>Group</th>				
+				<th> extraverted</th>
+				<th> critical</th>
+				<th> dependable</th>
+				<th> anxious</th>
+				<th> open</th>
+				<th> reserved</th>
+				<th> sympathetic</th>
+				<th> disorganized</th>
+				<th> calm</th>
+				<th> conventional</th>				
+				<th> artistic_appeal</th>
+				<th> effective_user_interface</th>
+				<th> interest_in_measurement</th>
+				<th> understanding_personality</th>
+				<th> interesting_dating_partners</th>				
+			</tr>
 			<c:forEach  var="accountItem" items="${accounts}" varStatus="accountCounter">
 				<tr>
-					<td>${accountItem.firstName}</td><td> ${accountItem.lastName }</td><td> ${ accountItem.email }</td><td> ${ accountItem.elementGroupId }</td>
+					<td>${accountItem.userId}</td>
+					<td>${accountItem.firstName}</td>
+					<td>${accountItem.lastName }</td>
+					<td>${accountItem.email }</td>
+					<td>${accountItem.elementGroupId }</td>					
+					<td>${accountItem.extraverted}</td>
+					<td>${accountItem.critical}</td>
+					<td>${accountItem.dependable}</td>
+					<td>${accountItem.anxious}</td>
+					<td>${accountItem.open}</td>
+					<td>${accountItem.reserved}</td>
+					<td>${accountItem.sympathetic}</td>
+					<td>${accountItem.disorganized}</td>
+					<td>${accountItem.calm}</td>
+					<td>${accountItem.conventional}</td>					
+					<td>${accountItem.artistic_appeal}</td>
+					<td>${accountItem.effective_user_interface}</td>
+					<td>${accountItem.interest_in_measurement}</td>
+					<td>${accountItem.understanding_personality}</td>
+					<td>${accountItem.interesting_dating_partners}</td>					
 				</tr>
 			</c:forEach>
 		</table>

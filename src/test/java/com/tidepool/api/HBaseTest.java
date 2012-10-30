@@ -29,6 +29,7 @@ import com.tidepool.api.model.CodedAttributeGroup;
 import com.tidepool.api.model.CodedItem;
 import com.tidepool.api.model.CodedItemLog;
 import com.tidepool.api.model.CodingEvent;
+import com.tidepool.api.model.CodingEventRollup;
 import com.tidepool.api.model.CodingGroup;
 import com.tidepool.api.model.Highlight;
 import com.tidepool.api.model.MainGroup;
@@ -475,6 +476,32 @@ public class HBaseTest {
 		assertNotNull(items);
 		assertTrue(items.size() > 0);
 		
+	}
+	
+	@Test
+	public void testGetCodingEventForUser() {
+		List<CodingEvent> events = hBaseManager.getCodingEventsForAccount("191");
+		assertNotNull(events);
+		assertTrue(events.size() > 0);		
+		
+		for (CodingEvent event : events) {
+			System.out.println("Event: id: " + event.getId() + " user id: " + event.getUser_id() + " type: " + event.getType() + " picture_id: " + event.getPicture_id()  + " timestamp: " + event.getTimestamp());
+		}		
+	}
+	
+	@Test
+	public void testCodingEventRollup() {
+		CodingEventRollup rollup =  hBaseManager.getCodingEventRollup("191");
+		assertNotNull(rollup);
+		assertTrue(rollup.getSelectedEvents().size() > 0);
+	}
+	
+	
+	@Test
+	public void testGettingCodedItemsByIdAndFolder() {
+		List<CodedItem> items = hBaseManager.getFolderCodedItemsForPictures("match_type", "1", "10");
+		assertNotNull(items);
+		assertTrue(items.size() == 2);
 	}
 	
 }

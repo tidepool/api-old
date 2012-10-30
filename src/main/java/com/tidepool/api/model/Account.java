@@ -43,6 +43,7 @@ public class Account implements Serializable, UserDetails {
 	public static final byte[] understanding_personality_column = Bytes.toBytes("understanding_personality");
 	public static final byte[] interesting_dating_partners_column = Bytes.toBytes("interesting_dating_partners");
 	
+	public static final byte[] ip_column = Bytes.toBytes("ip");
 	
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_USER = "ROLE_USER";
@@ -100,6 +101,8 @@ public class Account implements Serializable, UserDetails {
 	public String disorganizedLabel = "Disorganized, careless.";
 	public String calmLabel = "Calm, emotionally stable.";
 	public String conventionalLabel = "Conventional, uncreative.";
+	
+	public String ip;
 	
 	
 	public Collection<? extends GrantedAuthority> getAuthorities() {
@@ -449,6 +452,14 @@ public class Account implements Serializable, UserDetails {
 
 	public void setInteresting_dating_partners(int interesting_dating_partners) {
 		this.interesting_dating_partners = interesting_dating_partners;
+	}
+
+	public String getIp() {
+		return ip;
+	}
+
+	public void setIp(String ip) {
+		this.ip = ip;
 	}
 	
 }

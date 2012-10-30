@@ -42,9 +42,11 @@ import com.tidepool.api.model.CodedItemLog;
 import com.tidepool.api.model.CodingEvent;
 import com.tidepool.api.model.CodingEventRollup;
 import com.tidepool.api.model.CodingGroup;
+import com.tidepool.api.model.Factor;
 import com.tidepool.api.model.Highlight;
 import com.tidepool.api.model.MainGroup;
 import com.tidepool.api.model.Photo;
+import com.tidepool.api.model.RowMapper;
 import com.tidepool.api.model.TrainingItem;
 
 public class HBaseManager {
@@ -79,6 +81,9 @@ public class HBaseManager {
 		
 	private final String trainingImageTable= "explicit_training_image";
 	private final String trainingEventTable= "explicit_training_event";
+	
+	private final String factorTable = "element_factor";
+	private final String elementBig5Table = "element_big_5";
 	
 	private final byte[] family_name_column = Bytes.toBytes("cf");
 	
@@ -1331,5 +1336,78 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 	public CodingEventRollup getCodingEventRollup(String accountId) {		
 		return new CodingEventRollup(getCodingEventsForAccount(accountId));		
 	}
+	
+	
+	public HashMap<String, Factor> getFactors() {
+		HashMap<String, Factor> factors = new HashMap<String, Factor>();		
+		ResultScanner scanner  = null;		
+		try {
+			HTableInterface table = pool.getTable(factorTable);
+			Scan scan = new Scan();			
+			scanner = table.getScanner(scan);		
+			for (Result result : scanner) {
+				String key = Bytes.toString(result.getValue(family_name_column, Factor.factor_column));
+				String value = Bytes.toString(result.getValue(family_name_column, Factor.element_column));
+				Factor factor = factors.get(key);
+				if (factor == null) {
+					factor = new Factor();
+					factor.setName(key);
+					factors.put(key, factor);
+				}
+				factor.getElements().add(value);
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			scanner.close();
+		}		
+		return factors;		
+	}
+
+	public List<String> getElementsFromPictures(String folder, List<String > pictureIds ) {		
+		return getElementsFromPictures(folder, pictureIds);
+	}
+	
+	public List<String> getElementsFromPictures(String folder, String...pictureIds ) {		
+		List<String> elements = new ArrayList<String>();
+		List<CodedItem> items = getFolderCodedItemsForPictures(folder, pictureIds);
+		for (CodedItem item : items) {
+			elements.addAll(item.getActiveAttributes());
+		}
+		return elements;
+	}
+	
+	
+	public RowMapper getBigFiveRow(RowMapper mapper) {
+
+		ResultScanner scanner  = null;
+		SingleColumnValueFilter filter = new SingleColumnValueFilter(
+				family_name_column,
+				RowMapper.big_5_column,
+				CompareOp.EQUAL,
+				Bytes.toBytes(mapper.getName())
+		);
+
+		try {
+			HTableInterface table = pool.getTable(elementBig5Table);
+			Scan scan = new Scan();
+			scan.setFilter(filter);
+			scanner = table.getScanner(scan);		
+			for (Result result : scanner) {				
+				for (String key : mapper.getDoubleValues().keySet()) {
+					double value =  Bytes.toDouble(result.getValue(family_name_column, Bytes.toBytes(key)));
+					mapper.getDoubleValues().put(key, value);
+				}				
+				return mapper;
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			scanner.close();
+		}		
+		return mapper;
+
+	}
+	
 	
 }

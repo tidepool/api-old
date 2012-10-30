@@ -2,7 +2,9 @@ package com.tidepool.api.model;
 
 import java.io.Serializable;
 import java.lang.reflect.Field;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.hadoop.hbase.util.Bytes;
 
@@ -12,6 +14,27 @@ public class CodedItem implements Serializable {
 	
 	
 	public HashMap<String, Highlight> highlightMap = new HashMap<String, Highlight>();
+	
+	
+	public List<String> getActiveAttributes() {
+		Class<CodedItem> codedItemClass = CodedItem.class;	
+		List<String> attributes = new ArrayList<String>();
+		for (Field field : codedItemClass.getFields()) {
+			try {
+				if (field.getType().equals(String.class)) {	
+					String value = (String)(field.get(this));
+					if (value != null && value.equals("1")) {
+						attributes.add(field.getName());
+					}
+				}
+			} catch (IllegalArgumentException e) {
+				
+			} catch (IllegalAccessException e) {
+
+			}
+		}
+		return attributes;
+	}
 	
 	
 	public boolean isAttributeActive(String attributeName) {

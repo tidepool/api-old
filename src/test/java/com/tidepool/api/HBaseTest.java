@@ -31,6 +31,7 @@ import com.tidepool.api.model.CodedItemLog;
 import com.tidepool.api.model.CodingEvent;
 import com.tidepool.api.model.CodingEventRollup;
 import com.tidepool.api.model.CodingGroup;
+import com.tidepool.api.model.Factor;
 import com.tidepool.api.model.Highlight;
 import com.tidepool.api.model.MainGroup;
 import com.tidepool.api.model.TrainingItem;
@@ -503,5 +504,32 @@ public class HBaseTest {
 		assertNotNull(items);
 		assertTrue(items.size() == 2);
 	}
+	
+	@Test
+	public void testGetElementsFromPicture() {
+		List<CodedItem> items = hBaseManager.getFolderCodedItemsForPictures("match_type", "1");
+		assertNotNull(items);
+		assertTrue(items.size() == 1);		
+		assertTrue(items.get(0).getActiveAttributes().size() > 0);
+	}
+	
+	@Test
+	public void getElementsFromPictures() {
+		List<String> items = hBaseManager.getElementsFromPictures("match_type", "1", "10");
+		assertTrue(items.size() > 0);
+		for (String item : items) {
+			System.out.println("Element: " + item);
+		}
+	}
+	
+	
+	@Test
+	public void testGetFactorMap() {		
+		HashMap<String, Factor> factors = hBaseManager.getFactors();
+		assertNotNull(factors);
+		assertTrue(factors.size() > 0);
+	}
+	
+	
 	
 }

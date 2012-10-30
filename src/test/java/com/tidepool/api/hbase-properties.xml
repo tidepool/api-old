@@ -26,6 +26,7 @@
 	
 	
 	<bean id="hBaseManager" class="com.tidepool.api.data.HBaseManager" init-method="initialize"></bean>
+	<bean id="factorAnalysisManager" class="com.tidepool.api.data.FactorAnalysisManager"></bean>
 	<bean id="passwordEncoder" class="org.springframework.security.authentication.encoding.ShaPasswordEncoder"/>		
 	
 </beans>

@@ -42,6 +42,7 @@
 
 	<bean id="hBaseManager" class="com.tidepool.api.data.HBaseManager" init-method="initialize"></bean>
 	<bean id="accountService" class="com.tidepool.api.authentication.AccountService"></bean>
+	<bean id="factorAnalysisManager" class="com.tidepool.api.data.FactorAnalysisManager"></bean>
 	
 	<!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">

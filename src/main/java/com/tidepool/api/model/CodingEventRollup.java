@@ -15,6 +15,15 @@ public class CodingEventRollup {
 		return getEventsByType(CodingEvent.SELECTED_TYPE);
 	}
 	
+	public List<String> getSelectedPictureIds() {		
+		List<String> ids = new ArrayList<String>();
+		for (CodingEvent event : getSelectedEvents()) {
+			ids.add(event.getPicture_id());
+		}
+		return ids;		
+	}
+	
+	
 	public List<CodingEvent> getViewedEvents() {
 		return getEventsByType(CodingEvent.VIEWED_TYPE);
 	}

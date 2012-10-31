@@ -10,15 +10,12 @@ import java.util.HashMap;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
-import org.apache.commons.cli.GnuParser;
 import org.apache.commons.cli.HelpFormatter;
-import org.apache.commons.cli.OptionBuilder;
 import org.apache.commons.cli.Options;
 import org.apache.commons.cli.ParseException;
 import org.apache.commons.cli.PosixParser;
 import org.apache.hadoop.conf.Configuration;
 import org.apache.hadoop.hbase.HBaseConfiguration;
-import org.apache.hadoop.hbase.client.HBaseAdmin;
 import org.apache.hadoop.hbase.client.HTable;
 import org.apache.hadoop.hbase.client.Put;
 import org.apache.hadoop.hbase.util.Bytes;
@@ -27,9 +24,6 @@ import com.tidepool.api.model.Factor;
 
 public class HBaseLoader {
 
-	
-	
-	
 	/**
 	 * @param args
 	 */
@@ -52,6 +46,8 @@ public class HBaseLoader {
 	        	formatter.printHelp( "loader", options );
 	        	return;
 	        } 
+	        
+	        loadTable(line.getOptionValue("t"), line.getOptionValue("cf"),line.getOptionValue("c"), line.getOptionValue("f")); 
 	        
 	    }
 	    catch( ParseException exp ) {

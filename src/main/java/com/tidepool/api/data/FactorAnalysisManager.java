@@ -39,7 +39,11 @@ public class FactorAnalysisManager {
 		HashMap<String, Factor> scoredFactors = getScoredFactors(factors, elements);
 		
 		//Apply factor score to the big 5 equations
-		
+		bigFive.setOpenness(calculateOpenness(scoredFactors));
+		bigFive.setConscientiousness(calculateConscientiousness(scoredFactors));
+		bigFive.setExtraversion(calculateExtraversion(scoredFactors));
+		bigFive.setAgreeableness(calculateAgreeableness(scoredFactors));
+		bigFive.setNeuroticism(this.calculateNeuroticism(scoredFactors));
 		return bigFive;
 	}
 	
@@ -48,6 +52,7 @@ public class FactorAnalysisManager {
 		
 		RowMapper mapper = new RowMapper();
 		mapper.setName("openness");
+		
 		mapper.getDoubleValues().put("complex_cognition", 0D);
 		mapper.getDoubleValues().put("artistic_composition", 0D);
 		mapper.getDoubleValues().put("nature", 0D);
@@ -57,17 +62,92 @@ public class FactorAnalysisManager {
 		mapper.getDoubleValues().put("wild_side", 0D);
 		mapper = hBaseManager.getBigFiveRow(mapper);
 		
-		return (mapper.getDoubleValues().get("openness") * factorMap.get("openness").getScore()) +
-			   (mapper.getDoubleValues().get("complex_cognition") * factorMap.get("complex_cognition").getScore()) +
+		return (mapper.getDoubleValues().get("complex_cognition") * factorMap.get("complex_cognition").getScore()) +
 			   (mapper.getDoubleValues().get("artistic_composition") * factorMap.get("artistic_composition").getScore()) +
 			   (mapper.getDoubleValues().get("nature") * factorMap.get("nature").getScore()) +
 			   (mapper.getDoubleValues().get("complex_nature") * factorMap.get("complex_nature").getScore()) +
 			   (mapper.getDoubleValues().get("literary") * factorMap.get("literary").getScore()) +
 			   (mapper.getDoubleValues().get("spiritual_religious") * factorMap.get("spiritual_religious").getScore()) + 
-			   (mapper.getDoubleValues().get("wild_side") * factorMap.get("wild_side").getScore())
-			   ;
+			   (mapper.getDoubleValues().get("wild_side") * factorMap.get("wild_side").getScore());
 	}
 	
+	
+	public double calculateConscientiousness(HashMap<String, Factor> factorMap) {
+
+		RowMapper mapper = new RowMapper();
+		mapper.setName("conscientiousness");
+
+		mapper.getDoubleValues().put("complex_cognition", 0D);		
+		mapper.getDoubleValues().put("negative_human_emotions", 0D);
+		mapper.getDoubleValues().put("complex_nature", 0D);
+		mapper.getDoubleValues().put("artistic_composition", 0D);		
+		mapper = hBaseManager.getBigFiveRow(mapper);
+
+		return (mapper.getDoubleValues().get("complex_cognition") * factorMap.get("complex_cognition").getScore()) +
+		(mapper.getDoubleValues().get("negative_human_emotions") * factorMap.get("negative_human_emotions").getScore()) +			   
+		(mapper.getDoubleValues().get("complex_nature") * factorMap.get("complex_nature").getScore()) +
+		(mapper.getDoubleValues().get("artistic_composition") * factorMap.get("artistic_composition").getScore());			   
+	}
+
+	
+	public double calculateExtraversion(HashMap<String, Factor> factorMap) {
+		
+		RowMapper mapper = new RowMapper();
+		mapper.setName("extraversion");
+		
+		mapper.getDoubleValues().put("humans", 0D);
+		mapper.getDoubleValues().put("positive_human_emotions", 0D);
+		mapper.getDoubleValues().put("sports", 0D);
+		mapper.getDoubleValues().put("sexuality", 0D);		
+		mapper = hBaseManager.getBigFiveRow(mapper);
+		
+		return (mapper.getDoubleValues().get("humans") * factorMap.get("humans").getScore()) +
+			   (mapper.getDoubleValues().get("positive_human_emotions") * factorMap.get("positive_human_emotions").getScore()) +
+			   (mapper.getDoubleValues().get("sports") * factorMap.get("sports").getScore()) +
+			   (mapper.getDoubleValues().get("sexuality") * factorMap.get("sexuality").getScore());
+	}
+	
+
+	public double calculateAgreeableness(HashMap<String, Factor> factorMap) {
+		
+		RowMapper mapper = new RowMapper();
+		mapper.setName("agreeableness");
+		
+		mapper.getDoubleValues().put("negative_human_emotions", 0D);
+		mapper.getDoubleValues().put("positive_human_emotions", 0D);
+		mapper.getDoubleValues().put("nature", 0D);
+		mapper.getDoubleValues().put("happiness_factor", 0D);
+		mapper.getDoubleValues().put("sexuality", 0D);
+		
+		mapper = hBaseManager.getBigFiveRow(mapper);
+		
+		return (mapper.getDoubleValues().get("negative_human_emotions") * factorMap.get("negative_human_emotions").getScore()) +
+			   (mapper.getDoubleValues().get("positive_human_emotions") * factorMap.get("positive_human_emotions").getScore()) +
+			   (mapper.getDoubleValues().get("nature") * factorMap.get("nature").getScore()) +
+			   (mapper.getDoubleValues().get("happiness_factor") * factorMap.get("happiness_factor").getScore()) +
+			   (mapper.getDoubleValues().get("sexuality") * factorMap.get("sexuality").getScore());
+	}	
+	
+	
+	public double calculateNeuroticism(HashMap<String, Factor> factorMap) {
+		
+		RowMapper mapper = new RowMapper();
+		mapper.setName("neuroticism");
+		
+		mapper.getDoubleValues().put("artistic_composition", 0D);
+		mapper.getDoubleValues().put("negative_human_emotions", 0D);
+		mapper.getDoubleValues().put("positive_human_emotions", 0D);		
+		mapper.getDoubleValues().put("nature", 0D);
+		mapper.getDoubleValues().put("animals", 0D);
+		
+		mapper = hBaseManager.getBigFiveRow(mapper);
+		
+		return (mapper.getDoubleValues().get("negative_human_emotions") * factorMap.get("negative_human_emotions").getScore()) +
+			   (mapper.getDoubleValues().get("positive_human_emotions") * factorMap.get("positive_human_emotions").getScore()) +
+			   (mapper.getDoubleValues().get("artistic_composition") * factorMap.get("artistic_composition").getScore()) +
+			   (mapper.getDoubleValues().get("nature") * factorMap.get("nature").getScore()) +
+			   (mapper.getDoubleValues().get("animals") * factorMap.get("animals").getScore());
+	}	
 	
 	
 	public HashMap<String, Factor> getScoredFactors (HashMap<String, Factor> factors, List<String> elements) {

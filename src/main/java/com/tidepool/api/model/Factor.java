@@ -1,6 +1,7 @@
 package com.tidepool.api.model;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
@@ -11,10 +12,15 @@ public class Factor implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final byte[] factor_column = Bytes.toBytes("factor");
-	public static final byte[] element_column = Bytes.toBytes("element");
+	public static final byte[] element_column = Bytes.toBytes("element");	
+	public static final byte[] big_5_column = Bytes.toBytes("big_5");
+	public static final byte[] value_column = Bytes.toBytes("value");
 	
+	protected int id;
 	protected String name;
-	protected List<String> elements;
+	protected String element;
+	protected double coefficient;
+	protected List<String> elements = new ArrayList<String>();
 	protected int score;
 	
 	public String getName() {
@@ -37,6 +43,30 @@ public class Factor implements Serializable {
 
 	public void setScore(int score) {
 		this.score = score;
+	}
+
+	public int getId() {
+		return id;
+	}
+
+	public void setId(int id) {
+		this.id = id;
+	}
+
+	public String getElement() {
+		return element;
+	}
+
+	public void setElement(String element) {
+		this.element = element;
+	}
+
+	public double getCoefficient() {
+		return coefficient;
+	}
+
+	public void setCoefficient(double coefficient) {
+		this.coefficient = coefficient;
 	}
 	
 }

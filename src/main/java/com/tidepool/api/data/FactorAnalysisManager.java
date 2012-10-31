@@ -1,7 +1,5 @@
 package com.tidepool.api.data;
 
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 
@@ -9,7 +7,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 
 import com.tidepool.api.model.Account;
 import com.tidepool.api.model.BigFive;
-import com.tidepool.api.model.CodedItem;
 import com.tidepool.api.model.CodingEventRollup;
 import com.tidepool.api.model.Factor;
 import com.tidepool.api.model.RowMapper;
@@ -30,6 +27,7 @@ public class FactorAnalysisManager {
 		CodingEventRollup rollup =  hBaseManager.getCodingEventRollup(account.getUserId());
 		
 		//Get the elements
+		
 		List<String> elements = hBaseManager.getElementsFromPictures(folder, rollup.getSelectedPictureIds());
 		
 		//Get the factors
@@ -47,6 +45,12 @@ public class FactorAnalysisManager {
 		return bigFive;
 	}
 	
+	public int getFactorScore(HashMap<String, Factor> factorMap, String factor) {
+		if (factorMap.containsKey(factor)) {
+			return factorMap.get(factor).getScore();
+		}
+		return 0;
+	}
 	
 	public double calculateOpenness(HashMap<String, Factor> factorMap) {
 		
@@ -62,13 +66,13 @@ public class FactorAnalysisManager {
 		mapper.getDoubleValues().put("wild_side", 0D);
 		mapper = hBaseManager.getBigFiveRow(mapper);
 		
-		return (mapper.getDoubleValues().get("complex_cognition") * factorMap.get("complex_cognition").getScore()) +
-			   (mapper.getDoubleValues().get("artistic_composition") * factorMap.get("artistic_composition").getScore()) +
-			   (mapper.getDoubleValues().get("nature") * factorMap.get("nature").getScore()) +
-			   (mapper.getDoubleValues().get("complex_nature") * factorMap.get("complex_nature").getScore()) +
-			   (mapper.getDoubleValues().get("literary") * factorMap.get("literary").getScore()) +
-			   (mapper.getDoubleValues().get("spiritual_religious") * factorMap.get("spiritual_religious").getScore()) + 
-			   (mapper.getDoubleValues().get("wild_side") * factorMap.get("wild_side").getScore());
+		return (mapper.getDoubleValues().get("complex_cognition") * getFactorScore(factorMap, "complex_cognition")) +
+			   (mapper.getDoubleValues().get("artistic_composition") * getFactorScore(factorMap, "artistic_composition")) +
+			   (mapper.getDoubleValues().get("nature") * getFactorScore(factorMap, "nature")) +
+			   (mapper.getDoubleValues().get("complex_nature") * getFactorScore(factorMap, "complex_nature")) +
+			   (mapper.getDoubleValues().get("literary") * getFactorScore(factorMap, "literary")) +
+			   (mapper.getDoubleValues().get("spiritual_religious") * getFactorScore(factorMap, "spiritual_religious")) + 
+			   (mapper.getDoubleValues().get("wild_side") * getFactorScore(factorMap, "wild_side"));
 	}
 	
 	
@@ -83,10 +87,10 @@ public class FactorAnalysisManager {
 		mapper.getDoubleValues().put("artistic_composition", 0D);		
 		mapper = hBaseManager.getBigFiveRow(mapper);
 
-		return (mapper.getDoubleValues().get("complex_cognition") * factorMap.get("complex_cognition").getScore()) +
-		(mapper.getDoubleValues().get("negative_human_emotions") * factorMap.get("negative_human_emotions").getScore()) +			   
-		(mapper.getDoubleValues().get("complex_nature") * factorMap.get("complex_nature").getScore()) +
-		(mapper.getDoubleValues().get("artistic_composition") * factorMap.get("artistic_composition").getScore());			   
+		return (mapper.getDoubleValues().get("complex_cognition") * getFactorScore(factorMap, "complex_cognition")) +
+		(mapper.getDoubleValues().get("negative_human_emotions") * getFactorScore(factorMap, "negative_human_emotions")) +			   
+		(mapper.getDoubleValues().get("complex_nature") * getFactorScore(factorMap, "complex_nature")) +
+		(mapper.getDoubleValues().get("artistic_composition") * getFactorScore(factorMap, "artistic_composition"));			   
 	}
 
 	
@@ -101,10 +105,10 @@ public class FactorAnalysisManager {
 		mapper.getDoubleValues().put("sexuality", 0D);		
 		mapper = hBaseManager.getBigFiveRow(mapper);
 		
-		return (mapper.getDoubleValues().get("humans") * factorMap.get("humans").getScore()) +
-			   (mapper.getDoubleValues().get("positive_human_emotions") * factorMap.get("positive_human_emotions").getScore()) +
-			   (mapper.getDoubleValues().get("sports") * factorMap.get("sports").getScore()) +
-			   (mapper.getDoubleValues().get("sexuality") * factorMap.get("sexuality").getScore());
+		return (mapper.getDoubleValues().get("humans") * getFactorScore(factorMap, "humans")) +
+			   (mapper.getDoubleValues().get("positive_human_emotions") * getFactorScore(factorMap, "positive_human_emotions")) +
+			   (mapper.getDoubleValues().get("sports") * getFactorScore(factorMap, "sports")) +
+			   (mapper.getDoubleValues().get("sexuality") * getFactorScore(factorMap, "sexuality"));
 	}
 	
 
@@ -121,11 +125,11 @@ public class FactorAnalysisManager {
 		
 		mapper = hBaseManager.getBigFiveRow(mapper);
 		
-		return (mapper.getDoubleValues().get("negative_human_emotions") * factorMap.get("negative_human_emotions").getScore()) +
-			   (mapper.getDoubleValues().get("positive_human_emotions") * factorMap.get("positive_human_emotions").getScore()) +
-			   (mapper.getDoubleValues().get("nature") * factorMap.get("nature").getScore()) +
-			   (mapper.getDoubleValues().get("happiness_factor") * factorMap.get("happiness_factor").getScore()) +
-			   (mapper.getDoubleValues().get("sexuality") * factorMap.get("sexuality").getScore());
+		return (mapper.getDoubleValues().get("negative_human_emotions") * getFactorScore(factorMap, "negative_human_emotions")) +
+			   (mapper.getDoubleValues().get("positive_human_emotions") * getFactorScore(factorMap, "positive_human_emotions")) +
+			   (mapper.getDoubleValues().get("nature") * getFactorScore(factorMap, "nature")) +
+			   (mapper.getDoubleValues().get("happiness_factor") * getFactorScore(factorMap, "happiness_factor")) +
+			   (mapper.getDoubleValues().get("sexuality") * getFactorScore(factorMap, "sexuality"));
 	}	
 	
 	
@@ -142,11 +146,11 @@ public class FactorAnalysisManager {
 		
 		mapper = hBaseManager.getBigFiveRow(mapper);
 		
-		return (mapper.getDoubleValues().get("negative_human_emotions") * factorMap.get("negative_human_emotions").getScore()) +
-			   (mapper.getDoubleValues().get("positive_human_emotions") * factorMap.get("positive_human_emotions").getScore()) +
-			   (mapper.getDoubleValues().get("artistic_composition") * factorMap.get("artistic_composition").getScore()) +
-			   (mapper.getDoubleValues().get("nature") * factorMap.get("nature").getScore()) +
-			   (mapper.getDoubleValues().get("animals") * factorMap.get("animals").getScore());
+		return (mapper.getDoubleValues().get("negative_human_emotions") * getFactorScore(factorMap, "negative_human_emotions")) +
+			   (mapper.getDoubleValues().get("positive_human_emotions") * getFactorScore(factorMap, "positive_human_emotions")) +
+			   (mapper.getDoubleValues().get("artistic_composition") * getFactorScore(factorMap, "artistic_composition")) +
+			   (mapper.getDoubleValues().get("nature") * getFactorScore(factorMap, "nature")) +
+			   (mapper.getDoubleValues().get("animals") * getFactorScore(factorMap, "animals"));
 	}	
 	
 	

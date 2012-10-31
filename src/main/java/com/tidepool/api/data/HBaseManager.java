@@ -1364,10 +1364,6 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 		return factors;		
 	}
 
-	public List<String> getElementsFromPictures(String folder, List<String > pictureIds ) {		
-		return getElementsFromPictures(folder, pictureIds);
-	}
-	
 	public List<String> getElementsFromPictures(String folder, String...pictureIds ) {		
 		List<String> elements = new ArrayList<String>();
 		List<CodedItem> items = getFolderCodedItemsForPictures(folder, pictureIds);
@@ -1394,12 +1390,13 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 			scan.setFilter(filter);
 			scanner = table.getScanner(scan);		
 			for (Result result : scanner) {				
-				for (String key : mapper.getDoubleValues().keySet()) {
-					double value =  Bytes.toDouble(result.getValue(family_name_column, Bytes.toBytes(key)));
-					mapper.getDoubleValues().put(key, value);
-				}				
-				return mapper;
+				String factor = Bytes.toString(result.getValue(family_name_column, RowMapper.factor_column));
+				if (mapper.getDoubleValues().containsKey(factor)) {
+					double value =  Bytes.toDouble(result.getValue(family_name_column, RowMapper.value_column));
+					mapper.getDoubleValues().put(factor, value);
+				}							
 			}
+			return mapper;
 		} catch(Exception e) {
 			e.printStackTrace();
 		} finally {
@@ -1407,6 +1404,24 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 		}		
 		return mapper;
 
+	}
+	
+	
+	
+	public void loadBig5Data(ArrayList<Factor> factors) {
+		
+		for (Factor factor : factors) {		
+			try {
+				HTableInterface table = pool.getTable(elementBig5Table);
+				Put put = new Put(Bytes.toBytes(factor.getId()));				
+				put.add(family_name_column, Factor.big_5_column, Bytes.toBytes(factor.getName()));				
+				put.add(family_name_column, Factor.factor_column, Bytes.toBytes(factor.getElement()));				
+				put.add(family_name_column, Factor.value_column, Bytes.toBytes(factor.getCoefficient()));				
+				table.put(put);
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}				
 	}
 	
 	

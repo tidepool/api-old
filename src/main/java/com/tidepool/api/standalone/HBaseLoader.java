@@ -35,6 +35,7 @@ public class HBaseLoader {
 		Options options = new Options();
 		options.addOption( "t", "table", true, "the table name" );
 		options.addOption( "cf", "column-family", true, "column family name" );
+		options.addOption( "i", "id-type", true, "the data type of the first field in the csv, the id. ex: String" );
 		options.addOption( "c", "columns", true, "column mappings(first column is assumned to be ID): name:<Java>type, ex: name:String,score:Long" );
 		options.addOption( "f", "file", true, "csv file" );
 		try {
@@ -47,7 +48,7 @@ public class HBaseLoader {
 	        	return;
 	        } 
 	        
-	        loadTable(line.getOptionValue("t"), line.getOptionValue("cf"),line.getOptionValue("c"), line.getOptionValue("f")); 
+	        loadTable(line.getOptionValue("t"), line.getOptionValue("cf"), line.getOptionValue("i"),line.getOptionValue("c"), line.getOptionValue("f")); 
 	        
 	    }
 	    catch( ParseException exp ) {
@@ -57,7 +58,7 @@ public class HBaseLoader {
 		
 	}
 	
-	protected static void loadTable(String tableName, String columnFamily, String columns, String filePath) {
+	protected static void loadTable(String tableName, String columnFamily, String idType, String columns, String filePath) {
 
 		Configuration conf = HBaseConfiguration.create();
 		conf.clear();		
@@ -80,8 +81,17 @@ public class HBaseLoader {
 				inFile = new BufferedReader(new InputStreamReader(new FileInputStream(filePath)));
 				String pipeName;
 				while ((pipeName = inFile.readLine()) != null) {
-					String[] values = pipeName.split(",");				
-					Put put = new Put(Bytes.toBytes(values[0]));	
+					String[] values = pipeName.split(",");
+					
+					Put put = null;
+					if (idType.toLowerCase().equals("integer")) {
+						put = new Put(Bytes.toBytes(new Integer(values[0])));	
+					} else if (idType.toLowerCase().equals("long")) {
+						put = new Put(Bytes.toBytes(new Long(values[0])));	
+					}  else {
+						put = new Put(Bytes.toBytes(values[0]));	
+					}
+					
 					int i = 1;
 					for (String columnMapKey : columnMap.keySet()) {
 						

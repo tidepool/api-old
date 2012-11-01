@@ -492,9 +492,10 @@ public class HBaseTest {
 	
 	@Test
 	public void testCodingEventRollup() {
-		CodingEventRollup rollup =  hBaseManager.getCodingEventRollup("191");
+		CodingEventRollup rollup =  hBaseManager.getCodingEventRollup("193");
 		assertNotNull(rollup);
 		assertTrue(rollup.getSelectedEvents().size() > 0);
+		assertTrue(rollup.getSelectedPictureIds().length > 0);
 	}
 	
 	

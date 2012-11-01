@@ -26,8 +26,7 @@ public class FactorAnalysisManager {
 		//Get the events
 		CodingEventRollup rollup =  hBaseManager.getCodingEventRollup(account.getUserId());
 		
-		//Get the elements
-		
+		//Get the elements		
 		List<String> elements = hBaseManager.getElementsFromPictures(folder, rollup.getSelectedPictureIds());
 		
 		//Get the factors

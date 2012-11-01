@@ -17,8 +17,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tidepool.api.authentication.AccountService;
+import com.tidepool.api.data.FactorAnalysisManager;
 import com.tidepool.api.data.HBaseManager;
 import com.tidepool.api.model.Account;
+import com.tidepool.api.model.BigFive;
 import com.tidepool.api.model.Bullet;
 import com.tidepool.api.model.CodedItem;
 import com.tidepool.api.model.CodingEvent;
@@ -28,7 +30,8 @@ public class APIController {
 	
 	@Value("${tidepool.cdn.url}") 
 	private String cdnUrl;
-		
+	
+	private FactorAnalysisManager factorAnalysisManager;
 	private HBaseManager hBaseManager;
 	private AccountService accountService;
 
@@ -41,6 +44,11 @@ public class APIController {
 	@Autowired
 	public void setHBaseManager(HBaseManager hBaseManager) {
 		this.hBaseManager = hBaseManager;
+	}
+	
+	@Autowired
+	public void setFactorAnalysisManager(FactorAnalysisManager factorAnalysisManager) {
+		this.factorAnalysisManager = factorAnalysisManager;
 	}
 	
 	@RequestMapping(value="/json/session.ajax", method=RequestMethod.POST)
@@ -250,45 +258,48 @@ public class APIController {
 	
 	@RequestMapping(value="/json/bigfivebullet.ajax", method=RequestMethod.GET)
 	public @ResponseBody List<Bullet> getBullet(HttpServletRequest request) {
-
+		
+		Account account = (Account)request.getSession().getAttribute("account");
+		
 		ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 		
-		Random random = new Random();
+		
+		BigFive bigFive = factorAnalysisManager.getTheBigFive("match_type", account);
 		
 		Bullet bullet0 = new Bullet();
 		bullet0.setTitle("Openness");
 		bullet0.setSubtitle("Measure of Openness");
-		bullet0.setMarkers(Arrays.asList(random.nextDouble() * 250D));
-		bullet0.setRanges(Arrays.asList(random.nextDouble() * 150D, random.nextDouble() * 225D, random.nextDouble() * 300D));
-		bullet0.setMeasures(Arrays.asList(random.nextDouble() *  220D, random.nextDouble() * 270D));
+		bullet0.setMarkers(Arrays.asList(200D));
+		bullet0.setRanges(Arrays.asList(bigFive.getOpenness()));
+		bullet0.setMeasures(Arrays.asList(50D));
 		
 		Bullet bullet1 = new Bullet();
 		bullet1.setTitle("Conscientiousness");
 		bullet1.setSubtitle("Measure of Conscientiousness");
-		bullet1.setMarkers(Arrays.asList(random.nextDouble() * 26D));
-		bullet1.setRanges(Arrays.asList(random.nextDouble() * 20D, random.nextDouble() * 25D, random.nextDouble() * 30D));
-		bullet1.setMeasures(Arrays.asList(random.nextDouble() *  21D, random.nextDouble() * 23D));
+		bullet1.setMarkers(Arrays.asList(200D));
+		bullet1.setRanges(Arrays.asList(bigFive.getConscientiousness()));
+		bullet1.setMeasures(Arrays.asList(50D));
 		
 		Bullet bullet2 = new Bullet();
 		bullet2.setTitle("Extraversion");
 		bullet2.setSubtitle("Measure of Extraversion");
-		bullet2.setMarkers(Arrays.asList(random.nextDouble() * 550D));
-		bullet2.setRanges(Arrays.asList(random.nextDouble() * 350D, random.nextDouble() * 500D, random.nextDouble() * 600D));
-		bullet2.setMeasures(Arrays.asList(random.nextDouble() *  100D, random.nextDouble() * 320D));
+		bullet2.setMarkers(Arrays.asList(200D));
+		bullet2.setRanges(Arrays.asList(bigFive.getExtraversion()));
+		bullet2.setMeasures(Arrays.asList(50D));
 		
 		Bullet bullet3 = new Bullet();
 		bullet3.setTitle("Agreeableness");
-		bullet3.setSubtitle("Measure of Extraversion");
-		bullet3.setMarkers(Arrays.asList(random.nextDouble() *  550D));
-		bullet3.setRanges(Arrays.asList(random.nextDouble() *  350D, random.nextDouble() *  500D, random.nextDouble() * 600D));
-		bullet3.setMeasures(Arrays.asList(random.nextDouble() *  100D, random.nextDouble() * 320D));
+		bullet3.setSubtitle("Measure of Agreeableness");
+		bullet3.setMarkers(Arrays.asList(200D));
+		bullet3.setRanges(Arrays.asList(bigFive.getAgreeableness()));
+		bullet3.setMeasures(Arrays.asList(50D));
 		
 		Bullet bullet4 = new Bullet();
 		bullet4.setTitle("Neuroticism");
 		bullet4.setSubtitle("Measure of Neuroticism");
-		bullet4.setMarkers(Arrays.asList(random.nextDouble() *  550D));
-		bullet4.setRanges(Arrays.asList(random.nextDouble() * 350D, random.nextDouble() * 500D, random.nextDouble() * 600D));
-		bullet4.setMeasures(Arrays.asList(random.nextDouble() * 100D, random.nextDouble() * 320D));
+		bullet4.setMarkers(Arrays.asList(200D));
+		bullet4.setRanges(Arrays.asList(bigFive.getNeuroticism()));
+		bullet4.setMeasures(Arrays.asList(50D));
 				
 		bullets.add(bullet0);
 		bullets.add(bullet1);

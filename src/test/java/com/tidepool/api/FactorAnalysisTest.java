@@ -10,6 +10,7 @@ import org.springframework.test.context.junit4.SpringJUnit4ClassRunner;
 
 import com.tidepool.api.data.FactorAnalysisManager;
 import com.tidepool.api.model.Account;
+import com.tidepool.api.model.BigFive;
 
 @RunWith(SpringJUnit4ClassRunner.class)
 @ContextConfiguration(locations={"file:/Users/joseph/projects/tidepoolAPI/src/test/java/com/tidepool/api/hbase-properties.xml"})
@@ -26,8 +27,11 @@ public class FactorAnalysisTest {
 	@Test
 	public void testBig5() {
 		Account account = new Account();
-		account.setUserId("191");
-		assertNotNull(factorAnalysisManager.getTheBigFive("match_type", account));
+		account.setUserId("193");
+		BigFive bigFive = factorAnalysisManager.getTheBigFive("match_type", account);
+		assertNotNull(bigFive);
+		System.out.println(" Big Five: " + bigFive.getOpenness() + " " + bigFive.getConscientiousness() + " " 
+				+ bigFive.getExtraversion() + " " + bigFive.getAgreeableness() + " " + bigFive.getNeuroticism());
 	}
 	
 }

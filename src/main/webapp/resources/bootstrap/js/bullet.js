@@ -6,11 +6,13 @@
 		var chart = bulletChart()
 	    	.width(width - margin.right - margin.left)
 	    	.height(height - margin.top - margin.bottom);
-
+		
+		var vis = null;
+		
 		function buildChart() {
 		
 			d3.json("http://localhost:8080/tidepoolAPI/json/bigfivebullet.ajax", function(data) {
-				var vis = d3.select("#chart").selectAll("svg")
+				vis = d3.select("#chart").selectAll("svg")
 				.data(data)
 				.enter().append("svg")
 				.attr("class", "bullet")
@@ -41,6 +43,13 @@
 		}
 	
 		buildChart();
+	
+	function updateChart() {
+		d3.json("http://localhost:8080/tidepoolAPI/json/bigfivebullet.ajax", function(data) {
+			vis.datum(data).call(chart);
+		});
+	}	
+		
 		
 	function randomize(d) {
 	  if (!d.randomizer) d.randomizer = randomizer(d);

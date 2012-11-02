@@ -307,7 +307,7 @@ public class HBaseTest {
 	}
 	
 	
-	@Test
+	//@Test
 	public void testGetRandomExplicitCoding() {
 		
 		CodedItem item0 = hBaseManager.getRandomCodedItem("0", null);		

@@ -36,6 +36,7 @@
 	
 	.bar {
 	  fill: steelblue;
+	  color: white;
 	}
 	
 	.x.axis path {
@@ -77,9 +78,9 @@
 	        
 	        <c:if test="${ not empty admin }">
 	        	<div class="offset1 span-9">
-					<table width="200px">					
-						<tr><th>Openness</th><th>Conscientiousness</th><th>Extraversion</th><th>Agreeableness</th><th>Neuroticism</th></tr>
-						<tr><td id="oVal">0</td><td id="cVal">0</td><td id="eVal">0</td><td id="aVal">0</td><td id="nVal">0</td></tr>
+					<table class="table">					
+						<tr><th>Openness</th><th>Conscientiousness</th><th>Extraversion</th><th>Agreeableness</th><th>Neuroticism</th><th>Calculation Time(ms)</th></tr>
+						<tr><td id="oVal">0</td><td id="cVal">0</td><td id="eVal">0</td><td id="aVal">0</td><td id="nVal">0</td><td id="timing">0</td></tr>
 					</table>
 	        	</div>
 	        	
@@ -126,18 +127,17 @@
 								
 
 		<c:if test="${ not empty admin }">		
-			
-				
+							
 			var chartLoaded = false;
 			function updateOcean() {				  
-				  d3.json("http://localhost:8080/tidepoolAPI/json/bigfivebullet.ajax", function(newData) {
+				  d3.json(servicesAPI + "/json/bigfivebullet.ajax", function(newData) {
 											  
 						$('#oVal').html(newData[0].ranges[0].toFixed(2));
 						$('#cVal').html(newData[1].ranges[0].toFixed(2));
 						$('#eVal').html(newData[2].ranges[0].toFixed(2));
 						$('#aVal').html(newData[3].ranges[0].toFixed(2));
 						$('#nVal').html(newData[4].ranges[0].toFixed(2));
-						
+						$('#timing').html(newData[0].timing);
 					d3.selectAll("#chart").selectAll("svg").remove();	
 						var margin = {top: 20, right: 20, bottom: 30, left: 40},
 					    width = 960 - margin.left - margin.right,
@@ -170,9 +170,7 @@
 						            {letter:newData[2].title, frequency:newData[2].ranges[0].toFixed(2)}, 
 						            {letter:newData[3].title, frequency:newData[3].ranges[0].toFixed(2)},
 						            {letter:newData[4].title, frequency:newData[4].ranges[0].toFixed(2)}];
-						
-						  
-						
+																		
 						  x.domain(data.map(function(d) { return d.letter; }));
 						  y.domain([0, d3.max(data, function(d) { return d.frequency; })]);
 				
@@ -191,8 +189,7 @@
 							.style("text-anchor", "end")
 							.text("Score");
 					
-						
-						
+												
 						svg.selectAll(".bar")
 							.data(data)
 							.enter().append("rect")
@@ -200,9 +197,9 @@
 							.attr("x", function(d) { return x(d.letter); })
 							.attr("width", x.rangeBand())
 							.attr("y", function(d) { return y(d.frequency); })
-							.attr("height", function(d) { return height - y(d.frequency); });
-						
-						
+							.attr("height", function(d) { return height - y(d.frequency); })							
+							.text(String);
+												
 				  });
 			  };				
 			  </c:if>

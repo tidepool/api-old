@@ -7,6 +7,7 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -67,7 +68,7 @@ public class HBaseLoader {
 			
 			HTable table = new HTable(conf, tableName);
 			String[] columnPairs = columns.split(",");
-			HashMap<String, String> columnMap = new HashMap<String, String>();
+			HashMap<String, String> columnMap = new LinkedHashMap<String, String>();
 			for (String columnPair : columnPairs) {				
 				String[] keyValues = columnPair.split(":");
 				columnMap.put(keyValues[0], keyValues[1]);				
@@ -96,23 +97,33 @@ public class HBaseLoader {
 					for (String columnMapKey : columnMap.keySet()) {
 						
 						if ( columnMap.get(columnMapKey).toLowerCase().equals("string")) {
-							put.add(family_name_column, Bytes.toBytes(columnMapKey), Bytes.toBytes(values[i++]));	
+							put.add(family_name_column, Bytes.toBytes(columnMapKey), Bytes.toBytes(values[i]));
+							i++;
+							continue;
 						}
 						
 						if ( columnMap.get(columnMapKey).toLowerCase().equals("double")) {
-							put.add(family_name_column, Bytes.toBytes(columnMapKey), Bytes.toBytes(new Double(values[i++])));	
+							put.add(family_name_column, Bytes.toBytes(columnMapKey), Bytes.toBytes(new Double(values[i])));
+							i++;
+							continue;
 						}
 						
 						if ( columnMap.get(columnMapKey).toLowerCase().equals("long")) {
-							put.add(family_name_column, Bytes.toBytes(columnMapKey), Bytes.toBytes(new Long(values[i++])));	
+							put.add(family_name_column, Bytes.toBytes(columnMapKey), Bytes.toBytes(new Long(values[i])));
+							i++;
+							continue;
 						}
 						
-						if ( columnMap.get(columnMapKey).toLowerCase().equals("int")) {
-							put.add(family_name_column, Bytes.toBytes(columnMapKey), Bytes.toBytes(new Integer(values[i++])));	
+						if ( columnMap.get(columnMapKey).toLowerCase().equals("integer") || columnMap.get(columnMapKey).toLowerCase().equals("int")) {
+							put.add(family_name_column, Bytes.toBytes(columnMapKey), Bytes.toBytes(new Integer(values[i])));
+							i++;
+							continue;
 						}
 						
 						if ( columnMap.get(columnMapKey).toLowerCase().equals("boolean")) {
-							put.add(family_name_column, Bytes.toBytes(columnMapKey), Bytes.toBytes(new Boolean(values[i++])));	
+							put.add(family_name_column, Bytes.toBytes(columnMapKey), Bytes.toBytes(new Boolean(values[i])));
+							i++;
+							continue;
 						}
 												
 					}

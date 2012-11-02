@@ -263,8 +263,9 @@ public class APIController {
 		
 		ArrayList<Bullet> bullets = new ArrayList<Bullet>();
 		
-		
+		long startTime = System.currentTimeMillis();
 		BigFive bigFive = factorAnalysisManager.getTheBigFive("match_type", account);
+		long duration = System.currentTimeMillis() - startTime;
 		
 		Bullet bullet0 = new Bullet();
 		bullet0.setTitle("Openness");
@@ -272,6 +273,7 @@ public class APIController {
 		bullet0.setMarkers(Arrays.asList(200D));
 		bullet0.setRanges(Arrays.asList(bigFive.getOpenness()));
 		bullet0.setMeasures(Arrays.asList(50D));
+		bullet0.setTiming(duration);
 		
 		Bullet bullet1 = new Bullet();
 		bullet1.setTitle("Conscientiousness");

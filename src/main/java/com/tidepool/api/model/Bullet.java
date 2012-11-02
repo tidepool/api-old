@@ -7,6 +7,7 @@ public class Bullet implements Serializable {
 	
 	private static final long serialVersionUID = 1L;
 	
+	public long timing;
 	public String title;
 	public String subtitle;
 	public List<Double> ranges;
@@ -42,6 +43,12 @@ public class Bullet implements Serializable {
 	}
 	public void setMarkers(List<Double> markers) {
 		this.markers = markers;
+	}
+	public long getTiming() {
+		return timing;
+	}
+	public void setTiming(long timing) {
+		this.timing = timing;
 	}
 	
 }

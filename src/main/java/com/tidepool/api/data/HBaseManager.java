@@ -1379,7 +1379,7 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 		ResultScanner scanner  = null;
 		SingleColumnValueFilter filter = new SingleColumnValueFilter(
 				family_name_column,
-				RowMapper.big_5_column,
+				RowMapper.model_column,
 				CompareOp.EQUAL,
 				Bytes.toBytes(mapper.getName())
 		);

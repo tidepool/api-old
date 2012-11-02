@@ -6,7 +6,8 @@ import org.apache.hadoop.hbase.util.Bytes;
 
 public class RowMapper {
 	
-	public static final byte[] big_5_column = Bytes.toBytes("big_5");
+	public static final byte[] big_5_column = Bytes.toBytes("big_5_id");
+	public static final byte[] model_column = Bytes.toBytes("model");
 	public static final byte[] factor_column = Bytes.toBytes("factor");
 	public static final byte[] value_column = Bytes.toBytes("value");
 	

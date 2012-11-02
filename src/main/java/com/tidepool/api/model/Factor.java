@@ -12,8 +12,10 @@ public class Factor implements Serializable {
 	private static final long serialVersionUID = 1L;
 
 	public static final byte[] factor_column = Bytes.toBytes("factor");
-	public static final byte[] element_column = Bytes.toBytes("element");	
-	public static final byte[] big_5_column = Bytes.toBytes("big_5");
+	public static final byte[] element_column = Bytes.toBytes("element");
+	
+	public static final byte[] model_column = Bytes.toBytes("model");
+	public static final byte[] big_5_column = Bytes.toBytes("big_5_id");
 	public static final byte[] value_column = Bytes.toBytes("value");
 	
 	protected int id;

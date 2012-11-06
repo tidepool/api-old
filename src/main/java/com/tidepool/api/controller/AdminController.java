@@ -321,4 +321,18 @@ public class AdminController {
 		}
 	}
 	
+	
+	@RequestMapping(value="/admin/graph", method=RequestMethod.GET)
+	public String getGraph(HttpServletRequest request, @RequestParam(required=false) String owner, Model model) {
+			
+		return "admin/graph";
+	}
+	
+	@RequestMapping(value="/admin/graph.json", method=RequestMethod.GET)
+	public String getGraphJSON(HttpServletRequest request, @RequestParam(required=false) String owner, Model model) {			
+		
+		return "admin/graph_json";
+	}
+	
+	
 }

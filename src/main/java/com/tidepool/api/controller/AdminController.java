@@ -334,5 +334,10 @@ public class AdminController {
 		return "admin/graph_json";
 	}
 	
+	@RequestMapping(value="/admin/canvas", method=RequestMethod.GET)
+	public String getCanvas(HttpServletRequest request, @RequestParam(required=false) String owner, Model model) {			
+		return "admin/canvas";
+	}
+	
 	
 }

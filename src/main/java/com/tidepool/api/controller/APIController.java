@@ -7,6 +7,7 @@ import java.util.Random;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
@@ -180,6 +181,61 @@ public class APIController {
 		return "assessment/assessment";
 	}
 	
+	
+	@RequestMapping(value="/instructions", method=RequestMethod.GET)
+	public String getAssessInstructions(HttpServletRequest request, @RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("cdn_url", cdnUrl);	
+		model.addAttribute("account", request.getSession().getAttribute("account"));
+		return "assessment/assess-instructions";
+	}
+	
+	@RequestMapping(value="/drag0", method=RequestMethod.GET)
+	public String getDrag0(HttpServletRequest request, @RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("cdn_url", cdnUrl);	
+		model.addAttribute("account", request.getSession().getAttribute("account"));
+		return "assessment/drag0";
+	}
+	
+	@RequestMapping(value="/drag1", method=RequestMethod.GET)
+	public String getDrag1(HttpServletRequest request, @RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("cdn_url", cdnUrl);	
+		model.addAttribute("account", request.getSession().getAttribute("account"));
+		return "assessment/drag1";
+	}
+	
+	@RequestMapping(value="/drag2", method=RequestMethod.GET)
+	public String getDrag2(HttpServletRequest request, @RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("cdn_url", cdnUrl);	
+		model.addAttribute("account", request.getSession().getAttribute("account"));
+		return "assessment/drag2";
+	}
+	
+	
+	
 	@RequestMapping(value="/json/assessmentevent.ajax", method=RequestMethod.POST)
 	public @ResponseBody CodingEvent logTrainingEvent(
 			HttpServletRequest request,
@@ -189,6 +245,7 @@ public class APIController {
 			@RequestParam(required=false) String attributeId,
 			@RequestParam(required=false) String attributeValue,
 			@RequestParam(required=false) String attributeComment,
+			@RequestParam(required=false) String coordinates,
 			@RequestParam(required=false) String x0,
 			@RequestParam(required=false) String y0,
 			@RequestParam(required=false) String x1,
@@ -196,7 +253,28 @@ public class APIController {
 			@RequestParam(required=false) String width,
 			@RequestParam(required=false) String height
 			) {		
-		
+
+		if (!StringUtils.isEmpty(coordinates)) {
+			String[] coordinatesArray = coordinates.split("|");
+			for (String coordinateSubArray : coordinatesArray) {
+				String[] coordinate = coordinateSubArray.split(",");
+				if (coordinate.length == 2) {
+					CodingEvent event = new CodingEvent();
+					event.user_id = accountId;
+					event.picture_id = explicitId;
+					event.element = attributeId;
+					event.type = type;
+					event.x0 = coordinate[0];
+					event.y0 = coordinate[1];					
+					event.width = width;
+					event.height = height;
+					event.text = attributeComment;					
+					hBaseManager.logCodingEvent(event);	
+				}
+			}
+			return null;
+		} else {
+
 			CodingEvent event = new CodingEvent();
 			event.user_id = accountId;
 			event.picture_id = explicitId;
@@ -209,9 +287,10 @@ public class APIController {
 			event.width = width;
 			event.height = height;
 			event.text = attributeComment;
-			
+
 			hBaseManager.logCodingEvent(event);			
 			return event;
+		}
 	}
 	
 	

@@ -165,7 +165,7 @@ public class APIController {
 			}
 			
 		
-		return "forward:assessment";
+		return "forward:drag0";
 	}
 	
 	@RequestMapping(value="/assessment", method=RequestMethod.GET)
@@ -181,19 +181,6 @@ public class APIController {
 		return "assessment/assessment";
 	}
 	
-	
-	@RequestMapping(value="/instructions", method=RequestMethod.GET)
-	public String getAssessInstructions(HttpServletRequest request, @RequestParam(required=false) String owner,
-			Model model) {
-		
-		if (getAccount() != null && getAccount().isAdmin()) {
-			model.addAttribute("admin", getAccount());
-		}
-		
-		model.addAttribute("cdn_url", cdnUrl);	
-		model.addAttribute("account", request.getSession().getAttribute("account"));
-		return "assessment/assess-instructions";
-	}
 	
 	@RequestMapping(value="/drag0", method=RequestMethod.GET)
 	public String getDrag0(HttpServletRequest request, @RequestParam(required=false) String owner,

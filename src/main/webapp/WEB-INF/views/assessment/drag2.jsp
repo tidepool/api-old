@@ -190,7 +190,7 @@
 							   for (var i in movedMap) {
 							      count++;
 							   }							   
-							   if (count == 5) {
+							   if (count == 3) {
 								   $("#next").show();
 							   } 
 							   

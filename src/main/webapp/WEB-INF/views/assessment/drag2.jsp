@@ -30,14 +30,14 @@
     		
 	 }
       
-      #next {
-    	left: 800px;
+ 	#next {
+    	left: 700px;
     	position: absolute;
-    	top: 400px;
+    	top: 300px;
     	z-index: 1000;
     	display:none;
     	font-size:18px;	
-	 }
+	 }	
       
     </style>
    
@@ -124,9 +124,9 @@
 				    	  imageObj3.onload = function() {
 				    		  
 				    		  layer.add(buildSelfCircle("Self", 200, 100));
-				    		  layer.add(build5Circle(imageObj1, "test", 100, 250));
-				    		  layer.add(build5Circle(imageObj2, "test", 300, 250));
-				    		  layer.add(build5Circle(imageObj3, "test", 500, 250));
+				    		  layer.add(build5Circle(imageObj1, "image0", 100, 250));
+				    		  layer.add(build5Circle(imageObj2, "image1", 300, 250));
+				    		  layer.add(build5Circle(imageObj3, "image2", 500, 250));
 				    		  stage.add(layer);
 				    		  				    		  
 				    	  }
@@ -162,6 +162,7 @@
 			          var group = new Kinetic.Image({
 			              x: x,
 			              y: y,
+			              name:name,
 			              image: imageObj,
 			              width: 106,
 			              height: 118,

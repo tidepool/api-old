@@ -31,13 +31,13 @@
 	 }
       
       #next {
-    	left: 800px;
+    	left: 700px;
     	position: absolute;
-    	top: 400px;
+    	top: 300px;
     	z-index: 1000;
     	display:none;
     	font-size:18px;	
-	 }
+	 }	
       
     </style>
    

@@ -35,7 +35,8 @@
     	position: absolute;
     	top: 400px;
     	z-index: 1000;
-    	display:none;	
+    	display:none;
+    	font-size:18px;	
 	 }
       
     </style>
@@ -122,7 +123,7 @@
 		        	
 		        	var coordinateString = "";
 		        	for (var i in dragArray) {
-		        		coordinateString += dragArray[i][0] + "," + dragArray[i][1] + "|"; 
+		        		coordinateString += dragArray[i][0] + "-" + dragArray[i][1] + ","; 
 		        	}
 		        	
 		        	dragArray.length = 0;
@@ -148,9 +149,9 @@
 			              width: 150,
 			              height: 150,
 			              name: name,
-			              fill: 'green',
-			              stroke: "green",
-			              strokeWidth: 0
+			              fill: 'white',
+			              stroke: "black",
+			              strokeWidth: 2
 			            });
 
 			          var simpleText = new Kinetic.Text({

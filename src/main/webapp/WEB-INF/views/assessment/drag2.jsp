@@ -35,7 +35,8 @@
     	position: absolute;
     	top: 400px;
     	z-index: 1000;
-    	display:none;	
+    	display:none;
+    	font-size:18px;	
 	 }
       
     </style>
@@ -112,13 +113,31 @@
 		      
 			  			  
 		      function drawImages() {		            
-		    	  layer.add(buildSelfCircle("Self", 200, 100)); 
-		    	  layer.add(build5Circle("Independent/ \nDetermined", 100, 350));
-		          layer.add(build5Circle("Self-reflective/ \n internalized", 275, 350));
-		          layer.add(build5Circle("Disorganized/ \nunconventional", 455, 350));
-		          layer.add(build5Circle("Calm/Consistent", 625, 350));
-		          layer.add(build5Circle("Focused/Self-assured", 795, 350));		          
-		          stage.add(layer);
+		    	 		    	  
+		    	  var imageObj1 = new Image();
+		    	  imageObj1.onload = function() {
+		    		  
+		    		  var imageObj2 = new Image();
+			    	  imageObj2.onload = function() {
+			    		  
+			    		  var imageObj3 = new Image();
+				    	  imageObj3.onload = function() {
+				    		  
+				    		  layer.add(buildSelfCircle("Self", 200, 100));
+				    		  layer.add(build5Circle(imageObj1, "test", 100, 250));
+				    		  layer.add(build5Circle(imageObj2, "test", 300, 250));
+				    		  layer.add(build5Circle(imageObj3, "test", 500, 250));
+				    		  stage.add(layer);
+				    		  				    		  
+				    	  }
+				    	  imageObj3.src = "http://www.html5canvastutorials.com/demos/assets/yoda.jpg";
+			    		  			    		 
+			    	  }
+			    	  imageObj2.src = "http://www.html5canvastutorials.com/demos/assets/yoda.jpg";
+		    		  		    		  		    	  
+		    	  }
+		    	  imageObj1.src = "http://www.html5canvastutorials.com/demos/assets/yoda.jpg";
+		    	  		          
 		        }
 		      
 		      
@@ -126,7 +145,7 @@
 		        	
 		        	var coordinateString = "";
 		        	for (var i in dragArray) {
-		        		coordinateString += dragArray[i][0] + "," + dragArray[i][1] + "|"; 
+		        		coordinateString += dragArray[i][0] + "-" + dragArray[i][1] + ","; 
 		        	}
 		        	
 		        	dragArray.length = 0;
@@ -136,38 +155,19 @@
     			    		function(items) {});
 		        }
 		       
-		        function build5Circle(name, x, y) {
+		        function build5Circle(imageObj, name, x, y) {
 		        	
-		        	var group = new Kinetic.Group({
+		        	
+			          
+			          var group = new Kinetic.Image({
 			              x: x,
 			              y: y,
-			              name:name,
-			              rotationDeg: 0,
+			              image: imageObj,
+			              width: 106,
+			              height: 118,
 			              draggable:true
 			            });
-			          
-			          var box = new Kinetic.Circle({
-			              x: 0,
-			              y: 0,
-			              width: 150,
-			              height: 150,
-			              name: name,
-			              fill: 'green',
-			              stroke: "green",
-			              strokeWidth: 0
-			            });
-
-			          var simpleText = new Kinetic.Text({
-			        	  x: -70,
-			        	  y: -10,
-			        	  text: name,
-			        	  fontSize: 12,
-			        	  fontFamily: "Calibri",
-			        	  textFill: "black",
-			        	  align: "center",
-			        	  verticalAlign: "middle"
-			        	  });
-			          
+			         
 			          
 				           group.on('dragstart', function() {
 				        	 $.post(servicesAPI + "/json/assessmentevent.ajax", 
@@ -195,8 +195,7 @@
 							   
 						   });
 			          
-			            group.add(box);
-			            group.add(simpleText);
+			            		            
 		        		return group;
 		        	
 		        }
@@ -231,7 +230,7 @@
 			        	  align: "center",
 			        	  verticalAlign: "middle"
 			        	  });
-			          
+			          	
 			            group.add(box);
 			            group.add(simpleText);
 		        		return group;

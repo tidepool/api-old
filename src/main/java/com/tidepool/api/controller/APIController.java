@@ -255,9 +255,9 @@ public class APIController {
 			) {		
 
 		if (!StringUtils.isEmpty(coordinates)) {
-			String[] coordinatesArray = coordinates.split("|");
+			String[] coordinatesArray = coordinates.split(",");
 			for (String coordinateSubArray : coordinatesArray) {
-				String[] coordinate = coordinateSubArray.split(",");
+				String[] coordinate = coordinateSubArray.split("-");
 				if (coordinate.length == 2) {
 					CodingEvent event = new CodingEvent();
 					event.user_id = accountId;

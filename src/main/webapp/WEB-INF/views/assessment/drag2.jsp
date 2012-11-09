@@ -33,7 +33,7 @@
  	#next {
     	left: 700px;
     	position: absolute;
-    	top: 300px;
+    	top: 100px;
     	z-index: 1000;
     	display:none;
     	font-size:18px;	
@@ -97,13 +97,16 @@
 				var dragArray = [];
 				var stage = new Kinetic.Stage({
 		            container: "container",
-		            width: 960,
-		            height: 600
+		            width: 970,
+		            height: 700
 		          });
 		          var layer = new Kinetic.Layer();	
 				
 		          
 		      $("#next").click(function() {
+		    	  $.post(servicesAPI + "/json/assessmentevent.ajax", 
+	  			    		{accountId:$('#userId').val(), explicitId:'next' , type:"next"}, 
+	  			    		function(items) {});
 		    	 window.location="<c:url value="/assessmentFeedback"/>";  
 		      });  
 		     
@@ -124,20 +127,17 @@
 				    	  imageObj3.onload = function() {
 				    		  
 				    		  layer.add(buildSelfCircle("Self", 200, 100));
-				    		  layer.add(build5Circle(imageObj1, "image0", 100, 250));
-				    		  layer.add(build5Circle(imageObj2, "image1", 300, 250));
-				    		  layer.add(build5Circle(imageObj3, "image2", 500, 250));
+				    		  layer.add(build5Circle(imageObj3, "happy.png", 267, 400, 100, 250)); 
+				    		  layer.add(build5Circle(imageObj1, "success.png", 200, 90, 550, 250)); 
+				    		  layer.add(build5Circle(imageObj2, "open_consc.png", 200, 200, 675, 250));				    		  
 				    		  stage.add(layer);
 				    		  				    		  
 				    	  }
-				    	  imageObj3.src = "http://www.html5canvastutorials.com/demos/assets/yoda.jpg";
-			    		  			    		 
+				    	  imageObj3.src = "<c:url value="/resources/bootstrap/img/happy.png" />";			    		  			    		 
 			    	  }
-			    	  imageObj2.src = "http://www.html5canvastutorials.com/demos/assets/yoda.jpg";
-		    		  		    		  		    	  
+			    	  imageObj2.src = "<c:url value="/resources/bootstrap/img/open_consc.png" />";		    		  		    		  		    	  
 		    	  }
-		    	  imageObj1.src = "http://www.html5canvastutorials.com/demos/assets/yoda.jpg";
-		    	  		          
+		    	  imageObj1.src = "<c:url value="/resources/bootstrap/img/success.png" />";		    	  		          
 		        }
 		      
 		      
@@ -155,7 +155,7 @@
     			    		function(items) {});
 		        }
 		       
-		        function build5Circle(imageObj, name, x, y) {
+		        function build5Circle(imageObj, name, height, width, x, y) {
 		        	
 		        	
 			          
@@ -164,8 +164,8 @@
 			              y: y,
 			              name:name,
 			              image: imageObj,
-			              width: 106,
-			              height: 118,
+			              width: width,
+			              height: height,
 			              draggable:true
 			            });
 			         

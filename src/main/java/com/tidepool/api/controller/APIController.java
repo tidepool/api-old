@@ -124,6 +124,8 @@ public class APIController {
 	@RequestMapping(value="/assessPost", method=RequestMethod.GET)
 	public String postAssessmentRegister(HttpServletRequest request, 			
 			@RequestParam(required=false) String zipCode,
+			@RequestParam(required=false) String birthDate,
+			@RequestParam(required=false) String gender,
 			@RequestParam(required=false) Integer extraverted,
 			@RequestParam(required=false) Integer critical,
 			@RequestParam(required=false) Integer dependable,
@@ -150,7 +152,9 @@ public class APIController {
 				account.setDisorganized(disorganized);
 				account.setCalm(calm);
 				account.setConventional(conventional);
-				account.setIp(request.getRemoteAddr());				
+				account.setIp(request.getRemoteAddr());
+				account.setBirthYear(birthDate);
+				account.setGender(gender);
 				account = hBaseManager.createAssessAccount(account);
 				request.getSession().setAttribute("account", account);
 				

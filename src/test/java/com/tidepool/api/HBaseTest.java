@@ -479,7 +479,7 @@ public class HBaseTest {
 		
 	}
 	
-	@Test
+	//@Test
 	public void testGetCodingEventForUser() {
 		List<CodingEvent> events = hBaseManager.getCodingEventsForAccount("191");
 		assertNotNull(events);
@@ -490,7 +490,7 @@ public class HBaseTest {
 		}		
 	}
 	
-	@Test
+	//@Test
 	public void testCodingEventRollup() {
 		CodingEventRollup rollup =  hBaseManager.getCodingEventRollup("193");
 		assertNotNull(rollup);

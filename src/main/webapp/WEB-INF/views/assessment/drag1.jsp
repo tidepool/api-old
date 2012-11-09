@@ -96,13 +96,16 @@
 				var dragArray = [];
 				var stage = new Kinetic.Stage({
 		            container: "container",
-		            width: 960,
-		            height: 600
+		            width: 970,
+		            height: 700
 		          });
 		          var layer = new Kinetic.Layer();	
 				
 		          
 		      $("#next").click(function() {
+		    	  $.post(servicesAPI + "/json/assessmentevent.ajax", 
+	  			    		{accountId:$('#userId').val(), explicitId:'next' , type:"next"}, 
+	  			    		function(items) {});
 		    	 window.location="<c:url value="/drag2"/>";  
 		      });  
 		     

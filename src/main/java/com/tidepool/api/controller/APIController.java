@@ -263,6 +263,32 @@ public class APIController {
 		return "assessment/drag2";
 	}
 	
+	@RequestMapping(value="/drag3", method=RequestMethod.GET)
+	public String getDrag3(HttpServletRequest request, @RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("cdn_url", cdnUrl);	
+		model.addAttribute("account", request.getSession().getAttribute("account"));
+		return "assessment/drag3";
+	}	
+
+	@RequestMapping(value="/drag4", method=RequestMethod.GET)
+	public String getDrag4(HttpServletRequest request, @RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("cdn_url", cdnUrl);	
+		model.addAttribute("account", request.getSession().getAttribute("account"));
+		return "assessment/drag4";
+	}		
+	
 	@RequestMapping(value="/timing", method=RequestMethod.GET)
 	public String getTiming(HttpServletRequest request, @RequestParam(required=false) String owner,
 			Model model) {

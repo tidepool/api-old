@@ -23,9 +23,9 @@
       }
             
       #instructions {
-    	left: 400px;
+    	left: 210px;
     	position: absolute;
-    	top: 270px;
+    	top: 100px;
     	z-index: 1000;
     	border:3px solid #000;
     	padding:40px;
@@ -110,8 +110,10 @@
 		var contentURL = "${cdn_url}";
 		var circleArray = [];
 		var circleArrayCounter = [];
-		var test0Limit = 4;
+		var test0Limit = 3;
+		var test1Limit = 3;
 		var test0Counter = 0;
+		var test1Counter = 0;
 		var startTime;
 		var selectedCircle;
 		
@@ -151,7 +153,8 @@
 		      }
 		      
 		      function showTest1() {
-		    	    var yellowLimit = Math.floor((Math.random() * 10));		      				    	   
+		    	    var yellowLimit = Math.floor((Math.random() * 10));
+		    	    yellowLimit = (yellowLimit == 0) ? 2 : yellowLimit;
 		    	    var increment = 0;
 		    	    var intervalId = 0;
 		    	    function f() {
@@ -164,6 +167,7 @@
 	  						selectedCircle = Math.floor((Math.random()*3));
 	  						circleArray[selectedCircle].setFill('red');
 	  						layer.draw();
+	  						
 	  						return;
 	  						
 		    	    	}
@@ -237,12 +241,20 @@
 		        	
 		        	if (test0Counter == test0Limit) {
 		        		if (circle.getName() == circleArray[selectedCircle].getName()) {
+		        			test1Counter++;
 		        			$.post(servicesAPI + "/json/assessmentevent.ajax", 
 		    			   			{accountId:$('#userId').val(), explicitId:name , type:"timing-click-red-after-yellow", startTime:startTime, endTime:new Date().getTime()}, 
 		    			    			function(items) {
-		    			   					window.location="<c:url value="/drag0"/>";
+		    			   				if (test1Counter == test1Limit) {	
+		    			   				 	window.location="<c:url value="/drag0"/>";
+		    			   				} else {
+		    			   					$("#test1").addClass("btn-success");
+		    			   				}
 		    			   		});
-		        		}
+		        			circle.setFill('white');
+				        	layer.draw();
+		        		}		        		
+		        		return;
 		        	}
 		        	
 		        	
@@ -277,8 +289,8 @@
 		        	var box = new Kinetic.Rect({
 		                x: 0,
 		                y: 0,
-		                width: 200,
-		                height:565,
+		                width: 100,
+		                height:274,
 		                fill: 'grey',
 		                stroke: 'black',
 		                strokeWidth: 4
@@ -286,10 +298,10 @@
 
 		        	  
 			          var circle0 = new Kinetic.Circle({
-			              x: 100,
-			              y: 100,
-			              width: 150,
-			              height: 150,
+			              x: 50,
+			              y: 50,
+			              width: 75,
+			              height: 75,
 			              name: 'circle0',
 			              fill: 'white',
 			              stroke: "black",
@@ -301,10 +313,10 @@
 			      	  });
 			      	  
 			          var circle1 = new Kinetic.Circle({
-			              x: 100,
-			              y: 275,
-			              width: 150,
-			              height: 150,
+			              x: 50,
+			              y: 135,
+			              width: 75,
+			              height: 75,
 			              name: 'circle1',
 			              fill: 'white',
 			              stroke: "black",
@@ -316,10 +328,10 @@
 				      });
 			          
 			          var circle2 = new Kinetic.Circle({
-			              x: 100,
-			              y: 450,
-			              width: 150,
-			              height: 150,
+			              x: 50,
+			              y: 225,
+			              width: 75,
+			              height: 75,
 			              name: 'circle2',
 			              fill: 'white',
 			              stroke: "black",

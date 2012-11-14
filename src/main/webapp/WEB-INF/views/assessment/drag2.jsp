@@ -107,7 +107,7 @@
 		    	  $.post(servicesAPI + "/json/assessmentevent.ajax", 
 	  			    		{accountId:$('#userId').val(), explicitId:'next' , type:"next"}, 
 	  			    		function(items) {});
-		    	 window.location="<c:url value="/assessmentFeedback"/>";  
+		    	 window.location="<c:url value="/drag3"/>";  
 		      });  
 		     
 		      $("#start").click(function() {
@@ -147,7 +147,7 @@
 		        	}
 		        	
 		        	dragArray.length = 0;
-		        	console.log("array: " + coordinateString	);
+		        	
 		        	$.post(servicesAPI + "/json/assessmentevent.ajax", 
     			   		{accountId:$('#userId').val(), explicitId:name , type:"drag", coordinates:coordinateString}, 
     			    		function(items) {});

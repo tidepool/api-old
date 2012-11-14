@@ -23,10 +23,12 @@
       }
             
       #instructions {
-    	left: 500px;
+    	left: 400px;
     	position: absolute;
-    	top: 50px;
+    	top: 70px;
     	z-index: 1000;
+    	border:3px solid #000;
+    	padding:10px;
     		
 	 }
       
@@ -62,6 +64,17 @@
     <div class="container">
 		<button id="next">Next</button>
 		<div id="container"></div>		
+		
+		<div id="instructions">
+			<div>
+				<p>Imagine you are dating someone for six months. Things are going unexpectedly well.</p> 
+				<p>Then one night he/she stands you up. No call, no text.</p> 
+				<p>Where do these feelings fit into your picture of your Self?</p>
+				<div>
+				  <button id="start">Start</button>
+				</div>
+			</div>
+		</div>
 		
 		<footer>
         	<p>&copy; Tidepool 2012</p>
@@ -104,20 +117,30 @@
 		          
 		      $("#next").click(function() {
 		    	  $.post(servicesAPI + "/json/assessmentevent.ajax", 
-	  			    		{accountId:$('#userId').val(), explicitId:'next' , type:"next"}, 
-	  			    		function(items) {});
-		    	 window.location="<c:url value="/drag2"/>";  
+  			    		{accountId:$('#userId').val(), explicitId:'next' , type:"next"}, 
+  			    		function(items) {});
+		    	  	window.location="<c:url value="/drag4"/>";   
 		      });  
 		     
+		      $("#start").click(function() {
+			  		$("#instructions").hide();
+			  		 $.post(servicesAPI + "/json/assessmentevent.ajax", 
+	    			    		{accountId:$('#userId').val(), explicitId:'instruction' , type:"click"}, 
+	    			    		function(items) {	    			    			
+	    			    			$.post(servicesAPI + "/json/assessmentevent.ajax", 
+	    		    			    		{accountId:$('#userId').val(), explicitId:'self' , type:"click", x0:200, y0:100}, function(items) {	    		    			    		
+	    		    			    });
+	    			    		});	
+			   }); 
+		      
 			  			  
 		      function drawImages() {		            
 		    	  layer.add(buildSelfCircle("Self", 200, 100)); 
-		    	  layer.add(buildSelfCircle("Self", 200, 100)); 
-		    	  layer.add(build5Circle("Independent/ \nAloof", "independent_aloof",100, 350));
-		          layer.add(build5Circle("Self-reflective/ \n Reserved", "self-reflective_reserved", 275, 350));
-		          layer.add(build5Circle("Disorganized/ \n Unconventional", "disorganized_unconventional", 455, 350));
-		          layer.add(build5Circle("Calm/ \n Consistent", "calm_consistent", 625, 350));
-		          layer.add(build5Circle("Focused/ \n Narrow-minded", "focused_narrow-minded", 795, 350));          
+		    	  layer.add(build5Circle("Doubt myself", "doubt_myself", 100, 350));
+		          layer.add(build5Circle("Doubt past \nrelationships", "doubt_past_relationships", 275, 350));
+		          layer.add(build5Circle("Anger at \nthe other", "anger_at_the_other", 455, 350));
+		          layer.add(build5Circle("Concern for \nthe other", "concern_for_the_other", 625, 350));
+		          layer.add(build5Circle("Forget about \nthe other", "forget_about_the_other", 795, 350));		          
 		          stage.add(layer);
 		        }
 		      
@@ -129,14 +152,13 @@
 		        		coordinateString += dragArray[i][0] + "-" + dragArray[i][1] + ","; 
 		        	}
 		        	
-		        	dragArray.length = 0;
-		        	
+		        	dragArray.length = 0;		        	
 		        	$.post(servicesAPI + "/json/assessmentevent.ajax", 
     			   		{accountId:$('#userId').val(), explicitId:name , type:"drag", coordinates:coordinateString}, 
     			    		function(items) {});
 		        }
 		       
-		        function build5Circle(name, id, x, y) {
+		        function build5Circle(name, id,  x, y) {
 		        	
 		        	var group = new Kinetic.Group({
 			              x: x,
@@ -158,7 +180,7 @@
 			            });
 
 			          var simpleText = new Kinetic.Text({
-			        	  x: -50,
+			        	  x: -40,
 			        	  y: -10,
 			        	  text: name,
 			        	  fontSize: 12,

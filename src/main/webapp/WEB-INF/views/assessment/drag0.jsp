@@ -135,11 +135,11 @@
 			  			  
 		      function drawImages() {		            
 		    	  layer.add(buildSelfCircle("Self", 200, 100)); 
-		    	  layer.add(build5Circle("Orderly/Persistent", 100, 350));
-		          layer.add(build5Circle("Anxious/Dramatic", 275, 350));
-		          layer.add(build5Circle("Cooperative/Friendly", 455, 350));
-		          layer.add(build5Circle("Sociable/Energetic", 625, 350));
-		          layer.add(build5Circle("Intellectual/Cultured", 795, 350));		          
+		    	  layer.add(build5Circle("Orderly/Persistent", "orderly_persistent", 100, 350));
+		          layer.add(build5Circle("Anxious/Dramatic", "anxious_dramatic", 275, 350));
+		          layer.add(build5Circle("Cooperative/Friendly", "cooperative_friendly", 455, 350));
+		          layer.add(build5Circle("Sociable/Energetic", "sociable_energetic", 625, 350));
+		          layer.add(build5Circle("Intellectual/Cultured", "intellectual_cultured", 795, 350));		          
 		          stage.add(layer);
 		        }
 		      
@@ -152,18 +152,18 @@
 		        	}
 		        	
 		        	dragArray.length = 0;
-		        	console.log("array: " + coordinateString	);
+		        	
 		        	$.post(servicesAPI + "/json/assessmentevent.ajax", 
     			   		{accountId:$('#userId').val(), explicitId:name , type:"drag", coordinates:coordinateString}, 
     			    		function(items) {});
 		        }
 		       
-		        function build5Circle(name, x, y) {
+		        function build5Circle(name, id,  x, y) {
 		        	
 		        	var group = new Kinetic.Group({
 			              x: x,
 			              y: y,
-			              name:name,
+			              name:id,
 			              rotationDeg: 0,
 			              draggable:true
 			            });
@@ -173,7 +173,7 @@
 			              y: 0,
 			              width: 150,
 			              height: 150,
-			              name: name,
+			              name: id,
 			              fill: 'white',
 			              stroke: "black",
 			              strokeWidth: 2
@@ -193,7 +193,7 @@
 			          
 				           group.on('dragstart', function() {
 				        	 $.post(servicesAPI + "/json/assessmentevent.ajax", 
-			    			    		{accountId:$('#userId').val(), explicitId:name , type:"click", x0:group.getX(), y0:group.getY()}, 
+			    			    		{accountId:$('#userId').val(), explicitId:id , type:"click", x0:group.getX(), y0:group.getY()}, 
 			    			    		function(items) {
 			    			    				
 			    			    		});	

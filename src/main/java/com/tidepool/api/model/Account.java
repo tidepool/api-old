@@ -25,6 +25,7 @@ public class Account implements Serializable, UserDetails {
 	public static final byte[] registration_level_id_column = Bytes.toBytes("registration_level_id");
 	public static final byte[] explicit_image_folder_column = Bytes.toBytes("explicit_image_folder");
 	public static final byte[] account_status_column = Bytes.toBytes("account_status");
+	public static final byte[] assess_code_column = Bytes.toBytes("assess_code_status");
 	
 	public static final byte[] extraverted_column = Bytes.toBytes("extraverted");
 	public static final byte[] critical_column = Bytes.toBytes("critical");
@@ -73,6 +74,7 @@ public class Account implements Serializable, UserDetails {
 	private String zipCode;
 	private String explicitImageFolder;
 	private String accountStatus;
+	private String assessCode;
 	
 	public int extraverted;
 	public int critical;
@@ -460,6 +462,14 @@ public class Account implements Serializable, UserDetails {
 
 	public void setIp(String ip) {
 		this.ip = ip;
+	}
+
+	public String getAssessCode() {
+		return assessCode;
+	}
+
+	public void setAssessCode(String assessCode) {
+		this.assessCode = assessCode;
 	}
 	
 }

@@ -124,14 +124,12 @@
 			    	  imageObj2.onload = function() {
 			    		  
 			    		  var imageObj3 = new Image();
-				    	  imageObj3.onload = function() {
-				    		  
+				    	  imageObj3.onload = function() {				    		  
 				    		  layer.add(buildSelfCircle("Self", 200, 100));
 				    		  layer.add(build5Circle(imageObj3, "happy.png", 267, 400, 100, 250)); 
 				    		  layer.add(build5Circle(imageObj1, "success.png", 200, 90, 550, 250)); 
 				    		  layer.add(build5Circle(imageObj2, "open_consc.png", 200, 200, 675, 250));				    		  
-				    		  stage.add(layer);
-				    		  				    		  
+				    		  stage.add(layer);				    		  				    		  
 				    	  }
 				    	  imageObj3.src = "<c:url value="/resources/bootstrap/img/happy.png" />";			    		  			    		 
 			    	  }

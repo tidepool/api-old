@@ -125,7 +125,11 @@
 			  		$("#instructions").hide();
 			  		 $.post(servicesAPI + "/json/assessmentevent.ajax", 
 	    			    		{accountId:$('#userId').val(), explicitId:'instruction' , type:"click"}, 
-	    			    		function(items) {});	
+	    			    		function(items) {	    			    			
+	    			    			$.post(servicesAPI + "/json/assessmentevent.ajax", 
+	    		    			    		{accountId:$('#userId').val(), explicitId:'self' , type:"click", x0:200, y0:100}, function(items) {	    		    			    		
+	    		    			    });
+	    			    		});	
 			   }); 
 		      
 			  			  

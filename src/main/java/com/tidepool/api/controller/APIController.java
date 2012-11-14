@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -116,13 +117,49 @@ public class APIController {
 		if (getAccount() != null && getAccount().isAdmin()) {
 			model.addAttribute("admin", getAccount());
 		}
-		
+		model.addAttribute("assessCode", 0);
 		model.addAttribute("account", new Account());
 		return "assessment/assessment-register";
 	}
 	
+	/*
+	 * 
+	 * Assessment code.
+	 * 
+	 * 
+	 */
+
+	@RequestMapping(value="/assess1", method=RequestMethod.GET)
+	public String getAssessmentRegister1(HttpServletRequest request, @RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("account", new Account());
+		model.addAttribute("assessCode", 1);
+		return "assessment/assessment-register";
+	}
+	
+	
+	@RequestMapping(value="/assess{code}", method=RequestMethod.GET)
+	public String getAssessmentRegisterN(HttpServletRequest request, @PathVariable String code, @RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("account", new Account());
+		model.addAttribute("assessCode", code);
+		return "assessment/assessment-register";
+	}
+	
+	
 	@RequestMapping(value="/assessPost", method=RequestMethod.GET)
-	public String postAssessmentRegister(HttpServletRequest request, 			
+	public String postAssessmentRegister(HttpServletRequest request, 
+			@RequestParam(required=false) String assessCode,
 			@RequestParam(required=false) String zipCode,
 			@RequestParam(required=false) String birthDate,
 			@RequestParam(required=false) String gender,
@@ -141,6 +178,7 @@ public class APIController {
 			try {
 				
 				Account account = new Account();
+				account.setAssessCode(assessCode);
 				account.setZipCode(zipCode);
 				account.setExtraverted(extraverted);
 				account.setCritical(critical);
@@ -225,7 +263,18 @@ public class APIController {
 		return "assessment/drag2";
 	}
 	
-	
+	@RequestMapping(value="/timing", method=RequestMethod.GET)
+	public String getTiming(HttpServletRequest request, @RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("cdn_url", cdnUrl);	
+		model.addAttribute("account", request.getSession().getAttribute("account"));
+		return "assessment/timing";
+	}
 	
 	@RequestMapping(value="/json/assessmentevent.ajax", method=RequestMethod.POST)
 	public @ResponseBody CodingEvent logTrainingEvent(

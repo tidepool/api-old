@@ -51,7 +51,7 @@
 			
 			<form class="form-horizontal" action="<c:url value="/assessPost" />" method="get">
 							
-				
+				<input type="hidden" name="assessCode" id="assessCode" value="${ assessCode }">
 				<div class="control-group">
 					<label class="control-label" for="zipCode">Zip Code</label>
 					<div class="controls">
@@ -62,7 +62,7 @@
 				<div class="control-group">
 					<label class="control-label" for="birthYear">Birth Year</label>
 					<div class="controls">
-						<input type="text" name="birthYear" id="birthYear" placeholder="Birth Year">
+						<input type="text" name="birthDate" id="birthDate" placeholder="Birth Year">
 					</div>
 				</div>
 				
@@ -71,10 +71,10 @@
 					<div class="controls">
 						<label class="radio inline">
 						    
-	  						<input type="radio" name="male" value="male"> Male
+	  						<input type="radio" name="gender" value="male"> Male
 						</label>
 						<label class="radio inline">
-	  						<input type="radio" name="female" value="female"> Female
+	  						<input type="radio" name="gender" value="female"> Female
 						</label>						
 					</div>
 				</div>				
@@ -416,8 +416,8 @@
 				$('#feedbackSubmit').click(function() {
 					
 					if ($("#zipCode").val() == '' ||
-						$("#birthYear").val() == '' ||	
-						!$("input[name='gender']:checked").val()	
+						$("#birthDate").val() == '' ||	
+						!$("input[name='gender']:checked").val() ||	
 						!$("input[name='extraverted']:checked").val() ||
 						!$("input[name='critical']:checked").val() ||		
 						!$("input[name='dependable']:checked").val() ||

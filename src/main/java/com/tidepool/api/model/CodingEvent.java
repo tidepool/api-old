@@ -38,6 +38,8 @@ public class CodingEvent implements Serializable {
 	public String y1;
 	public String width;
 	public String height;
+	public String startTime;
+	public String endTime;
 	
 	
 	public String getId() {
@@ -153,6 +155,18 @@ public class CodingEvent implements Serializable {
 	}
 	public void setTimestamp(long timestamp) {
 		this.timestamp = timestamp;
+	}
+	public String getStartTime() {
+		return startTime;
+	}
+	public void setStartTime(String startTime) {
+		this.startTime = startTime;
+	}
+	public String getEndTime() {
+		return endTime;
+	}
+	public void setEndTime(String endTime) {
+		this.endTime = endTime;
 	}
 	
 }

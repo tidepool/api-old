@@ -41,6 +41,11 @@
     	font-size:18px;	
 	 }	
       
+      .buttonPanel {
+      	padding:20px;
+      	text-align:center;
+      }
+      
     </style>
    
 
@@ -69,11 +74,11 @@
 			<div>
 				<p>Follow the instructions that will appear on the button below:</p> 
 				
-				<div>
-				  <button id="start">Ok</button>
-				  <button id="test0" style="display:none">Click the red circle when it appears. Click here when ready.</button>
-				  <button id="test0Next" style="display:none">Again, click the red circle when it appears. Click here when ready.</button>
-				  <button id="test1" style="display:none">Click the red circle when it appears AFTER a yellow circle. Click here when ready.</button>
+				<div class="buttonPanel" >
+				  <button class="btn btn-success" id="start">Click to continue</button>
+				  <button class="btn btn-success" id="test0" style="display:none">Click the red circle on the left when it appears. Click here when ready.</button>
+				  <button class="btn btn-success" id="test0Next" style="display:none">Again, click the red circle on the left when it appears. Click here when ready.</button>
+				  <button class="btn btn-success" id="test1" style="display:none">Click the red circle when it appears AFTER the yellow circles. Click here when ready.</button>
 				</div>
 			</div>
 		</div>
@@ -106,6 +111,7 @@
 		var circleArray = [];
 		var circleArrayCounter = [];
 		var test0Limit = 4;
+		var test0Counter = 0;
 		var startTime;
 		var selectedCircle;
 		
@@ -122,24 +128,15 @@
 		          var layer = new Kinetic.Layer();	
 				
 		          
-		      $("#next").click(function() {
-		    	  $.post(servicesAPI + "/json/assessmentevent.ajax", 
-  			    		{accountId:$('#userId').val(), explicitId:'next' , type:"next"}, 
-  			    		function(items) {});
-		    	 window.location="<c:url value="/drag1"/>";  
-		      });  
 		     
 		      $("#start").click(function() {		    	    
 		    		
-			  		 $.post(servicesAPI + "/json/assessmentevent.ajax", 
-	    			    		{accountId:$('#userId').val(), explicitId:'instruction' , type:"click"}, 
-	    			    		function(items) {	    			    			
-	    			    			$.post(servicesAPI + "/json/assessmentevent.ajax", 
-	    		    			    		{accountId:$('#userId').val(), explicitId:'self' , type:"click", x0:200, y0:100}, function(items) {	    		    			    			    		    			           	
-	    		    			    			$("#start").hide();
-	    		    			    			$("#test0").show();	    		    			    				    		    			    			
-	    		    			    		});
-	    			    		});	
+ 			   	$.post(servicesAPI + "/json/assessmentevent.ajax", 
+ 		    	   {accountId:$('#userId').val(), explicitId:'self' , type:"start-timing", x0:200, y0:100}, function(items) {	    		    			    			    		    			           	
+ 		    			$("#start").hide();
+ 		    			$("#test0").show();	    		    			    				    		    			    			
+ 		    		});
+	    			    	
 			   }); 
 		      
 		      function showTest0() {
@@ -154,51 +151,63 @@
 		      }
 		      
 		      function showTest1() {
-		    	    var redArray = [Math.floor((Math.random() * 10))];		      				    	   
+		    	    var yellowLimit = Math.floor((Math.random() * 10));		      				    	   
+		    	    var increment = 0;
+		    	    var intervalId = 0;
 		    	    function f() {
+		    	    	if (increment == yellowLimit) {
+		    	    		clearInterval(intervalId);
+		    	    		circleArray[0].setFill('white');
+			    	    	circleArray[1].setFill('white');
+			    	    	circleArray[2].setFill('white');			    	    	
+		    	    		startTime = new Date().getTime();
+	  						selectedCircle = Math.floor((Math.random()*3));
+	  						circleArray[selectedCircle].setFill('red');
+	  						layer.draw();
+	  						return;
+	  						
+		    	    	}
+		    	    	circleArray[0].setFill('white');
+		    	    	circleArray[1].setFill('white');
+		    	    	circleArray[2].setFill('white');
 						startTime = new Date().getTime();
 						var newCircle = Math.floor((Math.random() * 3));
 						circleArray[newCircle].setFill('yellow');
-						layer.draw();						
+						layer.draw();
+						increment++;
 					}		    	    
-					setTimeout(f, 2000 * Math.random());	
+		    	    intervalId = setInterval(f, 2000 * Math.random());	
 		      }
 		      
 		      
 		      $("#test0").click(function() {		    	    
-		    		
-			  		 $.post(servicesAPI + "/json/assessmentevent.ajax", 
-	    			    		{accountId:$('#userId').val(), explicitId:'instruction' , type:"click"}, 
-	    			    		function(items) {	    			    			
-	    			    			$.post(servicesAPI + "/json/assessmentevent.ajax", 
-	    		    			    		{accountId:$('#userId').val(), explicitId:'self' , type:"click", x0:200, y0:100}, function(items) {	    		    			           
-	    		    			    			showTest0();	    		    			    				    		    			    			
-	    		    			    		});
-	    			    		});	
+		    	  $("#test0").removeClass("btn-success");
+			  			    			    			
+	    			$.post(servicesAPI + "/json/assessmentevent.ajax", 
+	    		   		{accountId:$('#userId').val(), explicitId:'self' , type:"test0-button-click"}, function(items) {	    		    			           
+	    		    			showTest0();	    		    			    				    		    			    			
+	    		    });
+	    			    		
 			   }); 
 		      
 		      $("#test0Next").click(function() {		    	    
-		    		
-			  		 $.post(servicesAPI + "/json/assessmentevent.ajax", 
-	    			    		{accountId:$('#userId').val(), explicitId:'instruction' , type:"click"}, 
-	    			    		function(items) {	    			    			
-	    			    			$.post(servicesAPI + "/json/assessmentevent.ajax", 
-	    		    			    		{accountId:$('#userId').val(), explicitId:'self' , type:"click", x0:200, y0:100}, function(items) {	    		    			           
-	    		    			    			showTest0();	    		    			    				    		    			    			
-	    		    			    		});
-	    			    		});	
+		    	  $("#test0Next").removeClass("btn-success");
+			  		 	    			    			
+		    		$.post(servicesAPI + "/json/assessmentevent.ajax", 
+		    		    {accountId:$('#userId').val(), explicitId:'self' , type:"test0-next-button-click" }, function(items) {	    		    			           
+		    		    showTest0();	    		    			    				    		    			    			
+		    		});
+	    			    		
 			   }); 
 		      
 		      $("#test1").click(function() {		    	    
-		    		
-			  		 $.post(servicesAPI + "/json/assessmentevent.ajax", 
-	    			    		{accountId:$('#userId').val(), explicitId:'instruction' , type:"click"}, 
-	    			    		function(items) {	    			    			
-	    			    			$.post(servicesAPI + "/json/assessmentevent.ajax", 
-	    		    			    		{accountId:$('#userId').val(), explicitId:'self' , type:"click", x0:200, y0:100}, function(items) {	    		    			           
-	    		    			    			showTest1();	    		    			    				    		    			    			
-	    		    			    		});
-	    			    		});	
+		    	  $("#test1").removeClass("btn-success");
+			  		 	    			    			
+	    		  $.post(servicesAPI + "/json/assessmentevent.ajax", 
+	    		  {accountId:$('#userId').val(), explicitId:'self' , type:"click", type:"test1-button-click"}, function(items) {	    		    			           
+	    		   	showTest1();	    		    			    				    		    			    			
+	    		   });
+	    			    		
 			   }); 
 		      
 		      
@@ -207,6 +216,7 @@
 		      		
 		      		if (circleArrayCounter.length > 0) {
 		      			$('#test0Next').show();
+		      			$("#test0Next").addClass("btn-success");
 		      			$('#test0').hide();
 		      		}
 		      		
@@ -222,34 +232,33 @@
 		          stage.add(layer);
 		        }
 		      
-		      
-		        function logArrayEvent(name) {
+		      		        
+		        function logCircleEvent(circle) {
 		        	
-		        	var coordinateString = "";
-		        	for (var i in dragArray) {
-		        		coordinateString += dragArray[i][0] + "-" + dragArray[i][1] + ","; 
+		        	if (test0Counter == test0Limit) {
+		        		if (circle.getName() == circleArray[selectedCircle].getName()) {
+		        			$.post(servicesAPI + "/json/assessmentevent.ajax", 
+		    			   			{accountId:$('#userId').val(), explicitId:name , type:"timing-click-red-after-yellow", startTime:startTime, endTime:new Date().getTime()}, 
+		    			    			function(items) {
+		    			   					window.location="<c:url value="/drag0"/>";
+		    			   		});
+		        		}
 		        	}
 		        	
-		        	dragArray.length = 0;
 		        	
-		        	$.post(servicesAPI + "/json/assessmentevent.ajax", 
-    			   		{accountId:$('#userId').val(), explicitId:name , type:"drag", coordinates:coordinateString}, 
-    			    		function(items) {});
-		        }
-		       
-		        function logCircleEvent(circle) {
 		        	circle.setFill('white');
 		        	layer.draw();
 		        	if (circle.getName() == circleArray[selectedCircle].getName()) {
-		        		console.log("Logging: " + circle.getName());
+		        		test0Counter++;
+		        		
 		        		$.post(servicesAPI + "/json/assessmentevent.ajax", 
-		    			   		{accountId:$('#userId').val(), explicitId:name , type:"timing-click"}, 
+		    			   		{accountId:$('#userId').val(), explicitId:name , type:"timing-click-red", startTime:startTime, endTime:new Date().getTime()}, 
 		    			    		function(items) {
 		    			   				nextCommand();
 		    			   		});
 		        	} else {
 		        		$.post(servicesAPI + "/json/assessmentevent.ajax", 
-		    			   		{accountId:$('#userId').val(), explicitId:name , type:"timing-wrong-click"}, 
+		    			   		{accountId:$('#userId').val(), explicitId:name , type:"timing-wrong-click", startTime:startTime, endTime:new Date().getTime()}, 
 		    			    		function(items) {
 		    			   			    nextCommand();	
 		    			   		});
@@ -262,7 +271,7 @@
 			              x: x,
 			              y: y,
 			              rotationDeg: 0,
-			              draggable:true
+			              draggable:false
 			            });
 			          
 		        	var box = new Kinetic.Rect({

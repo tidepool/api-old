@@ -207,7 +207,7 @@ public class APIController {
 			}
 			
 		
-		return "forward:drag0";
+		return "forward:timing";
 	}
 	
 	@RequestMapping(value="/assessment", method=RequestMethod.GET)
@@ -291,7 +291,9 @@ public class APIController {
 			@RequestParam(required=false) String x1,
 			@RequestParam(required=false) String y1,
 			@RequestParam(required=false) String width,
-			@RequestParam(required=false) String height
+			@RequestParam(required=false) String height,
+			@RequestParam(required=false) String startTime,
+			@RequestParam(required=false) String endTime
 			) {		
 
 		if (!StringUtils.isEmpty(coordinates)) {
@@ -308,7 +310,9 @@ public class APIController {
 					event.y0 = coordinate[1];					
 					event.width = width;
 					event.height = height;
-					event.text = attributeComment;					
+					event.text = attributeComment;
+					event.startTime = startTime;
+					event.endTime = endTime;
 					hBaseManager.logCodingEvent(event);	
 				}
 			}
@@ -327,6 +331,8 @@ public class APIController {
 			event.width = width;
 			event.height = height;
 			event.text = attributeComment;
+			event.startTime = startTime;
+			event.endTime = endTime;
 
 			hBaseManager.logCodingEvent(event);			
 			return event;

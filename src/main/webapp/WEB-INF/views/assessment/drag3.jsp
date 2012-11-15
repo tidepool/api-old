@@ -168,6 +168,88 @@
 			              draggable:true
 			            });
 			          
+		        	var plusText = new Kinetic.Text({
+			        	  x: -24,
+			        	  y: 8,
+			        	  text: "+",
+			        	  fontSize: 12,
+			        	  fontFamily: "Calibri",
+			        	  textFill: "white",
+			        	  align: "center",
+			        	  verticalAlign: "middle"
+			        	  });
+		        	
+		        	var plusBox = new Kinetic.Rect({
+		                x: -30,
+		                y: 5,
+		                width: 20,
+		                height:20,
+		                fill: 'grey',
+		                stroke: 'black',
+		                strokeWidth: 1
+		              });		        	
+		        			        			        	
+		        	var minusText = new Kinetic.Text({
+			        	  x: 5,
+			        	  y: 8,
+			        	  text: "-",
+			        	  fontSize: 12,
+			        	  fontFamily: "Calibri",
+			        	  textFill: "white",
+			        	  align: "center",
+			        	  verticalAlign: "middle"
+			        	  });
+		        	
+		        	var minusBox = new Kinetic.Rect({
+		                x: -3,
+		                y: 5,
+		                width: 20,
+		                height:20,
+		                fill: 'grey',
+		                stroke: 'black',
+		                strokeWidth: 1
+		              });
+		        	
+		        	function increaseCircleSize() {
+						  if (box.getRadius() < 250) { 							   
+						   		box.setRadius(box.getRadius() + 10);					      							    	
+						   		layer.draw();						    	
+						    	$.post(servicesAPI + "/json/assessmentevent.ajax", 
+				    			   		{accountId:$('#userId').val(), explicitId:id , type:"increase-size", width:box.getRadius() * 2, height:box.getRadius() * 2}, 
+				    			    		function(items) {});
+						    	
+						   }
+					  }
+					  
+		        	
+					 function decreaseCircleSize() {
+						   if (box.getRadius() > 50) { 
+						    	box.setRadius(box.getRadius() - 10);					      	
+						    	layer.draw(); 
+						    	$.post(servicesAPI + "/json/assessmentevent.ajax", 
+				    			   		{accountId:$('#userId').val(), explicitId:id , type:"decrease-size", width:box.getRadius() * 2, height:box.getRadius() * 2}, 
+				    			    		function(items) {});
+						    	
+						   }
+					  }
+					   
+					  plusText.on("click", function(){
+					  	increaseCircleSize();
+					  });
+						   
+						  
+					  minusText.on("click", function(){
+						  decreaseCircleSize();
+					   }); 
+					   
+					  plusBox.on("click", function(){
+						  increaseCircleSize();
+				      });
+					   						  
+					  minusBox.on("click", function(){
+						  decreaseCircleSize();
+					  });		        	
+		        	
 			          var box = new Kinetic.Circle({
 			              x: 0,
 			              y: 0,
@@ -181,7 +263,7 @@
 
 			          var simpleText = new Kinetic.Text({
 			        	  x: -40,
-			        	  y: -10,
+			        	  y: -30,
 			        	  text: name,
 			        	  fontSize: 12,
 			        	  fontFamily: "Calibri",
@@ -219,6 +301,10 @@
 			          
 			            group.add(box);
 			            group.add(simpleText);
+			            group.add(plusBox);
+			            group.add(plusText);
+			            group.add(minusBox);
+			            group.add(minusText);
 		        		return group;
 		        	
 		        }

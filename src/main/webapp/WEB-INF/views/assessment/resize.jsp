@@ -67,8 +67,8 @@
 		
 		<div id="instructions">
 			<div>
-				<p>How well do these abilities and attitudes capture your Self?</p> 
-				<p>Position the circles to indicate.</p> 				
+				<p>There is a circle representing yourself and five characteristics representing common traits.</p> 
+				<p>Position the traits at any place on the screen to demonstrate how important they are to you.</p>
 				<div>
 				  <button id="start">Start</button>
 				</div>
@@ -118,7 +118,7 @@
 		    	  $.post(servicesAPI + "/json/assessmentevent.ajax", 
   			    		{accountId:$('#userId').val(), explicitId:'next' , type:"next"}, 
   			    		function(items) {});
-		    	  	window.location="<c:url value="/assessmentFeedback"/>";   
+		    	 window.location="<c:url value="/drag1"/>";  
 		      });  
 		     
 		      $("#start").click(function() {
@@ -131,15 +131,15 @@
 	    		    			    });
 	    			    		});	
 			   }); 
-		    
+		      
 			  			  
 		      function drawImages() {		            
 		    	  layer.add(buildSelfCircle("Self", 200, 100)); 
-		    	  layer.add(build5Circle("Mechanical/ \nhands-on", "mechanical_hands-on", 100, 350));
-		          layer.add(build5Circle("Creative/ \nIntuitive", "creative_intuitive", 275, 350));
-		          layer.add(build5Circle("Teacher/ \nHelpful", "teacher_helpful", 455, 350));
-		          layer.add(build5Circle("Persuasive/ \nEnthusiastic", "persuasive_enthusiastic", 625, 350));
-		          layer.add(build5Circle("Inquisitive/ \nAnalytical", "inquisitive_analytical", 795, 350));		          
+		    	  layer.add(build5Circle("Orderly/ \nPersistent", "orderly_persistent", 100, 350));
+		          layer.add(build5Circle("Anxious/ \nDramatic", "anxious_dramatic", 275, 350));
+		          layer.add(build5Circle("Cooperative/ \nFriendly", "cooperative_friendly", 455, 350));
+		          layer.add(build5Circle("Sociable/\nEnergetic", "sociable_energetic", 625, 350));
+		          layer.add(build5Circle("Intellectual/\nCultured", "intellectual_cultured", 795, 350));		          
 		          stage.add(layer);
 		        }
 		      
@@ -151,7 +151,8 @@
 		        		coordinateString += dragArray[i][0] + "-" + dragArray[i][1] + ","; 
 		        	}
 		        	
-		        	dragArray.length = 0;		        	
+		        	dragArray.length = 0;
+		        	
 		        	$.post(servicesAPI + "/json/assessmentevent.ajax", 
     			   		{accountId:$('#userId').val(), explicitId:name , type:"drag", coordinates:coordinateString}, 
     			    		function(items) {});
@@ -166,7 +167,7 @@
 			              rotationDeg: 0,
 			              draggable:true
 			            });
-
+			        
 		        	var plusText = new Kinetic.Text({
 			        	  x: -24,
 			        	  y: 8,
@@ -248,7 +249,7 @@
 					  minusBox.on("click", function(){
 						  decreaseCircleSize();
 					  });
-		        			        	
+		        	
 		        	
 			          var box = new Kinetic.Circle({
 			              x: 0,
@@ -262,8 +263,8 @@
 			            });
 
 			          var simpleText = new Kinetic.Text({
-			        	  x: -40,
-			        	  y: -30,
+			        	  x: -42,
+			        	  y: -25,
 			        	  text: name,
 			        	  fontSize: 12,
 			        	  fontFamily: "Calibri",
@@ -298,7 +299,9 @@
 							   } 
 							   
 						   });
-			          
+			          	
+						   
+						  
 			            group.add(box);
 			            group.add(simpleText);
 			            group.add(plusBox);
@@ -342,7 +345,6 @@
 			          
 			            group.add(box);
 			            group.add(simpleText);
-			            
 		        		return group;
 		        	
 		        }

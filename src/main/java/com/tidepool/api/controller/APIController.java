@@ -289,6 +289,20 @@ public class APIController {
 		return "assessment/drag4";
 	}		
 	
+	@RequestMapping(value="/resize", method=RequestMethod.GET)
+	public String getResize(HttpServletRequest request, @RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("cdn_url", cdnUrl);	
+		model.addAttribute("account", request.getSession().getAttribute("account"));
+		return "assessment/resize";
+	}		
+	
+	
 	@RequestMapping(value="/timing", method=RequestMethod.GET)
 	public String getTiming(HttpServletRequest request, @RequestParam(required=false) String owner,
 			Model model) {

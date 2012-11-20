@@ -77,7 +77,9 @@
 		
 		<div id="instructions0">
 			<div>
-				<p>Resize the circles as to how they apply to you.</p> 				
+			    <p>Here are a number of psychological traits that may or may not describe you. </p>
+			    <p>Simply collapse or expand each circle to indicate how well the trait describes you.</p>
+				<p>You must change the size of all circles.</p> 				
 				<div>
 				  <button id="start0">Start</button>
 				</div>
@@ -86,8 +88,8 @@
 		
 		<div id="instructions" style="display:none">
 			<div>
-				<p>There is a circle representing yourself(Self) and five characteristics representing common traits.</p> 
-				<p>Position the traits at any place on the screen to demonstrate how important they are to you.</p>
+				<p>Now place each of the five circles in position to the new circle representing your self. </p> 
+				<p>Place each trait anywhere on the screen so that it best represents how important that trait is to your self.</p>
 				<div>
 				  <button id="start">Start</button>
 				</div>
@@ -172,7 +174,7 @@
 		    	  layer.add(selfGroup); 
 		    	
 		    	  layer.add(build5Circle("Independent/ \nAloof", "independent_aloof",100, 350));
-		          layer.add(build5Circle("Self-reflective/ \n Reserved", "self-reflective_reserved", 275, 350));
+		          layer.add(build5Circle("Self-reflective/ \n Cautious", "self-reflective_cautious", 275, 350));
 		          layer.add(build5Circle("Disorganized/ \n Unconventional", "disorganized_unconventional", 455, 350));
 		          layer.add(build5Circle("Calm/ \n Consistent", "calm_consistent", 625, 350));
 		          layer.add(build5Circle("Focused/ \n Narrow-minded", "focused_narrow-minded", 795, 350));          

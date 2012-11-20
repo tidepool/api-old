@@ -77,7 +77,9 @@
 		
 		<div id="instructions0">
 			<div>
-				<p>Resize the circles as to how they apply to you.</p> 				
+			    <p>Here are a number of psychological traits that may or may not describe you. </p>
+			    <p>Simply collapse or expand each circle to indicate how well the trait describes you.</p>
+				<p>You must change the size of all circles.</p> 				
 				<div>
 				  <button id="start0">Start</button>
 				</div>
@@ -86,8 +88,8 @@
 		
 		<div id="instructions" style="display:none">
 			<div>
-				<p>There is a circle representing yourself(Self) and five characteristics representing common traits.</p> 
-				<p>Position the traits at any place on the screen to demonstrate how important they are to you.</p>
+				<p>Now place each of the five circles in position to the new circle representing your self. </p> 
+				<p>Place each trait anywhere on the screen so that it best represents how important that trait is to your self.</p>
 				<div>
 				  <button id="start">Start</button>
 				</div>
@@ -170,10 +172,11 @@
 		    	  selfGroup = buildSelfCircle("Self", 200, 100);
 		    	  layer.add(selfGroup); 
 		    	  layer.add(build5Circle("Mechanical/ \nhands-on", "mechanical_hands-on", 100, 350));
-		          layer.add(build5Circle("Creative/ \nIntuitive", "creative_intuitive", 275, 350));
-		          layer.add(build5Circle("Teacher/ \nHelpful", "teacher_helpful", 455, 350));
-		          layer.add(build5Circle("Persuasive/ \nEnthusiastic", "persuasive_enthusiastic", 625, 350));
-		          layer.add(build5Circle("Inquisitive/ \nAnalytical", "inquisitive_analytical", 795, 350));		          
+		          layer.add(build5Circle("Creative/ \nIntuitive", "creative_intuitive", 255, 350));
+		          layer.add(build5Circle("Teacher/ \nHelpful", "teacher_helpful", 410, 350));
+		          layer.add(build5Circle("Persuasive/ \nEnthusiastic", "persuasive_enthusiastic", 565, 350));
+		          layer.add(build5Circle("Inquisitive/ \nAnalytical", "inquisitive_analytical", 725, 350));
+		          layer.add(build5Circle("Detail-oriented/ \nThorough", "detail-oriented_thorough", 880, 350));
 		          stage.add(layer);
 		        }
 		      

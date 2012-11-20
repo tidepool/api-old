@@ -77,7 +77,9 @@
 		
 		<div id="instructions0">
 			<div>
-				<p>Resize the circles as to how they apply to you.</p> 				
+			    <p>Here are a number of psychological traits that may or may not describe you. </p>
+			    <p>Simply collapse or expand each circle to indicate how well the trait describes you.</p>
+				<p>You must change the size of all circles.</p> 				
 				<div>
 				  <button id="start0">Start</button>
 				</div>
@@ -86,8 +88,8 @@
 		
 		<div id="instructions" style="display:none">
 			<div>
-				<p>There is a circle representing yourself(Self) and five characteristics representing common traits.</p> 
-				<p>Position the traits at any place on the screen to demonstrate how important they are to you.</p>
+				<p>Now place each of the five circles in position to the new circle representing your self. </p> 
+				<p>Place each trait anywhere on the screen so that it best represents how important that trait is to your self.</p>
 				<div>
 				  <button id="start">Start</button>
 				</div>
@@ -169,10 +171,10 @@
 		      function drawImages() {		            
 		    	  selfGroup = buildSelfCircle("Self", 200, 100);
 		    	  layer.add(selfGroup); 
-		    	  layer.add(build5Circle("Orderly/ \nPersistent", "orderly_persistent", 100, 350));
+		    	  layer.add(build5Circle("Self-disciplined/ \nPersistent", "self-disciplined_persistent", 100, 350));
 		          layer.add(build5Circle("Anxious/ \nDramatic", "anxious_dramatic", 275, 350));
 		          layer.add(build5Circle("Cooperative/ \nFriendly", "cooperative_friendly", 455, 350));
-		          layer.add(build5Circle("Sociable/ \nEnergetic", "sociable_energetic", 625, 350));
+		          layer.add(build5Circle("Sociable/ \nAdventurous", "sociable_adventurous", 625, 350));
 		          layer.add(build5Circle("Intellectual/ \nCultured", "intellectual_cultured", 795, 350));		          
 		          stage.add(layer);
 		        }

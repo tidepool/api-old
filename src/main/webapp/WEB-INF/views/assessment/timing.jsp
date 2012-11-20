@@ -29,6 +29,7 @@
     	z-index: 1000;
     	border:3px solid #000;
     	padding:40px;
+    	max-width:475px;
     		
 	 }
       
@@ -76,9 +77,13 @@
 				
 				<div class="buttonPanel" >
 				  <button class="btn btn-success" id="start">Click to continue</button>
-				  <button class="btn btn-success" id="test0" style="display:none">Click the red circle on the left when it appears. Click here when ready.</button>
-				  <button class="btn btn-success" id="test0Next" style="display:none">Again, click the red circle on the left when it appears. Click here when ready.</button>
-				  <button class="btn btn-success" id="test1" style="display:none">Click the red circle when it appears AFTER the yellow circles. Click here when ready.</button>
+				  <button class="btn btn-success" id="test0" style="display:none">Click the red circle on the left as soon as it appears. Click here when you ready to START.</button>
+				  <button class="btn btn-success" id="test0Next" style="display:none">Again, click the red circle on the left when it appears. Click here when ready to START.</button>
+				  <button class="btn btn-success" id="test1" style="display:none">Click the red circle only when it appears AFTER a yellow circle. Do not click unless there is a red circle after a yellow circle.
+
+Click here when ready to START
+
+ </button>
 				</div>
 			</div>
 		</div>
@@ -153,7 +158,7 @@
 		      }
 		      
 		      function showTest1() {
-		    	    var yellowLimit = Math.floor((Math.random() * 10));
+		    	    var yellowLimit = Math.floor((Math.random() * 12));
 		    	    yellowLimit = (yellowLimit == 0) ? 2 : yellowLimit;
 		    	    var increment = 0;
 		    	    var intervalId = 0;
@@ -176,11 +181,17 @@
 		    	    	circleArray[2].setFill('white');
 						startTime = new Date().getTime();
 						var newCircle = Math.floor((Math.random() * 3));
-						circleArray[newCircle].setFill('yellow');
+						
+						if (increment %2 == 0) {
+							circleArray[newCircle].setFill('yellow');
+						} else {
+							circleArray[newCircle].setFill('green');							
+						}
+						
 						layer.draw();
 						increment++;
 					}		    	    
-		    	    intervalId = setInterval(f, 2000 * Math.random());	
+		    	    intervalId = setInterval(f, 1000 * Math.random());	
 		      }
 		      
 		      

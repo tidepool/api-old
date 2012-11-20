@@ -22,7 +22,17 @@
         padding-bottom: 40px;
       }
             
-      #instructions {
+     #instructions {
+    	left: 400px;
+    	position: absolute;
+    	top: 70px;
+    	z-index: 1000;
+    	border:3px solid #000;
+    	padding:10px;
+    		
+	 }
+	 
+	 #instructions0 {
     	left: 400px;
     	position: absolute;
     	top: 70px;
@@ -64,6 +74,7 @@
     <div class="container">
 		<button id="next">Next</button>
 		<div id="container"></div>		
+		
 		
 		<div id="instructions">
 			<div>

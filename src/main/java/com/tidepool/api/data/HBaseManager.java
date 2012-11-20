@@ -309,6 +309,16 @@ public class HBaseManager {
 			byte[] val = result.getValue(family_name_column, Account.assess_code_column);
 			account.setAssessCode((Bytes.toString(val)));					
 		}
+				
+		if (result.containsColumn(family_name_column, Account.company_column)) {
+			byte[] val = result.getValue(family_name_column, Account.company_column);
+			account.setCompany((Bytes.toString(val)));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.phone_number_column)) {
+			byte[] val = result.getValue(family_name_column, Account.phone_number_column);
+			account.setPhoneNumber((Bytes.toString(val)));					
+		}
 		
 				
 	}
@@ -382,7 +392,18 @@ public class HBaseManager {
 			put.add(family_name_column, Account.interesting_dating_partners_column, Bytes.toBytes(account.getInteresting_dating_partners()));
 							
 			put.add(family_name_column, Account.ip_column, Bytes.toBytes(account.getIp()));
-			put.add(family_name_column, Account.assess_code_column, Bytes.toBytes(account.getAssessCode()));
+			
+			if (account.getAssessCode() != null) { 
+				put.add(family_name_column, Account.assess_code_column, Bytes.toBytes(account.getAssessCode()));
+			}
+			
+			if (account.getCompany() != null) {
+				put.add(family_name_column, Account.company_column, Bytes.toBytes(account.getCompany()));
+			}
+			
+			if (account.getPhoneNumber() != null) {
+				put.add(family_name_column, Account.phone_number_column, Bytes.toBytes(account.getPhoneNumber()));
+			}
 			
 			table.put(put);			
 		} catch(Exception e) {

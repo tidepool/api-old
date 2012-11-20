@@ -29,7 +29,7 @@ public class RegistrationController {
 		this.hBaseManager = hBaseManager;
 	}
 	
-	@RequestMapping(value="/register", method=RequestMethod.GET)
+//	@RequestMapping(value="/register", method=RequestMethod.GET)
 	public String getPhotoList(HttpServletRequest request, @RequestParam(required=false) String owner,
 			Model model) {
 

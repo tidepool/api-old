@@ -22,7 +22,17 @@
         padding-bottom: 40px;
       }
             
-      #instructions {
+     #instructions {
+    	left: 400px;
+    	position: absolute;
+    	top: 70px;
+    	z-index: 1000;
+    	border:3px solid #000;
+    	padding:10px;
+    		
+	 }
+	 
+	 #instructions0 {
     	left: 400px;
     	position: absolute;
     	top: 70px;
@@ -65,10 +75,19 @@
 		<button id="next">Next</button>
 		<div id="container"></div>		
 		
-		<div id="instructions">
+		<div id="instructions0">
 			<div>
-				<p>How well do these abilities and attitudes capture your Self?</p> 
-				<p>Position the circles to indicate.</p> 				
+				<p>Resize the circles as to how they apply to you.</p> 				
+				<div>
+				  <button id="start0">Start</button>
+				</div>
+			</div>
+		</div>
+		
+		<div id="instructions" style="display:none">
+			<div>
+				<p>There is a circle representing yourself(Self) and five characteristics representing common traits.</p> 
+				<p>Position the traits at any place on the screen to demonstrate how important they are to you.</p>
 				<div>
 				  <button id="start">Start</button>
 				</div>
@@ -105,7 +124,9 @@
 			$(document).ready(function () {	
 				
 				var movedMap = {};
+				var sizedMap = {};
 				var dragArray = [];
+				var selfGroup;
 				var stage = new Kinetic.Stage({
 		            container: "container",
 		            width: 970,
@@ -121,6 +142,18 @@
 		    	  	window.location="<c:url value="/assessmentFeedback"/>";   
 		      });  
 		     
+		      $("#start0").click(function() {
+			  		$("#instructions0").hide();
+			  		 $.post(servicesAPI + "/json/assessmentevent.ajax", 
+	    			    		{accountId:$('#userId').val(), explicitId:'instruction0' , type:"click"}, 
+	    			    		function(items) {	    			    			
+	    			    			$.post(servicesAPI + "/json/assessmentevent.ajax", 
+	    		    			    		{accountId:$('#userId').val(), explicitId:'self' , type:"click", x0:200, y0:100}, function(items) {	    		    			    		
+	    		    			    });
+	    			    		});	
+			   }); 
+		     
+		      
 		      $("#start").click(function() {
 			  		$("#instructions").hide();
 			  		 $.post(servicesAPI + "/json/assessmentevent.ajax", 
@@ -134,7 +167,8 @@
 		    
 			  			  
 		      function drawImages() {		            
-		    	  layer.add(buildSelfCircle("Self", 200, 100)); 
+		    	  selfGroup = buildSelfCircle("Self", 200, 100);
+		    	  layer.add(selfGroup); 
 		    	  layer.add(build5Circle("Mechanical/ \nhands-on", "mechanical_hands-on", 100, 350));
 		          layer.add(build5Circle("Creative/ \nIntuitive", "creative_intuitive", 275, 350));
 		          layer.add(build5Circle("Teacher/ \nHelpful", "teacher_helpful", 455, 350));
@@ -209,7 +243,23 @@
 		                strokeWidth: 1
 		              });
 		        	
+		        	function checkAndShowSelf() {
+		        		sizedMap[name] = 1;		        		
+		        		var count = 0;
+						for (var i in sizedMap) {
+							count++;
+						}							   
+						
+						if (count == 5) {
+							  $('#instructions0').hide();
+							  $('#instructions').show();
+							  selfGroup.setVisible(true);
+						} 
+		        		
+		        	}
+		        	
 		        	function increaseCircleSize() {
+		        		  checkAndShowSelf();
 						  if (box.getRadius() < 250) { 							   
 						   		box.setRadius(box.getRadius() + 10);					      							    	
 						   		layer.draw();						    	
@@ -222,7 +272,8 @@
 					  
 		        	
 					 function decreaseCircleSize() {
-						   if (box.getRadius() > 50) { 
+						 checkAndShowSelf();  
+						 if (box.getRadius() > 50) { 
 						    	box.setRadius(box.getRadius() - 10);					      	
 						    	layer.draw(); 
 						    	$.post(servicesAPI + "/json/assessmentevent.ajax", 
@@ -342,7 +393,7 @@
 			          
 			            group.add(box);
 			            group.add(simpleText);
-			            
+			            group.setVisible(false);
 		        		return group;
 		        	
 		        }

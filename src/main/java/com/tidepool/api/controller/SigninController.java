@@ -24,7 +24,7 @@ public class SigninController {
 	public String signin(WebRequest request, @CookieValue(value="u", defaultValue="xxxx", required=false) String cookie) {
 		Account account =  accountService.getAccount();				
 		if (account == null) {
-			return "signin/signin";
+			return "framework/register";
 		}
 		return "redirect:/survey";
 		

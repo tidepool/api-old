@@ -1,0 +1,14 @@
+.navbar-inner {
+   /* fix the background color.*/	
+   /* background-color: #78A6E7; */
+}   
+  
+  
+.hero-unit {
+    background-color: #fff;
+    border-radius: 6px 6px 6px 6px;
+    margin-bottom: 30px;
+    padding: 60px;
+
+   
+}   

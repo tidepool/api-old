@@ -26,6 +26,8 @@ public class Account implements Serializable, UserDetails {
 	public static final byte[] explicit_image_folder_column = Bytes.toBytes("explicit_image_folder");
 	public static final byte[] account_status_column = Bytes.toBytes("account_status");
 	public static final byte[] assess_code_column = Bytes.toBytes("assess_code_status");
+	public static final byte[] company_column = Bytes.toBytes("company");
+	public static final byte[] phone_number_column = Bytes.toBytes("phone_number");
 	
 	public static final byte[] extraverted_column = Bytes.toBytes("extraverted");
 	public static final byte[] critical_column = Bytes.toBytes("critical");
@@ -75,6 +77,8 @@ public class Account implements Serializable, UserDetails {
 	private String explicitImageFolder;
 	private String accountStatus;
 	private String assessCode;
+	private String company;
+	private String phoneNumber;
 	
 	public int extraverted;
 	public int critical;
@@ -470,6 +474,22 @@ public class Account implements Serializable, UserDetails {
 
 	public void setAssessCode(String assessCode) {
 		this.assessCode = assessCode;
+	}
+
+	public String getCompany() {
+		return company;
+	}
+
+	public void setCompany(String company) {
+		this.company = company;
+	}
+
+	public String getPhoneNumber() {
+		return phoneNumber;
+	}
+
+	public void setPhoneNumber(String phoneNumber) {
+		this.phoneNumber = phoneNumber;
 	}
 	
 }

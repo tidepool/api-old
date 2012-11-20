@@ -84,6 +84,8 @@ public class FrameworkController {
 		account.setCompany(company);
 		account.setRegistrationLevel("1");
 		account.setIp(request.getRemoteAddr());
+		account.setAccountStatus("0");
+		
 		try {
 			hBaseManager.createAccount(account);
 		} catch (Exception exception) {			

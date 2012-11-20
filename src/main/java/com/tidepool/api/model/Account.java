@@ -241,6 +241,7 @@ public class Account implements Serializable, UserDetails {
 
 	
 	public boolean isAdmin() {
+		if (getElementGroupId() == null) return false; 
 		return getElementGroupId().equals("0");
 	}
 

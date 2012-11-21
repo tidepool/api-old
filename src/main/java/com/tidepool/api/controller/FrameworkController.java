@@ -52,6 +52,20 @@ public class FrameworkController {
 	}
 	
 	
+	@RequestMapping(value="/template", method=RequestMethod.GET)
+	public String getTemplate(HttpServletRequest request, 
+			@RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("account", getAccount());
+		
+		return "framework/template";
+	}
+	
 	
 	@RequestMapping(value="/register", method=RequestMethod.GET)
 	public String getAssessmentRegister(HttpServletRequest request, 
@@ -96,7 +110,7 @@ public class FrameworkController {
 		Authentication result = authManager.authenticate(authRequest);
 		SecurityContextHolder.getContext().setAuthentication(result);
 				
-		return "redirect:/training0";
+		return "redirect:/assess";
 		
 	}
 	

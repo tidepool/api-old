@@ -16,8 +16,8 @@
     <!-- Le styles -->
     <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />" rel="stylesheet">
     <link href="<c:url value="/resources/bootstrap/css/anchor-footer.css" />" rel="stylesheet">
-    <link href="<c:url value="/resources/bootstrap/css/bootstrap-responsive.css" />" rel="stylesheet">
-	 <link href="<c:url value="/resources/bootstrap/css/framework.css" />" rel="stylesheet">
+   <%--  <link href="<c:url value="/resources/bootstrap/css/bootstrap-responsive.css" />" rel="stylesheet"> --%>
+	<link href="<c:url value="/resources/bootstrap/css/framework.css" />" rel="stylesheet">
   </head>
 
   <body>
@@ -56,64 +56,67 @@
     </div>
 
 	<div id="wrap">
-    <div class="container">
-		<div class="hero-unit">
+    <div class="container">    	
+    	<div class="row-fluid">
+    		<!-- <div class="span5" style="padding-top:40px">...</div> -->
+			<div class="hero-unit">
+			
+				<form class="form-horizontal" action="<c:url value="/userRegister" />" method="POST">
+									
+					<div class="control-group alert alert-error" style="display:none" id="error">Hold up....</div>
+												
+					<div class="control-group">
+						<label class="control-label" for="firstName">First Name</label>
+						<div class="controls">
+							<input type="text" id="firstName" name="firstName" placeholder="First Name">
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="lastName">Last Name</label>
+						<div class="controls">
+							<input type="text" id="lastName" name="lastName" placeholder="Last Name">
+						</div>
+					</div>
 		
-		<form class="form-horizontal span-7" action="<c:url value="/userRegister" />" method="POST">
-			
-			
-			<div class="control-group alert alert-error" style="display:none" id="error">Hold up....</div>
-			
-						
-			<div class="control-group">
-				<label class="control-label" for="firstName">First Name</label>
-				<div class="controls">
-					<input type="text" id="firstName" name="firstName" placeholder="First Name">
-				</div>
-			</div>
-			
-			<div class="control-group">
-				<label class="control-label" for="lastName">Last Name</label>
-				<div class="controls">
-					<input type="text" id="lastName" name="lastName" placeholder="Last Name">
-				</div>
-			</div>
-
-			<div class="control-group">
-				<label class="control-label" for="company">Company</label>
-				<div class="controls">
-					<input type="text" id="company" name="company" placeholder="Company">
-				</div>
+					<div class="control-group">
+						<label class="control-label" for="company">Company</label>
+						<div class="controls">
+							<input type="text" id="company" name="company" placeholder="Company">
+						</div>
+					</div>	
+					
+					<div class="control-group">
+						<label class="control-label" for="phoneNumber">Phone Number</label>
+						<div class="controls">
+							<input type="text" id="phoneNumber" name="phoneNumber" placeholder="Phone number">
+						</div>
+					</div>							
+					
+					<div class="control-group">
+						<label class="control-label" for="email">Email</label>
+						<div class="controls">
+							<input type="text" id="email" name="email" placeholder="email">
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="password">Password</label>
+						<div class="controls">
+							<input type="password" id="password" name="password" placeholder="Password">
+						</div>
+					</div>
+					
+					<div class="control-group">
+						<div class="controls">				
+							<button type="submit" id="signUpButton" class="btn">Sign Up</button>
+						</div>
+					</div>
+				</form>
 			</div>	
-			
-			<div class="control-group">
-				<label class="control-label" for="phoneNumber">Phone Number</label>
-				<div class="controls">
-					<input type="text" id="phoneNumber" name="phoneNumber" placeholder="Phone number">
-				</div>
-			</div>							
-			
-			<div class="control-group">
-				<label class="control-label" for="email">Email</label>
-				<div class="controls">
-					<input type="text" id="email" name="email" placeholder="email">
-				</div>
-			</div>
-			
-			<div class="control-group">
-				<label class="control-label" for="password">Password</label>
-				<div class="controls">
-					<input type="password" id="password" name="password" placeholder="Password">
-				</div>
-			</div>
-			
-			<div class="control-group">
-				<div class="controls">				
-					<button type="submit" id="signUpButton" class="btn">Sign Up</button>
-				</div>
-			</div>
-		</form>
-		</div>
+		</div>	
+		
+		
 	</div> <!-- /container -->
 	
 	</div>

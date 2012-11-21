@@ -9,6 +9,45 @@
     border-radius: 6px 6px 6px 6px;
     margin-bottom: 30px;
     padding: 60px;
+    
+}
 
-   
-}   
+.container-fluid {
+	padding-top:60px;	
+}
+
+mini-layout {
+    border: 1px solid #DDDDDD;
+    border-radius: 6px 6px 6px 6px;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.075);
+}
+.mini-layout, .mini-layout .mini-layout-body, .mini-layout.fluid .mini-layout-sidebar {
+
+}
+.mini-layout {
+    
+}
+.mini-layout div {
+    border-radius: 3px 3px 3px 3px;
+}
+
+.mini-layout-breadcrumbs {
+    background-color: #BBD8E9;
+    padding:10px;
+    margin-bottom:10px;    
+}
+
+.mini-layout-sidebar {
+    background-color: #BBD8E9;
+    padding:10px;    
+}
+
+.mini-layout .mini-layout-body {
+    background-color: #DCEAF4;
+    margin: 0 auto;
+    margin-left:10px;
+    padding:10px;
+    
+}
+
+

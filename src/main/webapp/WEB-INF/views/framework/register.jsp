@@ -59,9 +59,11 @@
     <div class="container">
 		<div class="hero-unit">
 		
-		<form class="form-horizontal" action="<c:url value="/userRegister" />" method="POST">
+		<form class="form-horizontal span-7" action="<c:url value="/userRegister" />" method="POST">
 			
-			<div class="alert alert-error" style="display:none" id="error">Hold up....</div>
+			
+			<div class="control-group alert alert-error" style="display:none" id="error">Hold up....</div>
+			
 						
 			<div class="control-group">
 				<label class="control-label" for="firstName">First Name</label>
@@ -123,7 +125,7 @@
     </div>  
     
        
-    <!-- Le javascript
+    <!-- El javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
     <script src="<c:url value="/resources/bootstrap/js/jquery.js" />"></script>
@@ -150,7 +152,7 @@
 							$("#email").val() == '' ||
 							$("#password").val() == ''	
 							) {
-							   $('#error').html('Please provide answers to all of the questions!');
+							   $('#error').html('Please fill in all fields!');
 							   $('#error').show();
 							}
 							else {
@@ -162,8 +164,5 @@
 			});
 		})(jQuery);		
 	</script>
-
-
   </body>
-
 </html>

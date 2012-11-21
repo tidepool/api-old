@@ -129,6 +129,7 @@
 				var movedMap = {};
 				var sizedMap = {};
 				var dragArray = [];
+				var circleArray = [];
 				var selfGroup;
 				var stage = new Kinetic.Stage({
 		            container: "container",
@@ -259,6 +260,11 @@
 							  $('#instructions0').hide();
 							  $('#instructions').show();
 							  selfGroup.setVisible(true);
+							  
+							  for (var i in circleArray) {
+								circleArray[i].hideResize();
+							  }
+							  
 						} 
 		        		
 		        	}
@@ -363,6 +369,14 @@
 			            group.add(plusText);
 			            group.add(minusBox);
 			            group.add(minusText);
+			            
+			            group.hideResize = function() {
+			            	plusBox.setVisible(false);
+			            	plusText.setVisible(false);
+			            	minusBox.setVisible(false);
+			            	minusText.setVisible(false);
+			            }
+			            circleArray.push(group);
 		        		return group;
 		        	
 		        }

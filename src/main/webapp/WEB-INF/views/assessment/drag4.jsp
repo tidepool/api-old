@@ -128,6 +128,7 @@
 				var movedMap = {};
 				var sizedMap = {};
 				var dragArray = [];
+				var circleArray = [];
 				var selfGroup;
 				var stage = new Kinetic.Stage({
 		            container: "container",
@@ -171,7 +172,7 @@
 		      function drawImages() {		            
 		    	  selfGroup = buildSelfCircle("Self", 200, 100);
 		    	  layer.add(selfGroup); 
-		    	  layer.add(build5Circle("Mechanical/ \nhands-on", "mechanical_hands-on", 100, 350));
+		    	  layer.add(build5Circle("Mechanical/ \nHands-on", "mechanical_hands-on", 100, 350));
 		          layer.add(build5Circle("Creative/ \nIntuitive", "creative_intuitive", 255, 350));
 		          layer.add(build5Circle("Teacher/ \nHelpful", "teacher_helpful", 410, 350));
 		          layer.add(build5Circle("Persuasive/ \nEnthusiastic", "persuasive_enthusiastic", 565, 350));
@@ -253,10 +254,14 @@
 							count++;
 						}							   
 						
-						if (count == 5) {
+						if (count == 6) {
 							  $('#instructions0').hide();
 							  $('#instructions').show();
 							  selfGroup.setVisible(true);
+							  
+							  for (var i in circleArray) {
+								 circleArray[i].hideResize();
+							  }
 						} 
 		        		
 		        	}
@@ -346,8 +351,9 @@
 							   var count = 0;
 							   for (var i in movedMap) {
 							      count++;
-							   }							   
-							   if (count == 5) {
+							   }
+							   
+							   if (count == 6) {
 								   $("#next").show();
 							   } 
 							   
@@ -359,6 +365,15 @@
 			            group.add(plusText);
 			            group.add(minusBox);
 			            group.add(minusText);
+			            
+			            group.hideResize = function() {
+			            	plusBox.setVisible(false);
+			            	plusText.setVisible(false);
+			            	minusBox.setVisible(false);
+			            	minusText.setVisible(false);
+			            }
+			            circleArray.push(group);
+			            
 		        		return group;
 		        	
 		        }

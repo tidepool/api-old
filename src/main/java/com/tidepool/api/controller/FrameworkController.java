@@ -66,6 +66,20 @@ public class FrameworkController {
 		return "framework/template";
 	}
 	
+	@RequestMapping(value="/testtemplate", method=RequestMethod.GET)
+	public String getTest(HttpServletRequest request, 
+			@RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("account", getAccount());
+		
+		return "framework/test";
+	}
+	
 	
 	@RequestMapping(value="/register", method=RequestMethod.GET)
 	public String getAssessmentRegister(HttpServletRequest request, 

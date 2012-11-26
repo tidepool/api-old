@@ -28,10 +28,10 @@
 	  			</div>
 	  			<div class="row-fluid mini-layout">  				
 	    			<div class="span2 mini-layout-sidebar">
-	      				POW
+	      				Left Sidebar
 	    			</div>
 	    			<div class="span8 mini-layout-body">
-	      				POW
+	      				Main body
 	    			</div>
 	  			</div>
 			</div>

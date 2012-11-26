@@ -90,7 +90,7 @@ public class FrameworkController {
 			model.addAttribute("admin", getAccount());
 		}
 		
-		return "framework/register";
+		return "framework/admin/register";
 	}
 	
 	

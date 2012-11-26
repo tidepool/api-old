@@ -270,7 +270,14 @@
 		        	function increaseCircleSize() {
 		        		  checkAndShowSelf();
 						  if (box.getRadius() < 250) { 							   
-						   		box.setRadius(box.getRadius() + 10);					      							    	
+						   		
+							   if (box.getRadius() > 50 && simpleText.getFontSize() == 6) {
+									simpleText.setFontSize(12);
+									simpleText.setX(simpleText.getX() - 20);
+									simpleText.setY(simpleText.getY() - 15);
+							 	}
+							  
+							  	box.setRadius(box.getRadius() + 10);					      							    	
 						   		layer.draw();						    	
 						    	$.post(servicesAPI + "/json/assessmentevent.ajax", 
 				    			   		{accountId:$('#userId').val(), explicitId:id , type:"increase-size", width:box.getRadius() * 2, height:box.getRadius() * 2}, 
@@ -281,8 +288,17 @@
 					  
 		        	
 					 function decreaseCircleSize() {
-						 checkAndShowSelf();  
-						 if (box.getRadius() > 50) { 
+						 checkAndShowSelf();
+						 					
+						 
+						 if (box.getRadius() > 30) {
+							 	
+							 	if (box.getRadius() < 50 && simpleText.getFontSize() == 12) {
+									simpleText.setFontSize(6);
+									simpleText.setX(simpleText.getX() + 20);
+									simpleText.setY(simpleText.getY() + 15);
+							 	}
+							 
 						    	box.setRadius(box.getRadius() - 10);					      	
 						    	layer.draw(); 
 						    	$.post(servicesAPI + "/json/assessmentevent.ajax", 
@@ -322,7 +338,7 @@
 			            });
 
 			          var simpleText = new Kinetic.Text({
-			        	  x: -35,
+			        	  x: -40,
 			        	  y: -25,
 			        	  text: name,
 			        	  fontSize: 12,

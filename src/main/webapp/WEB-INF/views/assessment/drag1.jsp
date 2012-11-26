@@ -271,7 +271,14 @@
 		        	
 		        	function increaseCircleSize() {
 		        		  checkAndShowSelf();
-						  if (box.getRadius() < 250) { 							   
+						  if (box.getRadius() < 250) {
+							  
+							  if (box.getRadius() > 50 && simpleText.getFontSize() == 6) {
+									simpleText.setFontSize(12);
+									simpleText.setX(simpleText.getX() - 25);
+									simpleText.setY(simpleText.getY() - 20);
+							 	}
+							  
 						   		box.setRadius(box.getRadius() + 10);					      							    	
 						   		layer.draw();						    	
 						    	$.post(servicesAPI + "/json/assessmentevent.ajax", 
@@ -284,7 +291,14 @@
 		        	
 					 function decreaseCircleSize() {
 						 checkAndShowSelf();  
-						 if (box.getRadius() > 50) { 
+						 if (box.getRadius() > 30) {
+							 
+							 if (box.getRadius() < 50 && simpleText.getFontSize() == 12) {
+									simpleText.setFontSize(6);
+									simpleText.setX(simpleText.getX() + 25);
+									simpleText.setY(simpleText.getY() + 20);
+							 	}
+							 	
 						    	box.setRadius(box.getRadius() - 10);					      	
 						    	layer.draw(); 
 						    	$.post(servicesAPI + "/json/assessmentevent.ajax", 

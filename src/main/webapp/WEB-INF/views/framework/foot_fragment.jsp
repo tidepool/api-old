@@ -6,7 +6,7 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <div id="footer">
 	<div class="container">
-       	<div class="muted span-2 menu">Home</div> <div class="muted span-2 menu">Blog</div> <div class="muted span-2 menu">Contact</div> <div class="muted span-2 menu">Terms</div> <div class="muted span-2 menu">Privacy</div><div class="span-1 pull-right social"><img>fb</div><div class="span-1 pull-right social"><img>li</div><div class="span-1 pull-right social"><img>t</div>
+       	<div class="muted span-2 menu">Home</div> <div class="muted span-2 menu">Blog</div> <div class="muted span-2 menu">Contact</div> <div class="muted span-2 menu">Terms</div> <div class="muted span-2 menu">Privacy</div><div class="span6 pull-right social-buttons"><div class="span-2 social-fb"><a class=""></a></div><div class="span-2"><a class="social-li"></a></div><div class="span-2"><a class="social-tw"></a></div></div>
        	<p class="muted credit">&copy; Tidepool 2013</p>      
      </div>
 </div>  

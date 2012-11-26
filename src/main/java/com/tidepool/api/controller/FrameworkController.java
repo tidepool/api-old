@@ -2,6 +2,7 @@ package com.tidepool.api.controller;
 
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import com.tidepool.api.authentication.AccountService;
 import com.tidepool.api.data.HBaseManager;
+import com.tidepool.api.email.EmailController;
 import com.tidepool.api.model.Account;
 
 @Controller
@@ -30,6 +32,18 @@ public class FrameworkController {
 	private AccountService accountService;
 	private ShaPasswordEncoder encoder;
 	private AuthenticationManager authManager;
+	private VelocityEngine velocityEngine;
+	private EmailController emailController;
+	
+	@Autowired  
+	public void setVelocityEngine(VelocityEngine velocityEngine) {
+		this.velocityEngine = velocityEngine;
+	}
+	
+	@Autowired
+	public void setEmailController(EmailController emailController) {
+		this.emailController = emailController;
+	}
 	
 	@Autowired
 	public void setAccountService(AccountService accountService) {
@@ -51,20 +65,6 @@ public class FrameworkController {
 		this.authManager = authManager;
 	}
 	
-	
-	@RequestMapping(value="/template", method=RequestMethod.GET)
-	public String getTemplate(HttpServletRequest request, 
-			@RequestParam(required=false) String owner,
-			Model model) {
-		
-		if (getAccount() != null && getAccount().isAdmin()) {
-			model.addAttribute("admin", getAccount());
-		}
-		
-		model.addAttribute("account", getAccount());
-		
-		return "framework/template";
-	}
 	
 	@RequestMapping(value="/testtemplate", method=RequestMethod.GET)
 	public String getTest(HttpServletRequest request, 

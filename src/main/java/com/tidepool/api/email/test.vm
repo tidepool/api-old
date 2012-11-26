@@ -1,0 +1,13 @@
+<html>
+	<body>
+		<div>
+			Hola. 
+		</div>		
+		<div>
+			Thanks for signing up with this.
+		</div>
+		<div>
+		  	Data: ${testString}
+		</div>
+	</body>
+</html>

@@ -7,19 +7,23 @@
 <!DOCTYPE html>
 <html lang="en">
 	<c:import url="head_fragment.jsp">
-		<c:param name = "title" value = "Kilgore"/>
+		<c:param name = "title" value = "HireSmart"/>
 	</c:import>
 
 	<body>	
 		<c:import url="nav_fragment.jsp">
-			<c:param name = "title" value = "Kilgore"/>
+			<c:param name = "title" value = "HireSmart"/>
 		</c:import>
 		
 		<div id="wrap">
 	    	<div class="container-fluid">
 	    	    <div class="row-fluid mini-layout">
 	  				<div class="span10 mini-layout-breadcrumbs">
-	  					BREADCRUMBS
+	  					<ul class="breadcrumb">
+  							<li><a href="#">Home</a> <span class="divider">/</span></li>
+  							<li><a href="#">Library</a> <span class="divider">/</span></li>
+  							<li class="active">Data</li>
+						</ul>
 	  				</div>
 	  			</div>
 	  			<div class="row-fluid mini-layout">  				
@@ -34,8 +38,7 @@
 		</div>
 		
 		<c:import url="foot_fragment.jsp"></c:import>		
-		<c:import url="javascript_fragment.jsp"></c:import>
-		
+		<c:import url="javascript_fragment.jsp"></c:import>		
 		<script>	
 			(function ($) {
 				$(document).ready(function () {								

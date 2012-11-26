@@ -25,6 +25,7 @@ public class EmailController {
 	private String accessKey;
 	private Properties props;
 	private PropertiesCredentials credentials = null;
+	
 	public EmailController() {
 		
 		/*

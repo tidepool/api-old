@@ -44,6 +44,19 @@
 	<bean id="accountService" class="com.tidepool.api.authentication.AccountService"></bean>
 	<bean id="factorAnalysisManager" class="com.tidepool.api.data.FactorAnalysisManager"></bean>
 	
+	<bean id="emailController" class="com.tidepool.api.email.EmailController"></bean>
+	
+	<bean id="velocityEngine" class="org.springframework.ui.velocity.VelocityEngineFactoryBean">
+	    <property name="velocityProperties">
+	        <props>
+	            <prop key="resource.loader">class</prop>
+	            <prop key="class.resource.loader.class">
+	                org.apache.velocity.runtime.resource.loader.ClasspathResourceLoader
+	            </prop>
+	        </props>
+	    </property>
+	</bean>
+	
 	<!-- Resolves view names to protected .jsp resources within the /WEB-INF/views directory -->
 	<bean class="org.springframework.web.servlet.view.InternalResourceViewResolver">
 		<property name="prefix" value="/WEB-INF/views/"/>

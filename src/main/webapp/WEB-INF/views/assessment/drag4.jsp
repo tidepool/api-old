@@ -268,9 +268,9 @@
 		        	
 		        	function increaseCircleSize() {
 		        		  checkAndShowSelf();
-						  if (box.getRadius() < 250) { 
+						  if (box.getRadius() < 115) { 
 							  	
-							  if (box.getRadius() > 50 && simpleText.getFontSize() == 6) {
+							  if (box.getRadius() > 60 && simpleText.getFontSize() == 6) {
 									simpleText.setFontSize(12);
 									simpleText.setX(simpleText.getX() - 20);
 									simpleText.setY(simpleText.getY() - 15);
@@ -288,9 +288,9 @@
 		        	
 					 function decreaseCircleSize() {
 						 checkAndShowSelf();  
-						 if (box.getRadius() > 30) {
+						 if (box.getRadius() > 35) {
 							 
-							 if (box.getRadius() < 50 && simpleText.getFontSize() == 12) {
+							 if (box.getRadius() < 60 && simpleText.getFontSize() == 12) {
 									simpleText.setFontSize(6);
 									simpleText.setX(simpleText.getX() + 20);
 									simpleText.setY(simpleText.getY() + 15);

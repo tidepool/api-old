@@ -66,6 +66,34 @@ public class FrameworkController {
 	}
 	
 	
+	@RequestMapping(value="/adminhome", method=RequestMethod.GET)
+	public String getAdminHome(HttpServletRequest request, 
+			@RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("account", getAccount());
+		
+		return "framework/admin/home";
+	}
+	
+	@RequestMapping(value="/team", method=RequestMethod.GET)
+	public String getAdminTeam(HttpServletRequest request, 
+			@RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("account", getAccount());
+		
+		return "framework/admin/team";
+	}
+	
 	@RequestMapping(value="/testtemplate", method=RequestMethod.GET)
 	public String getTest(HttpServletRequest request, 
 			@RequestParam(required=false) String owner,

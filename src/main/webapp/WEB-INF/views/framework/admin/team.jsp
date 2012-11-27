@@ -17,8 +17,8 @@
 		
 		<div id="wrap">
 	    	<div class="container-fluid">
-	    	    <div class="row-fluid mini-layout">
-	  				<div class="span10 mini-layout-breadcrumbs">
+	    	    <div class="row-fluid mini-layout span8">
+	  				<div class="mini-layout-breadcrumbs">
 	  					<ul class="breadcrumb">
   							<li><a href="#">Home</a> <span class="divider">/</span></li>
   							<li><a href="#">Teams</a> <span class="divider">/</span></li>
@@ -26,11 +26,12 @@
 						</ul>
 	  				</div>
 	  			</div>
-	  			<div class="row-fluid mini-layout">  					    			
+	  			<div class="row-fluid mini-layout team">  					    			
 	    			<div class="span10 mini-layout-body">
 	      				<div class="row-fluid">
-	      				    <div class="span3">Who</div>
+	      				    <div class="span3 bigthree bigthreewithass">Who?</div>
 	      				    <div class="span9">
+	      				    <input type="text" name="teamName" id="teamName" placeholder="Team Name">
 	      					<table class="table table-bordered table-striped">
   								<th>Select</th><th>Name</th><th>Age</th><th>Sex</th><th>Job Title</th>
   								<tr><td><input type="checkbox"/></td><td>Kilgore Trout</td><td>44</td><td>M</td><td>Writer</td></tr>
@@ -39,7 +40,7 @@
 							</div>
 	      				</div>
 	      				<div class="row-fluid">
-	      				    <div class="span3">Who</div>
+	      				    <div class="span3 bigthree bigthreewithass">What?</div>
 	      				    <div class="span9">
 	      					<table class="table table-bordered table-striped">
   								<th>Select</th><th>Dimension</th><th>Strength</th>
@@ -50,9 +51,16 @@
 	      				</div>
 	      				
 	      				<div class="row-fluid">
-	      				    <div class="span3">When</div>
+	      				    <div class="span3 bigthree">When?</div>
 	      				    <div class="span9">
-	      						<input type="text" id="datepicker" />
+	      						<input type="text" id="datepicker" placeholder="Pick a date"/>
+	      					</div>
+	      				</div>
+	      				
+	      				<div class="row-fluid">
+	      					<div class="span3 bigthree">&nbsp;</div>
+	      				    <div class="span9">
+	      						<button>Create Team</button>
 	      					</div>
 	      				</div>
 	    			</div>

@@ -66,4 +66,20 @@
     
 }
 
+.mini-layout .mini-layout-body, .team {
+	margin: 0 16px 18px !important;
+}
+
+
+.bigthree {
+	font-size:18px;
+	font-weight:bold;
+	text-align:center !important;
+	vertical-align:middle;
+}
+
+.bigthreewithass {
+	padding-top:30px;	
+}
+
 

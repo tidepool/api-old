@@ -26,6 +26,15 @@ public class SigninController {
 		if (account == null) {
 			return "framework/admin/register";
 		}
+		
+		if (account.isFrameworkAdmin()) {
+			return "redirect:/adminhome";
+		}
+		
+		if (account.isFrameworkUser()) {
+			return "redirect:/home";
+		}
+		
 		return "redirect:/survey";
 		
 	}

@@ -71,13 +71,38 @@ public class FrameworkController {
 			@RequestParam(required=false) String owner,
 			Model model) {
 		
+		Account account =  getAccount();				
+		if (account == null) {
+			return "framework/admin/register";
+		}
+		
+		if (account != null && account.isAdmin()) {
+			model.addAttribute("admin", account);
+		}
+		
+		model.addAttribute("account", account);
+		
+		return "framework/admin/home";
+	}
+	
+	@RequestMapping(value="/teams", method=RequestMethod.GET)
+	public String getAdminTeams(HttpServletRequest request, 
+			@RequestParam(required=false) String owner,
+			Model model) {
+		
+		Account account =  getAccount();				
+		if (account == null) {
+			return "framework/admin/register";
+		}
+		
 		if (getAccount() != null && getAccount().isAdmin()) {
 			model.addAttribute("admin", getAccount());
 		}
 		
-		model.addAttribute("account", getAccount());
+		model.addAttribute("account", account);		
+		model.addAttribute("teams", hBaseManager.getTeamsForAccount(account));
 		
-		return "framework/admin/home";
+		return "framework/admin/teams";
 	}
 	
 	@RequestMapping(value="/team", method=RequestMethod.GET)
@@ -85,14 +110,27 @@ public class FrameworkController {
 			@RequestParam(required=false) String owner,
 			Model model) {
 		
-		if (getAccount() != null && getAccount().isAdmin()) {
-			model.addAttribute("admin", getAccount());
+		Account account =  getAccount();				
+		if (account == null) {
+			return "framework/admin/register";
 		}
 		
-		model.addAttribute("account", getAccount());
+		if (account.isAdmin()) {
+			model.addAttribute("admin", account);
+		}
+		
+		model.addAttribute("account", account);
 		
 		return "framework/admin/team";
 	}
+	
+
+	@RequestMapping(value="/teamPost", method=RequestMethod.POST)
+	public String teamPost(HttpServletRequest request, @RequestParam(required=true) String name) {
+		
+		return "framework/admin/teams";
+	}
+	
 	
 	@RequestMapping(value="/testtemplate", method=RequestMethod.GET)
 	public String getTest(HttpServletRequest request, 
@@ -141,6 +179,7 @@ public class FrameworkController {
 		account.setRegistrationLevel("1");
 		account.setIp(request.getRemoteAddr());
 		account.setAccountStatus("0");
+		account.setElementGroupId(Account.FRAMEWORK_ADMIN);
 		
 		try {
 			hBaseManager.createAccount(account);

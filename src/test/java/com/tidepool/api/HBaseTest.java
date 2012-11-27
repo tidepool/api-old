@@ -473,7 +473,7 @@ public class HBaseTest {
 	@Test
 	public void testGetCodedItemsFromFolder() {
 		
-		List<CodedItem> items = hBaseManager.getFolderCodedItems("match_type");
+		List<CodedItem> items = hBaseManager.getFolderCodedItems("work_type");
 		assertNotNull(items);
 		assertTrue(items.size() > 0);
 		

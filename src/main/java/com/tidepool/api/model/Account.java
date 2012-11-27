@@ -52,6 +52,9 @@ public class Account implements Serializable, UserDetails {
 	public static final String ROLE_USER = "ROLE_USER";
 	public static final String ROLE_PRO_USER = "ROLE_PRO_USER";
 	
+	public static final String FRAMEWORK_ADMIN = "FRAMEWORK_ADMIN";
+	public static final String FRAMEWORK_USER = "FRAMEWORK_USER";
+	
 	private static final GrantedAuthority adminAuth = new GrantedAuthorityImpl(ROLE_ADMIN);
 	private static final GrantedAuthority userAuth = new GrantedAuthorityImpl(ROLE_USER);
 	private static final GrantedAuthority financialUserAuth = new GrantedAuthorityImpl(ROLE_PRO_USER);
@@ -245,6 +248,16 @@ public class Account implements Serializable, UserDetails {
 		return getElementGroupId().equals("0");
 	}
 
+	public boolean isFrameworkUser() {
+		if (getElementGroupId() == null) return false; 
+		return getElementGroupId().equals(FRAMEWORK_USER);
+	}
+	
+	public boolean isFrameworkAdmin() {
+		if (getElementGroupId() == null) return false; 
+		return getElementGroupId().equals(FRAMEWORK_ADMIN);
+	}
+	
 	public String getExplicitImageFolder() {
 		return explicitImageFolder;
 	}

@@ -224,6 +224,30 @@ public class APIController {
 	}
 	
 	
+	@RequestMapping(value="/image{imageNumber}", method=RequestMethod.GET)
+	public String getImage(HttpServletRequest request,
+			@PathVariable Integer imageNumber,
+			@RequestParam(required=false) String owner, Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		int startIndex = 0;
+		int increment = 5;
+		if (imageNumber != null) {
+			startIndex = imageNumber;
+		}
+		
+		List<CodedItem> itemList = hBaseManager.getFolderCodedItems("work_type");
+		if (itemList.size() > 0) {
+			model.addAttribute("images", itemList.subList(startIndex, (startIndex + increment)));
+		}
+		model.addAttribute("cdn_url", cdnUrl);
+		model.addAttribute("account", request.getSession().getAttribute("account"));
+		return "assessment/image";
+	}
+	
+	
 	@RequestMapping(value="/drag0", method=RequestMethod.GET)
 	public String getDrag0(HttpServletRequest request, @RequestParam(required=false) String owner,
 			Model model) {

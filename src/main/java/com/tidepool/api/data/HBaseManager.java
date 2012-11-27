@@ -47,6 +47,8 @@ import com.tidepool.api.model.Highlight;
 import com.tidepool.api.model.MainGroup;
 import com.tidepool.api.model.Photo;
 import com.tidepool.api.model.RowMapper;
+import com.tidepool.api.model.Team;
+import com.tidepool.api.model.TeamAccount;
 import com.tidepool.api.model.TrainingItem;
 
 public class HBaseManager {
@@ -72,9 +74,11 @@ public class HBaseManager {
 	private final String elementGroupTable = "element_group";
 	private final String elementMainTable = "element_main";
 	private final String explicitEventTable= "explicit_event";
+	private final String teamTable= "team";
+	private final String teamAccountMapTable= "team_account_map";
 	
-	//private final String explicitImageTable= "explicit_image";
-	private final String explicitImageTable= "image_content_detail";
+	private final String explicitImageTable= "explicit_image";
+	//private final String explicitImageTable= "image_content_detail";
 	
 	private final String explicitImageLogTable= "explicit_image_log";
 	private final String countersTable= "counters";
@@ -106,7 +110,7 @@ public class HBaseManager {
 		return instance;
 	}
 
-	
+
 	private Account getAccountFromId(String id) {
 		Account account = null;
 				
@@ -564,6 +568,8 @@ public List<CodedItem> getFolderCodedItems(String folderType) {
 		
 		Collections.sort(codedItems, new Comparator<CodedItem>() {
 			public int compare(CodedItem o1, CodedItem o2) {
+				if (o1.order_id == null) return -1;
+				if (o2.order_id == null) return 1;
 				return new Integer(o1.order_id).compareTo(new Integer(o2.order_id));
 			}			
 		});
@@ -1435,7 +1441,6 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 	}
 	
 	
-	
 	public void loadBig5Data(ArrayList<Factor> factors) {
 		
 		for (Factor factor : factors) {		
@@ -1453,4 +1458,159 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 	}
 	
 	
+	public Team createTeam(Team team) {
+		
+		HTableInterface counter = pool.getTable(countersTable);
+		try {
+			long nextCounter = counter.incrementColumnValue(Bytes.toBytes("10"), family_name_column, Bytes.toBytes(teamTable), 1);
+			team.setId(nextCounter);
+			saveTeam(team);
+		} catch (IOException e) {			
+			e.printStackTrace();
+		}
+				
+		return team;
+	}
+	
+	public void saveTeam(Team team) {
+		try {
+			HTableInterface table = pool.getTable(teamTable);
+			Put put = new Put(Bytes.toBytes(team.getId()));
+			
+			if (team.getName() != null) {
+				put.add(family_name_column, Team.name_column, Bytes.toBytes(team.getName()));
+			}
+			
+			if (team.getOwnerId() != null) {
+				put.add(family_name_column, Team.owner_id_column, Bytes.toBytes(team.getOwnerId()));
+			}
+						
+			put.add(family_name_column, Team.timeline_column, Bytes.toBytes(team.getTimeline()));
+			
+			table.put(put);
+			
+			for (TeamAccount teamAccount : team.getTeamMembers()) {
+				saveTeamAccount(teamAccount);
+			}
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {			
+			
+		}	
+	}
+	
+	public void mapTeam(Team team, Result result) {
+		
+		team.setId(Bytes.toLong(result.getRow()));
+		
+		if (result.containsColumn(family_name_column, Team.owner_id_column)) {
+			byte[] val = result.getValue(family_name_column, Team.owner_id_column);
+			team.setOwnerId(Bytes.toString(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Team.name_column)) {
+			byte[] val = result.getValue(family_name_column, Team.name_column);
+			team.setName(Bytes.toString(val));					
+		}
+		
+	}
+	
+	public List<Team> getTeamsForAccount(Account account) {
+		List<Team> teams = new ArrayList<Team>();
+		ResultScanner scanner  = null;
+		SingleColumnValueFilter filter = new SingleColumnValueFilter(
+				family_name_column,
+				Team.owner_id_column,
+				CompareOp.EQUAL,
+				Bytes.toBytes(account.getUserId()));
+
+		try {
+			HTableInterface table = pool.getTable(teamTable);
+			Scan scan = new Scan();
+			scan.setFilter(filter);
+			scanner = table.getScanner(scan);		
+			for (Result result : scanner) {				
+				Team team = new Team();
+				mapTeam(team, result);
+				teams.add(team);
+			}			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			scanner.close();
+		}		
+		return teams;	
+	}
+	
+	public void loadAccountsForTeam(Team team) {
+		
+		ResultScanner scanner  = null;
+		SingleColumnValueFilter filter = new SingleColumnValueFilter(
+				family_name_column,
+				TeamAccount.team_id_column,
+				CompareOp.EQUAL,
+				Bytes.toBytes(team.getId()));
+
+		try {
+			HTableInterface table = pool.getTable(teamAccountMapTable);
+			Scan scan = new Scan();
+			scan.setFilter(filter);
+			scanner = table.getScanner(scan);		
+			for (Result result : scanner) {				
+				if (result.containsColumn(family_name_column, TeamAccount.account_id_column)) {					
+					TeamAccount teamAccount = new TeamAccount();
+					byte[] val = result.getValue(family_name_column, TeamAccount.account_id_column);
+					Account account = getAccountFromId(Bytes.toString(val));
+					teamAccount.setAccount(account);
+					teamAccount.setId(Bytes.toLong(result.getRow()));
+					if (result.containsColumn(family_name_column, TeamAccount.active_column)) {
+						byte[] activityVal = result.getValue(family_name_column, TeamAccount.active_column);
+						teamAccount.setActive(Bytes.toBoolean(activityVal));
+					}
+					team.getTeamMembers().add(teamAccount);
+				}
+				
+			}			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			scanner.close();
+		}		
+	}
+	
+	
+	public void addAccountToTeam(TeamAccount account, Team team) {		
+		HTableInterface counter = pool.getTable(countersTable);
+		try {
+			long nextCounter = counter.incrementColumnValue(Bytes.toBytes("11"), family_name_column, Bytes.toBytes(teamAccountMapTable), 1);
+			HTableInterface table = pool.getTable(teamAccountMapTable);
+			Put put = new Put(Bytes.toBytes(nextCounter));					
+			put.add(family_name_column, TeamAccount.team_id_column, Bytes.toBytes(team.getId()));
+			put.add(family_name_column, TeamAccount.account_id_column, Bytes.toBytes(account.getAccount().getUserId()));
+			put.add(family_name_column, TeamAccount.active_column, Bytes.toBytes(false));
+			table.put(put);
+			account.setId(nextCounter);
+		} catch (IOException e) {			
+			e.printStackTrace();
+		} 
+		team.getTeamMembers().add(account);
+	}
+	
+	public void saveTeamAccount(TeamAccount teamAccount) {
+		
+		try {
+			HTableInterface table = pool.getTable(teamAccountMapTable);
+			Put put = new Put(Bytes.toBytes(teamAccount.getId()));					
+			put.add(family_name_column, TeamAccount.active_column, Bytes.toBytes(teamAccount.isActive()));		
+			table.put(put);			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {			
+			
+		}	
+		
+	}
+	
+
 }

@@ -20,14 +20,15 @@
 	    	    <div class="row-fluid mini-layout span8">
 	  				<div class="mini-layout-breadcrumbs">
 	  					<ul class="breadcrumb">
-  							<li><a href="#">Home</a> <span class="divider">/</span></li>
-  							<li><a href="#">Teams</a> <span class="divider">/</span></li>
+  							<li><a href="adminhome">Home</a> <span class="divider">/</span></li>
+  							<li><a href="teams">Teams</a> <span class="divider">/</span></li>
   							<li class="active">New Team</li>
 						</ul>
 	  				</div>
 	  			</div>
 	  			<div class="row-fluid mini-layout team">  					    			
 	    			<div class="span10 mini-layout-body">
+	      				<form action="<c:url value="/teamPost" />" method="POST">
 	      				<div class="row-fluid">
 	      				    <div class="span3 bigthree bigthreewithass">Who?</div>
 	      				    <div class="span9">
@@ -36,8 +37,10 @@
   								<th>Select</th><th>Name</th><th>Age</th><th>Sex</th><th>Job Title</th>
   								<tr><td><input type="checkbox"/></td><td>Kilgore Trout</td><td>44</td><td>M</td><td>Writer</td></tr>
   								<tr><td><input type="checkbox"/></td><td>Billy Pilgrim</td><td>44</td><td>M</td><td>Writer</td></tr>
-							</table>
+  								<tr><td colspan="5" style="align:center"><button class="btn btn-primary">Add Team Member</button></td></tr>
+							</table>							
 							</div>
+														
 	      				</div>
 	      				<div class="row-fluid">
 	      				    <div class="span3 bigthree bigthreewithass">What?</div>
@@ -60,9 +63,10 @@
 	      				<div class="row-fluid">
 	      					<div class="span3 bigthree">&nbsp;</div>
 	      				    <div class="span9">
-	      						<button>Create Team</button>
+	      						<button class="btn btn-primary">Create Team</button>
 	      					</div>
 	      				</div>
+	      			</form>	
 	    			</div>
 	  			</div>
 			</div>

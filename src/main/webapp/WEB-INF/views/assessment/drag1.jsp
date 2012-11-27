@@ -282,7 +282,9 @@
 						   		box.setRadius(box.getRadius() + 10);					      							    	
 						   		layer.draw();						    	
 						    	$.post(servicesAPI + "/json/assessmentevent.ajax", 
-				    			   		{accountId:$('#userId').val(), explicitId:id , type:"increase-size", width:box.getRadius() * 2, height:box.getRadius() * 2}, 
+				    			   		{accountId:$('#userId').val(), explicitId:id , type:"increase-size", 
+						    		width:box.getRadius() * 2, height:box.getRadius() * 2,
+						    		screenHeight:screen.height, screenWidth:screen.width}, 
 				    			    		function(items) {});
 						    	
 						   }
@@ -302,7 +304,9 @@
 						    	box.setRadius(box.getRadius() - 10);					      	
 						    	layer.draw(); 
 						    	$.post(servicesAPI + "/json/assessmentevent.ajax", 
-				    			   		{accountId:$('#userId').val(), explicitId:id , type:"decrease-size", width:box.getRadius() * 2, height:box.getRadius() * 2}, 
+				    			   		{accountId:$('#userId').val(), explicitId:id , type:"decrease-size", 
+						    		width:box.getRadius() * 2, height:box.getRadius() * 2,
+						    		screenHeight:screen.height, screenWidth:screen.width}, 
 				    			    		function(items) {});
 						    	
 						   }

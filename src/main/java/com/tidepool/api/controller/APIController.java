@@ -333,7 +333,9 @@ public class APIController {
 			@RequestParam(required=false) String width,
 			@RequestParam(required=false) String height,
 			@RequestParam(required=false) String startTime,
-			@RequestParam(required=false) String endTime
+			@RequestParam(required=false) String endTime,
+			@RequestParam(required=false) String screenWidth,
+			@RequestParam(required=false) String screenHeight
 			) {		
 
 		if (!StringUtils.isEmpty(coordinates)) {
@@ -353,6 +355,11 @@ public class APIController {
 					event.text = attributeComment;
 					event.startTime = startTime;
 					event.endTime = endTime;
+					event.setIp(request.getRemoteHost());
+					event.setResolution(request.getHeader("UA-resolution"));
+					event.setScreenHeight(screenHeight);
+					event.setScreenWidth(screenWidth);
+					event.setUserAgent(request.getHeader("User-Agent"));
 					hBaseManager.logCodingEvent(event);	
 				}
 			}
@@ -373,7 +380,11 @@ public class APIController {
 			event.text = attributeComment;
 			event.startTime = startTime;
 			event.endTime = endTime;
-
+			event.setIp(request.getRemoteHost());
+			event.setResolution(request.getHeader("UA-resolution"));
+			event.setScreenHeight(screenHeight);
+			event.setScreenWidth(screenWidth);			
+			event.setUserAgent(request.getHeader("User-Agent"));
 			hBaseManager.logCodingEvent(event);			
 			return event;
 		}

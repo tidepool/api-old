@@ -77,7 +77,7 @@ public class FrameworkController {
 		
 		model.addAttribute("account", getAccount());
 		
-		return "framework/test";
+		return "framework/template/template";
 	}
 	
 	

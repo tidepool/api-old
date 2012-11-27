@@ -40,6 +40,12 @@ public class CodingEvent implements Serializable {
 	public String height;
 	public String startTime;
 	public String endTime;
+	public String ip;
+	public String resolution;
+	public String screenHeight;
+	public String screenWidth;
+	public String userAgent;
+	
 	
 	
 	public String getId() {
@@ -167,6 +173,36 @@ public class CodingEvent implements Serializable {
 	}
 	public void setEndTime(String endTime) {
 		this.endTime = endTime;
+	}
+	public String getIp() {
+		return ip;
+	}
+	public void setIp(String ip) {
+		this.ip = ip;
+	}
+	public String getResolution() {
+		return resolution;
+	}
+	public void setResolution(String resolution) {
+		this.resolution = resolution;
+	}
+	public String getScreenHeight() {
+		return screenHeight;
+	}
+	public void setScreenHeight(String screenHeight) {
+		this.screenHeight = screenHeight;
+	}
+	public String getScreenWidth() {
+		return screenWidth;
+	}
+	public void setScreenWidth(String screenWidth) {
+		this.screenWidth = screenWidth;
+	}
+	public String getUserAgent() {
+		return userAgent;
+	}
+	public void setUserAgent(String userAgent) {
+		this.userAgent = userAgent;
 	}
 	
 }

@@ -8,13 +8,13 @@
 <!DOCTYPE html>
 <html lang="en">
 
-  	<c:import url="../head_fragment.jsp">
+  	<c:import url="../common/head_fragment.jsp">
 		<c:param name = "title" value = "HireSmart"/>
 	</c:import>
 
   <body>
 
-    <c:import url="../nav_fragment.jsp">
+    <c:import url="../common/nav_fragment.jsp">
 			<c:param name = "title" value = "HireSmart"/>
 	</c:import>
 
@@ -92,8 +92,8 @@
 	
 	</div>
 		
-	<c:import url="../foot_fragment.jsp"></c:import>		
-	<c:import url="../javascript_fragment.jsp"></c:import>	
+	<c:import url="../common/foot_fragment.jsp"></c:import>		
+	<c:import url="../common/javascript_fragment.jsp"></c:import>	
 	
 	<script>	
 		(function ($) {

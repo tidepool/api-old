@@ -72,18 +72,15 @@
 		<div id="container"></div>		
 		
 		<div id="instructions">
-			<div>
-				<p>Follow the instructions that will appear on the button below:</p> 
-				
-				<div class="buttonPanel" >
-				  <button class="btn btn-success" id="start">Click to continue</button>
-				  <button class="btn btn-success" id="test0" style="display:none">Click the red circle on the left as soon as it appears. Click here when you ready to START.</button>
-				  <button class="btn btn-success" id="test0Next" style="display:none">Again, click the red circle on the left when it appears. Click here when ready to START.</button>
-				  <button class="btn btn-success" id="test1" style="display:none">Click the red circle only when it appears AFTER a yellow circle. Do not click unless there is a red circle after a yellow circle.
-
-Click here when ready to START
-
- </button>
+			<div>				
+				<p id="test0Text">Click the red circle on the left as soon as it appears.</p>
+				<p id="test0NextText" style="display:none">Again, click the red circle on the left when it appears. </button>
+				<p id="test1Text" style="display:none">Click the red circle only when it appears AFTER a yellow circle. Do not click unless there is a red circle after a yellow circle.</p>
+											
+				<div class="buttonPanel" >				 
+				  <button class="btn btn-success" id="test0">I'm Ready</button>
+				  <button class="btn btn-success" id="test0Next" style="display:none">I'm Ready</button>
+				  <button class="btn btn-success" id="test1" style="display:none">I'm Ready</button>
 				</div>
 			</div>
 		</div>
@@ -141,7 +138,9 @@ Click here when ready to START
  			   	$.post(servicesAPI + "/json/assessmentevent.ajax", 
  		    	   {accountId:$('#userId').val(), explicitId:'self' , type:"start-timing", x0:200, y0:100}, function(items) {	    		    			    			    		    			           	
  		    			$("#start").hide();
- 		    			$("#test0").show();	    		    			    				    		    			    			
+ 		    			$("#test0").show();
+ 		    			$("#startText").hide();
+ 		    			$("#test0Text").show();
  		    		});
 	    			    	
 			   }); 
@@ -231,14 +230,18 @@ Click here when ready to START
 		      		
 		      		if (circleArrayCounter.length > 0) {
 		      			$('#test0Next').show();
+		      			$('#test0NextText').show();
 		      			$("#test0Next").addClass("btn-success");
 		      			$('#test0').hide();
+		      			$('#test0Text').hide();
 		      		}
 		      		
 		      		
 		      	} else {
 		      		$('#test0Next').hide();
 		      		$('#test1').show();
+		      		$('#test0NextText').hide();
+		      		$('#test1Text').show();
 		      	}	  
 		      };
 			  			  

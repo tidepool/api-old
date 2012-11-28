@@ -176,7 +176,7 @@
 		          layer.add(build5Circle("Anxious/ \nDramatic", "anxious_dramatic", 275, 350));
 		          layer.add(build5Circle("Cooperative/ \nFriendly", "cooperative_friendly", 455, 350));
 		          layer.add(build5Circle("Sociable/ \nAdventurous", "sociable_adventurous", 625, 350));
-		          layer.add(build5Circle("Intellectual/ \nCultured", "intellectual_cultured", 795, 350));		          
+		          layer.add(build5Circle("Curious/ \nCultured", "curious_cultured", 795, 350));		          
 		          stage.add(layer);
 		        }
 		      

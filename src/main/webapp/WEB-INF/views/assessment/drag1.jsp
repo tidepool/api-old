@@ -175,10 +175,10 @@
 		    	  layer.add(selfGroup); 
 		    	
 		    	  layer.add(build5Circle("Independent/ \nAloof", "independent_aloof",100, 350));
-		          layer.add(build5Circle("Self-reflective/ \n Cautious", "self-reflective_cautious", 275, 350));
-		          layer.add(build5Circle("Disorganized/ \n Unconventional", "disorganized_unconventional", 455, 350));
-		          layer.add(build5Circle("Calm/ \n Consistent", "calm_consistent", 625, 350));
-		          layer.add(build5Circle("Focused/ \n Narrow-minded", "focused_narrow-minded", 795, 350));          
+		          layer.add(build5Circle("Self-reflective/ \n Reserved", "self-reflective_reserved", 275, 350));
+		          layer.add(build5Circle("Disorganized/ \nUnconventional", "disorganized_unconventional", 455, 350));
+		          layer.add(build5Circle("Calm/ \nConsistent", "calm_consistent", 625, 350));
+		          layer.add(build5Circle("Adamant/ \nFocused", "adamant_focused", 795, 350));          
 		          stage.add(layer);
 		        }
 		      

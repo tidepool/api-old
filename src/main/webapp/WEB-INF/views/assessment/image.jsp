@@ -108,7 +108,8 @@
 				
 				var movedMap = {};
 				var dragArray = [];
-				var occupiedMap = {};
+				var occupiedMap = {0:null, 1:null, 2:null, 3:null, 4:null};
+				
 				var stage = new Kinetic.Stage({
 		            container: "container",
 		            width: 1200,
@@ -226,17 +227,19 @@
 						   group.on('dragend', function() {							   
 							 	
 							   var overIndex = group.isOver(group.getX(), group.getY());
-							   /*if (overIndex > 0) {
+							   if (overIndex >= 0) {
 								   if (occupiedMap[overIndex] != null) {
-									   group.sendHome();
+									  	group.sendHome();
+								   } else {
+									   occupiedMap[overIndex] = group.getName();
 								   }
 							   } else {
 								   for (var i in occupiedMap) {
 										if (occupiedMap[i] == group.getName()) {
-											delete occupiedMap[i];
+											occupiedMap[i] = null;
 										}									   
 								   }
-							   } */
+							   } 
 							   
 							   var count = 0;
 							   for (var i in movedMap) {
@@ -250,9 +253,10 @@
 			          
 						group.sendHome = function() {
 							group.setX(group.startx);
-							group.setY(group.startx);
+							group.setY(group.starty);
 							group.setHeight(group.startHeight);
 							group.setWidth(group.startWidth);
+							layer.draw();
 						}   
 						   
 						group.isOver = function(mouseX, mouseY) {							
@@ -265,13 +269,14 @@
 									group.setY(100);
 									group.setWidth(200);
 									group.setHeight(200);
-									layer.draw();
-									occupiedMap[i] = group.getName();
+									layer.draw();									
 									return i;
 								}
 							}
 							
-							
+							group.setHeight(group.startHeight);
+							group.setWidth(group.startWidth);
+							layer.draw();
 							
 							return -1;
 						}   

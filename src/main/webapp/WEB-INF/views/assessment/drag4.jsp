@@ -142,7 +142,7 @@
 		    	  $.post(servicesAPI + "/json/assessmentevent.ajax", 
   			    		{accountId:$('#userId').val(), explicitId:'next' , type:"next"}, 
   			    		function(items) {});
-		    	  	window.location="<c:url value="/assessmentFeedback"/>";   
+		    	  	window.location="<c:url value="image5"/>";   
 		      });  
 		     
 		      $("#start0").click(function() {
@@ -170,14 +170,14 @@
 		    
 			  			  
 		      function drawImages() {		            
-		    	  selfGroup = buildSelfCircle("Self", 200, 100);
+		    	  selfGroup = buildSelfCircle("Self", 100, 100);
 		    	  layer.add(selfGroup); 
-		    	  layer.add(build5Circle("Mechanical/ \nHands-on", "mechanical_hands-on", 100, 350));
-		          layer.add(build5Circle("Creative/ \nIntuitive", "creative_intuitive", 255, 350));
-		          layer.add(build5Circle("Teacher/ \nHelpful", "teacher_helpful", 410, 350));
-		          layer.add(build5Circle("Persuasive/ \nEnthusiastic", "persuasive_enthusiastic", 565, 350));
-		          layer.add(build5Circle("Inquisitive/ \nAnalytical", "inquisitive_analytical", 725, 350));
-		          layer.add(build5Circle("Detail-oriented/ \nThorough", "detail-oriented_thorough", 880, 350));
+		    	  layer.add(build5Circle("Stimulating/ \nFlirtatious", "stimulating_flirtatious", 100, 350));
+		          layer.add(build5Circle("Sensational/ \nThrill-seeker", "sensational_thrill-seeker", 255, 350));
+		          layer.add(build5Circle("Searcher/ \nNew Ideas", "searcher_new_ideas", 410, 350));
+		          layer.add(build5Circle("Thoughtful/ \nIntentional", "thoughtful_intentional", 565, 350));
+		          layer.add(build5Circle("Spontaneous/ \nReactive", "spontaneous_reactive", 725, 350));
+		          layer.add(build5Circle("Fine Arts/ \nClassical Music", "fine-arts_classical-music", 880, 350));
 		          stage.add(layer);
 		        }
 		      

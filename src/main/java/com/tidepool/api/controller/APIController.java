@@ -245,7 +245,7 @@ public class APIController {
 		model.addAttribute("cdn_url", cdnUrl);
 		model.addAttribute("account", request.getSession().getAttribute("account"));
 		
-		if (startIndex == 4) {
+		if (startIndex == 5) {
 			model.addAttribute("nextWindow", "assessmentFeedback");				
 		} else {		
 			model.addAttribute("nextWindow", "drag" + startIndex);				

@@ -75,12 +75,21 @@
 		<button id="next">Next</button>
 		<div id="container"></div>		
 		
-		
-		<div id="instructions">
+		<div id="instructions0">
 			<div>
-				<p>Imagine you are dating someone for six months. Things are going unexpectedly well.</p> 
-				<p>Then one night he/she stands you up. No call, no text.</p> 
-				<p>Where do these feelings fit into your picture of your Self?</p>
+			    <p>Here are a number of psychological traits that may or may not describe you. </p>
+			    <p>Simply collapse or expand each circle to indicate how well the trait describes you.</p>
+				<p>You must change the size of all circles.</p> 				
+				<div>
+				  <button id="start0">Start</button>
+				</div>
+			</div>
+		</div>
+		
+		<div id="instructions" style="display:none">
+			<div>
+				<p>Now place each of the five circles in position to the new circle representing your self. </p> 
+				<p>Place each trait anywhere on the screen so that it best represents how important that trait is to your self.</p>
 				<div>
 				  <button id="start">Start</button>
 				</div>
@@ -117,7 +126,10 @@
 			$(document).ready(function () {	
 				
 				var movedMap = {};
+				var sizedMap = {};
 				var dragArray = [];
+				var circleArray = [];
+				var selfGroup;
 				var stage = new Kinetic.Stage({
 		            container: "container",
 		            width: 970,
@@ -130,9 +142,21 @@
 		    	  $.post(servicesAPI + "/json/assessmentevent.ajax", 
   			    		{accountId:$('#userId').val(), explicitId:'next' , type:"next"}, 
   			    		function(items) {});
-		    	  	window.location="<c:url value="/drag4"/>";   
+		    	  	window.location="<c:url value="/image4"/>";   
 		      });  
 		     
+		      $("#start0").click(function() {
+			  		$("#instructions0").hide();
+			  		 $.post(servicesAPI + "/json/assessmentevent.ajax", 
+	    			    		{accountId:$('#userId').val(), explicitId:'instruction0' , type:"click"}, 
+	    			    		function(items) {	    			    			
+	    			    			$.post(servicesAPI + "/json/assessmentevent.ajax", 
+	    		    			    		{accountId:$('#userId').val(), explicitId:'self' , type:"click", x0:200, y0:100}, function(items) {	    		    			    		
+	    		    			    });
+	    			    		});	
+			   }); 
+		     
+		      
 		      $("#start").click(function() {
 			  		$("#instructions").hide();
 			  		 $.post(servicesAPI + "/json/assessmentevent.ajax", 
@@ -143,15 +167,17 @@
 	    		    			    });
 	    			    		});	
 			   }); 
-		      
+		    
 			  			  
 		      function drawImages() {		            
-		    	  layer.add(buildSelfCircle("Self", 200, 100)); 
-		    	  layer.add(build5Circle("Doubt myself", "doubt_myself", 100, 350));
-		          layer.add(build5Circle("Doubt past \nrelationships", "doubt_past_relationships", 275, 350));
-		          layer.add(build5Circle("Anger at \nthe other", "anger_at_the_other", 455, 350));
-		          layer.add(build5Circle("Concern for \nthe other", "concern_for_the_other", 625, 350));
-		          layer.add(build5Circle("Forget about \nthe other", "forget_about_the_other", 795, 350));		          
+		    	  selfGroup = buildSelfCircle("Self", 100, 100);
+		    	  layer.add(selfGroup); 
+		    	  layer.add(build5Circle("Mechanical/ \nHands-on", "mechanical_hands-on", 100, 350));
+		          layer.add(build5Circle("Creative/ \nIntuitive", "creative_intuitive", 255, 350));
+		          layer.add(build5Circle("Teacher/ \nHelpful", "teacher_helpful", 410, 350));
+		          layer.add(build5Circle("Persuasive/ \nEnthusiastic", "persuasive_enthusiastic", 565, 350));
+		          layer.add(build5Circle("Inquisitive/ \nAnalytical", "inquisitive_analytical", 725, 350));
+		          layer.add(build5Circle("Detail-oriented/ \nThorough", "detail-oriented_thorough", 880, 350));
 		          stage.add(layer);
 		        }
 		      
@@ -178,7 +204,7 @@
 			              rotationDeg: 0,
 			              draggable:true
 			            });
-			          
+
 		        	var plusText = new Kinetic.Text({
 			        	  x: -24,
 			        	  y: 8,
@@ -221,12 +247,41 @@
 		                strokeWidth: 1
 		              });
 		        	
+		        	function checkAndShowSelf() {
+		        		sizedMap[name] = 1;		        		
+		        		var count = 0;
+						for (var i in sizedMap) {
+							count++;
+						}							   
+						
+						if (count == 6) {
+							  $('#instructions0').hide();
+							  $('#instructions').show();
+							  selfGroup.setVisible(true);
+							  
+							  for (var i in circleArray) {
+								 circleArray[i].hideResize();
+							  }
+						} 
+		        		
+		        	}
+		        	
 		        	function increaseCircleSize() {
-						  if (box.getRadius() < 250) { 							   
+		        		  checkAndShowSelf();
+						  if (box.getRadius() < 115) { 
+							  	
+							  if (box.getRadius() > 60 && simpleText.getFontSize() == 6) {
+									simpleText.setFontSize(12);
+									simpleText.setX(simpleText.getX() - 20);
+									simpleText.setY(simpleText.getY() - 15);
+							 	}
+							  
 						   		box.setRadius(box.getRadius() + 10);					      							    	
 						   		layer.draw();						    	
 						    	$.post(servicesAPI + "/json/assessmentevent.ajax", 
-				    			   		{accountId:$('#userId').val(), explicitId:id , type:"increase-size", width:box.getRadius() * 2, height:box.getRadius() * 2}, 
+				    			   		{accountId:$('#userId').val(), explicitId:id , type:"increase-size", 
+						    			width:box.getRadius() * 2, height:box.getRadius() * 2,
+						    			screenHeight:screen.height, screenWidth:screen.width}, 
 				    			    		function(items) {});
 						    	
 						   }
@@ -234,11 +289,21 @@
 					  
 		        	
 					 function decreaseCircleSize() {
-						   if (box.getRadius() > 50) { 
+						 checkAndShowSelf();  
+						 if (box.getRadius() > 35) {
+							 
+							 if (box.getRadius() < 60 && simpleText.getFontSize() == 12) {
+									simpleText.setFontSize(6);
+									simpleText.setX(simpleText.getX() + 20);
+									simpleText.setY(simpleText.getY() + 15);
+							 	}
+							 
 						    	box.setRadius(box.getRadius() - 10);					      	
 						    	layer.draw(); 
 						    	$.post(servicesAPI + "/json/assessmentevent.ajax", 
-				    			   		{accountId:$('#userId').val(), explicitId:id , type:"decrease-size", width:box.getRadius() * 2, height:box.getRadius() * 2}, 
+				    			   		{accountId:$('#userId').val(), explicitId:id , type:"decrease-size", 
+						    		width:box.getRadius() * 2, height:box.getRadius() * 2,
+						    		screenHeight:screen.height, screenWidth:screen.width}, 
 				    			    		function(items) {});
 						    	
 						   }
@@ -259,7 +324,8 @@
 					   						  
 					  minusBox.on("click", function(){
 						  decreaseCircleSize();
-					  });		        	
+					  });
+		        			        	
 		        	
 			          var box = new Kinetic.Circle({
 			              x: 0,
@@ -303,8 +369,9 @@
 							   var count = 0;
 							   for (var i in movedMap) {
 							      count++;
-							   }							   
-							   if (count == 5) {
+							   }
+							   
+							   if (count == 6) {
 								   $("#next").show();
 							   } 
 							   
@@ -316,6 +383,15 @@
 			            group.add(plusText);
 			            group.add(minusBox);
 			            group.add(minusText);
+			            
+			            group.hideResize = function() {
+			            	plusBox.setVisible(false);
+			            	plusText.setVisible(false);
+			            	minusBox.setVisible(false);
+			            	minusText.setVisible(false);
+			            }
+			            circleArray.push(group);
+			            
 		        		return group;
 		        	
 		        }
@@ -353,6 +429,7 @@
 			          
 			            group.add(box);
 			            group.add(simpleText);
+			            group.setVisible(false);
 		        		return group;
 		        	
 		        }

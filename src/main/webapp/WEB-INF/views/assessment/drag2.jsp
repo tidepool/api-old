@@ -22,18 +22,30 @@
         padding-bottom: 40px;
       }
             
-      #instructions {
-    	left: 500px;
+     #instructions {
+    	left: 400px;
     	position: absolute;
-    	top: 50px;
+    	top: 70px;
     	z-index: 1000;
+    	border:3px solid #000;
+    	padding:10px;
+    		
+	 }
+	 
+	 #instructions0 {
+    	left: 400px;
+    	position: absolute;
+    	top: 70px;
+    	z-index: 1000;
+    	border:3px solid #000;
+    	padding:10px;
     		
 	 }
       
- 	#next {
+      #next {
     	left: 700px;
     	position: absolute;
-    	top: 100px;
+    	top: 300px;
     	z-index: 1000;
     	display:none;
     	font-size:18px;	
@@ -63,6 +75,17 @@
 		<button id="next">Next</button>
 		<div id="container"></div>		
 		
+		
+		<div id="instructions">
+			<div>
+				<p>Imagine you are dating someone for six months. Things are going unexpectedly well.</p> 
+				<p>Then one night he/she stands you up. No call, no text.</p> 
+				<p>Where do these feelings fit into your picture of your Self?</p>
+				<div>
+				  <button id="start">Start</button>
+				</div>
+			</div>
+		</div>
 		
 		<footer>
         	<p>&copy; Tidepool 2012</p>
@@ -105,37 +128,31 @@
 		          
 		      $("#next").click(function() {
 		    	  $.post(servicesAPI + "/json/assessmentevent.ajax", 
-	  			    		{accountId:$('#userId').val(), explicitId:'next' , type:"next"}, 
-	  			    		function(items) {});
-		    	 window.location="<c:url value="/drag3"/>";  
+  			    		{accountId:$('#userId').val(), explicitId:'next' , type:"next"}, 
+  			    		function(items) {});
+		    	  	window.location="<c:url value="/image3"/>";   
 		      });  
 		     
 		      $("#start").click(function() {
 			  		$("#instructions").hide();
+			  		 $.post(servicesAPI + "/json/assessmentevent.ajax", 
+	    			    		{accountId:$('#userId').val(), explicitId:'instruction' , type:"click"}, 
+	    			    		function(items) {	    			    			
+	    			    			$.post(servicesAPI + "/json/assessmentevent.ajax", 
+	    		    			    		{accountId:$('#userId').val(), explicitId:'self' , type:"click", x0:200, y0:100}, function(items) {	    		    			    		
+	    		    			    });
+	    			    		});	
 			   }); 
 		      
 			  			  
 		      function drawImages() {		            
-		    	 		    	  
-		    	  var imageObj1 = new Image();
-		    	  imageObj1.onload = function() {
-		    		  
-		    		  var imageObj2 = new Image();
-			    	  imageObj2.onload = function() {
-			    		  
-			    		  var imageObj3 = new Image();
-				    	  imageObj3.onload = function() {				    		  
-				    		  layer.add(buildSelfCircle("Self", 200, 100));
-				    		  layer.add(build5Circle(imageObj3, "happy.png", 267, 400, 100, 250)); 
-				    		  layer.add(build5Circle(imageObj1, "success.png", 200, 90, 550, 250)); 
-				    		  layer.add(build5Circle(imageObj2, "open_consc.png", 200, 200, 675, 250));				    		  
-				    		  stage.add(layer);				    		  				    		  
-				    	  }
-				    	  imageObj3.src = "<c:url value="/resources/bootstrap/img/happy.png" />";			    		  			    		 
-			    	  }
-			    	  imageObj2.src = "<c:url value="/resources/bootstrap/img/open_consc.png" />";		    		  		    		  		    	  
-		    	  }
-		    	  imageObj1.src = "<c:url value="/resources/bootstrap/img/success.png" />";		    	  		          
+		    	  layer.add(buildSelfCircle("Self", 100, 100)); 
+		    	  layer.add(build5Circle("Doubt myself", "doubt_myself", 100, 350));
+		          layer.add(build5Circle("Doubt past \nrelationships", "doubt_past_relationships", 275, 350));
+		          layer.add(build5Circle("Anger at \nthe other", "anger_at_the_other", 455, 350));
+		          layer.add(build5Circle("Concern for \nthe other", "concern_for_the_other", 625, 350));
+		          layer.add(build5Circle("Forget about \nthe other", "forget_about_the_other", 795, 350));		          
+		          stage.add(layer);
 		        }
 		      
 		      
@@ -146,31 +163,130 @@
 		        		coordinateString += dragArray[i][0] + "-" + dragArray[i][1] + ","; 
 		        	}
 		        	
-		        	dragArray.length = 0;
-		        	
+		        	dragArray.length = 0;		        	
 		        	$.post(servicesAPI + "/json/assessmentevent.ajax", 
     			   		{accountId:$('#userId').val(), explicitId:name , type:"drag", coordinates:coordinateString}, 
     			    		function(items) {});
 		        }
 		       
-		        function build5Circle(imageObj, name, height, width, x, y) {
+		        function build5Circle(name, id,  x, y) {
 		        	
-		        	
-			          
-			          var group = new Kinetic.Image({
+		        	var group = new Kinetic.Group({
 			              x: x,
 			              y: y,
-			              name:name,
-			              image: imageObj,
-			              width: width,
-			              height: height,
+			              name:id,
+			              rotationDeg: 0,
 			              draggable:true
 			            });
-			         
+			          
+		        	var plusText = new Kinetic.Text({
+			        	  x: -24,
+			        	  y: 8,
+			        	  text: "+",
+			        	  fontSize: 12,
+			        	  fontFamily: "Calibri",
+			        	  textFill: "white",
+			        	  align: "center",
+			        	  verticalAlign: "middle"
+			        	  });
+		        	
+		        	var plusBox = new Kinetic.Rect({
+		                x: -30,
+		                y: 5,
+		                width: 20,
+		                height:20,
+		                fill: 'grey',
+		                stroke: 'black',
+		                strokeWidth: 1
+		              });		        	
+		        			        			        	
+		        	var minusText = new Kinetic.Text({
+			        	  x: 5,
+			        	  y: 8,
+			        	  text: "-",
+			        	  fontSize: 12,
+			        	  fontFamily: "Calibri",
+			        	  textFill: "white",
+			        	  align: "center",
+			        	  verticalAlign: "middle"
+			        	  });
+		        	
+		        	var minusBox = new Kinetic.Rect({
+		                x: -3,
+		                y: 5,
+		                width: 20,
+		                height:20,
+		                fill: 'grey',
+		                stroke: 'black',
+		                strokeWidth: 1
+		              });
+		        	
+		        	function increaseCircleSize() {
+						  if (box.getRadius() < 250) { 							   
+						   		box.setRadius(box.getRadius() + 10);					      							    	
+						   		layer.draw();						    	
+						    	$.post(servicesAPI + "/json/assessmentevent.ajax", 
+				    			   		{accountId:$('#userId').val(), explicitId:id , type:"increase-size", width:box.getRadius() * 2, height:box.getRadius() * 2}, 
+				    			    		function(items) {});
+						    	
+						   }
+					  }
+					  
+		        	
+					 function decreaseCircleSize() {
+						   if (box.getRadius() > 50) { 
+						    	box.setRadius(box.getRadius() - 10);					      	
+						    	layer.draw(); 
+						    	$.post(servicesAPI + "/json/assessmentevent.ajax", 
+				    			   		{accountId:$('#userId').val(), explicitId:id , type:"decrease-size", width:box.getRadius() * 2, height:box.getRadius() * 2}, 
+				    			    		function(items) {});
+						    	
+						   }
+					  }
+					   
+					  plusText.on("click", function(){
+					  	increaseCircleSize();
+					  });
+						   
+						  
+					  minusText.on("click", function(){
+						  decreaseCircleSize();
+					   }); 
+					   
+					  plusBox.on("click", function(){
+						  increaseCircleSize();
+				      });
+					   						  
+					  minusBox.on("click", function(){
+						  decreaseCircleSize();
+					  });		        	
+		        	
+			          var box = new Kinetic.Circle({
+			              x: 0,
+			              y: 0,
+			              width: 150,
+			              height: 150,
+			              name: id,
+			              fill: 'white',
+			              stroke: "black",
+			              strokeWidth: 2
+			            });
+
+			          var simpleText = new Kinetic.Text({
+			        	  x: -40,
+			        	  y: -30,
+			        	  text: name,
+			        	  fontSize: 12,
+			        	  fontFamily: "Calibri",
+			        	  textFill: "black",
+			        	  align: "center",
+			        	  verticalAlign: "middle"
+			        	  });
+			          
 			          
 				           group.on('dragstart', function() {
 				        	 $.post(servicesAPI + "/json/assessmentevent.ajax", 
-			    			    		{accountId:$('#userId').val(), explicitId:name , type:"click", x0:group.getX(), y0:group.getY()}, 
+			    			    		{accountId:$('#userId').val(), explicitId:id , type:"click", x0:group.getX(), y0:group.getY()}, 
 			    			    		function(items) {
 			    			    				
 			    			    		});	
@@ -188,13 +304,18 @@
 							   for (var i in movedMap) {
 							      count++;
 							   }							   
-							   if (count == 3) {
+							   if (count == 5) {
 								   $("#next").show();
 							   } 
 							   
 						   });
 			          
-			            		            
+			            group.add(box);
+			            group.add(simpleText);
+			            group.add(plusBox);
+			            group.add(plusText);
+			            group.add(minusBox);
+			            group.add(minusText);
 		        		return group;
 		        	
 		        }
@@ -229,7 +350,7 @@
 			        	  align: "center",
 			        	  verticalAlign: "middle"
 			        	  });
-			          	
+			          
 			            group.add(box);
 			            group.add(simpleText);
 		        		return group;

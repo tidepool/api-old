@@ -23,19 +23,17 @@
       }
             
       #instructions {
-    	left: 50px;
+    	left: 500px;
     	position: absolute;
-    	top: 75px;
+    	top: 50px;
     	z-index: 1000;
-    	border:3px solid #000;
-    	padding:10px;
     		
 	 }
       
  	#next {
     	left: 700px;
     	position: absolute;
-    	top: 400px;
+    	top: 100px;
     	z-index: 1000;
     	display:none;
     	font-size:18px;	
@@ -65,13 +63,6 @@
 		<button id="next">Next</button>
 		<div id="container"></div>		
 		
-			<div id="instructions">
-				<div>
-					<p>Pick you favorite picture and rank them in order.</p> 					
-					<div>					
-					</div>
-				</div>
-			</div>
 		
 		<footer>
         	<p>&copy; Tidepool 2012</p>
@@ -99,19 +90,14 @@
 		var servicesAPI = "${pageContext.request.contextPath}";
 		var contentURL = "${cdn_url}";
 		
-		<c:forEach var="codedItem" items="${images}" varStatus="rowCounter">
-			//${cdn_url}/${codedItem.bucket_name}/${codedItem.folder_name}/${codedItem.picture_id}
-		</c:forEach>
-		
 		(function ($) {
 			$(document).ready(function () {	
 				
 				var movedMap = {};
 				var dragArray = [];
-				var occupiedMap = {};
 				var stage = new Kinetic.Stage({
 		            container: "container",
-		            width: 1200,
+		            width: 970,
 		            height: 700
 		          });
 		          var layer = new Kinetic.Layer();	
@@ -138,35 +124,18 @@
 			    	  imageObj2.onload = function() {
 			    		  
 			    		  var imageObj3 = new Image();
-				    	  imageObj3.onload = function() {
-				    		  
-				    		  var imageObj4 = new Image();
-					    	  imageObj4.onload = function() {
-				    		  
-					    		  var imageObj5 = new Image();
-						    	  imageObj5.onload = function() {
-					    		  
-						    		  layer.add(buildSelfCircle("1", 50, 100));
-						    		  layer.add(buildSelfCircle("2", 260, 100));
-						    		  layer.add(buildSelfCircle("3", 470, 100));
-						    		  layer.add(buildSelfCircle("4", 680, 100));
-						    		  layer.add(buildSelfCircle("5", 890, 100));
-						    		  layer.add(build5Circle(imageObj5, "${images[4].picture_id}", imageObj5.height/2, imageObj5.width/2, 50, 350)); 
-						    		  layer.add(build5Circle(imageObj4, "${images[3].picture_id}", imageObj4.height/2, imageObj4.width/2, 250, 350)); 
-						    		  layer.add(build5Circle(imageObj3, "${images[2].picture_id}", imageObj3.height/2, imageObj3.width/2, 500, 350)); 
-						    		  layer.add(build5Circle(imageObj1, "${images[1].picture_id}", imageObj1.height/2, imageObj1.width/2, 670, 350)); 
-						    		  layer.add(build5Circle(imageObj2, "${images[0].picture_id}", imageObj2.height/2, imageObj2.width/2, 870, 350));				    		  
-						    		  stage.add(layer);
-						    	  }
-						    	  imageObj5.src = "${cdn_url}/${images[4].bucket_name}/${images[4].folder_name}/${images[4].picture_id}";
-					    	  }
-					    	  imageObj4.src = "${cdn_url}/${images[3].bucket_name}/${images[3].folder_name}/${images[3].picture_id}";
+				    	  imageObj3.onload = function() {				    		  
+				    		  layer.add(buildSelfCircle("Self", 200, 100));
+				    		  layer.add(build5Circle(imageObj3, "happy.png", 267, 400, 100, 250)); 
+				    		  layer.add(build5Circle(imageObj1, "success.png", 200, 90, 550, 250)); 
+				    		  layer.add(build5Circle(imageObj2, "open_consc.png", 200, 200, 675, 250));				    		  
+				    		  stage.add(layer);				    		  				    		  
 				    	  }
-				    	  imageObj3.src = "${cdn_url}/${images[2].bucket_name}/${images[2].folder_name}/${images[2].picture_id}";			    		  			    		 
+				    	  imageObj3.src = "<c:url value="/resources/bootstrap/img/happy.png" />";			    		  			    		 
 			    	  }
-			    	  imageObj2.src = "${cdn_url}/${images[1].bucket_name}/${images[1].folder_name}/${images[1].picture_id}";		    		  		    		  		    	  
+			    	  imageObj2.src = "<c:url value="/resources/bootstrap/img/open_consc.png" />";		    		  		    		  		    	  
 		    	  }
-		    	  imageObj1.src = "${cdn_url}/${images[0].bucket_name}/${images[0].folder_name}/${images[0].picture_id}";		    	  		          
+		    	  imageObj1.src = "<c:url value="/resources/bootstrap/img/success.png" />";		    	  		          
 		        }
 		      
 		      
@@ -183,17 +152,11 @@
     			   		{accountId:$('#userId').val(), explicitId:name , type:"drag", coordinates:coordinateString}, 
     			    		function(items) {});
 		        }
-		        
-				function logEvent(name, image) {
-		        			        	
-		        	$.post(servicesAPI + "/json/assessmentevent.ajax", 
-    			   		{accountId:$('#userId').val(), explicitId:name , type:"imageOver", attributeId:image}, 
-    			    		function(items) {});
-		        }
-		        
 		       
 		        function build5Circle(imageObj, name, height, width, x, y) {
 		        	
+		        	
+			          
 			          var group = new Kinetic.Image({
 			              x: x,
 			              y: y,
@@ -204,13 +167,8 @@
 			              draggable:true
 			            });
 			         
-			            group.startx = x;
-			            group.starty = y;
-			            group.startHeight = height;
-			            group.startWidth = width;
 			          
 				           group.on('dragstart', function() {
-				        	 $("#instructions").hide();  
 				        	 $.post(servicesAPI + "/json/assessmentevent.ajax", 
 			    			    		{accountId:$('#userId').val(), explicitId:name , type:"click", x0:group.getX(), y0:group.getY()}, 
 			    			    		function(items) {
@@ -220,61 +178,22 @@
 				           });
 				          
 						   group.on('dragmove', function() {							   
-							   
+							   dragArray.push([group.getX(), group.getY()]);	
 						   });
 							
 						   group.on('dragend', function() {							   
-							 	
-							   var overIndex = group.isOver(group.getX(), group.getY());
-							   /*if (overIndex > 0) {
-								   if (occupiedMap[overIndex] != null) {
-									   group.sendHome();
-								   }
-							   } else {
-								   for (var i in occupiedMap) {
-										if (occupiedMap[i] == group.getName()) {
-											delete occupiedMap[i];
-										}									   
-								   }
-							   } */
+							   logArrayEvent(group.getName());
 							   
 							   var count = 0;
 							   for (var i in movedMap) {
 							      count++;
 							   }							   
-							   if (count == 5) {
-								   window.location="<c:url value="/${nextWindow}"/>";  
+							   if (count == 3) {
+								   $("#next").show();
 							   } 
 							   
 						   });
 			          
-						group.sendHome = function() {
-							group.setX(group.startx);
-							group.setY(group.startx);
-							group.setHeight(group.startHeight);
-							group.setWidth(group.startWidth);
-						}   
-						   
-						group.isOver = function(mouseX, mouseY) {							
-							for (var i = 0; i < 5; i++) {
-								if (mouseX > (50 + ((i * 200))) && mouseX < (250 + (i * 200)) 
-									&& mouseY > 100 && mouseY < 300) {								
-									logEvent(group.getName(), i + 1);
-									var padding = i > 0 ? i * 10 : 0;
-									group.setX(50 + ((i * 200)) + padding);
-									group.setY(100);
-									group.setWidth(200);
-									group.setHeight(200);
-									layer.draw();
-									occupiedMap[i] = group.getName();
-									return i;
-								}
-							}
-							
-							
-							
-							return -1;
-						}   
 			            		            
 		        		return group;
 		        	
@@ -289,20 +208,20 @@
 			              draggable:false
 			            });
 			          
-			          var box = new Kinetic.Rect({
+			          var box = new Kinetic.Circle({
 			              x: 0,
 			              y: 0,
 			              width: 200,
 			              height: 200,
-			              name: name,
+			              name: 'self',
 			              fill: 'white',
 			              stroke: "black",
 			              strokeWidth: 2
 			            });
 
 			          var simpleText = new Kinetic.Text({
-			        	  x: 100,
-			        	  y: 100,
+			        	  x: -10,
+			        	  y: -10,
 			        	  text: name,
 			        	  fontSize: 18,
 			        	  fontFamily: "Calibri",
@@ -311,7 +230,6 @@
 			        	  verticalAlign: "middle"
 			        	  });
 			          	
-			          
 			            group.add(box);
 			            group.add(simpleText);
 		        		return group;

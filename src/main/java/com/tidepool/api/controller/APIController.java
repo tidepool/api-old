@@ -30,7 +30,7 @@ import com.tidepool.api.model.CodingEvent;
 @Controller
 public class APIController {
 	
-	@Value("${tidepool.cdn.url}") 
+	@Value("${tidepool.training.cdn.url}") 
 	private String cdnUrl;
 	
 	private FactorAnalysisManager factorAnalysisManager;
@@ -240,10 +240,16 @@ public class APIController {
 		
 		List<CodedItem> itemList = hBaseManager.getFolderCodedItems("work_type");
 		if (itemList.size() > 0) {
-			model.addAttribute("images", itemList.subList(startIndex, (startIndex + increment)));
+			model.addAttribute("images", itemList.subList((startIndex * increment), ((startIndex * increment) + increment)));
 		}
 		model.addAttribute("cdn_url", cdnUrl);
 		model.addAttribute("account", request.getSession().getAttribute("account"));
+		
+		if (startIndex == 4) {
+			model.addAttribute("nextWindow", "assessmentFeedback");				
+		} else {		
+			model.addAttribute("nextWindow", "drag" + startIndex);				
+		}
 		return "assessment/image";
 	}
 	
@@ -377,6 +383,7 @@ public class APIController {
 					event.width = width;
 					event.height = height;
 					event.text = attributeComment;
+					
 					event.startTime = startTime;
 					event.endTime = endTime;
 					event.setIp(request.getRemoteHost());

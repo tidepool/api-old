@@ -20,6 +20,7 @@ import com.tidepool.api.authentication.AccountService;
 import com.tidepool.api.data.HBaseManager;
 import com.tidepool.api.email.EmailController;
 import com.tidepool.api.model.Account;
+import com.tidepool.api.model.Team;
 
 @Controller
 public class FrameworkController {
@@ -126,7 +127,18 @@ public class FrameworkController {
 	
 
 	@RequestMapping(value="/teamPost", method=RequestMethod.POST)
-	public String teamPost(HttpServletRequest request, @RequestParam(required=true) String name) {
+	public String teamPost(HttpServletRequest request, 
+			@RequestParam(required=true) String name,
+			@RequestParam(required=true) String timeline) {
+		
+		Account account =  getAccount();				
+		if (account == null) {
+			return "framework/admin/register";
+		}
+		
+		Team team = new Team();
+		team.setName(name);
+		
 		
 		return "framework/admin/teams";
 	}

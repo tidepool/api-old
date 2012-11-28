@@ -142,7 +142,7 @@
 		    	  $.post(servicesAPI + "/json/assessmentevent.ajax", 
   			    		{accountId:$('#userId').val(), explicitId:'next' , type:"next"}, 
   			    		function(items) {});
-		    	 window.location="<c:url value="/drag1"/>";  
+		    	 window.location="<c:url value="/image1"/>";  
 		      });  
 		     
 		      $("#start0").click(function() {
@@ -170,7 +170,7 @@
 		      
 			  			  
 		      function drawImages() {		            
-		    	  selfGroup = buildSelfCircle("Self", 200, 100);
+		    	  selfGroup = buildSelfCircle("Self", 100, 100);
 		    	  layer.add(selfGroup); 
 		    	  layer.add(build5Circle("Self-disciplined/ \nPersistent", "self-disciplined_persistent", 100, 350));
 		          layer.add(build5Circle("Anxious/ \nDramatic", "anxious_dramatic", 275, 350));

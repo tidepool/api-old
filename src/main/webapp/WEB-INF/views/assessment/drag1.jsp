@@ -143,7 +143,7 @@
 		    	  $.post(servicesAPI + "/json/assessmentevent.ajax", 
 	  			    		{accountId:$('#userId').val(), explicitId:'next' , type:"next"}, 
 	  			    		function(items) {});
-		    	 window.location="<c:url value="/drag2"/>";  
+		    	 window.location="<c:url value="/image2"/>";  
 		      });  
 		     
 		      
@@ -171,7 +171,7 @@
 			   }); 
 			  			  
 		      function drawImages() {		            
-		    	  selfGroup = buildSelfCircle("Self", 200, 100);
+		    	  selfGroup = buildSelfCircle("Self", 100, 100);
 		    	  layer.add(selfGroup); 
 		    	
 		    	  layer.add(build5Circle("Independent/ \nAloof", "independent_aloof",100, 350));

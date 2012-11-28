@@ -39,7 +39,7 @@
 							    </div>
 							    <div id="collapseOne" class="accordion-body collapse">
 							      <div class="accordion-inner">
-							        The people in group 1
+							        <a href="<c:url value="/team${ team.id }" />">Detail</a>
 							      </div>
 							    </div>
 							  </div>

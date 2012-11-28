@@ -1,7 +1,12 @@
 package com.tidepool.api.controller;
 
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 import javax.servlet.http.HttpServletRequest;
 
+import org.apache.commons.lang.StringUtils;
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -12,14 +17,17 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.tidepool.api.authentication.AccountService;
 import com.tidepool.api.data.HBaseManager;
 import com.tidepool.api.email.EmailController;
 import com.tidepool.api.model.Account;
+import com.tidepool.api.model.CodingEvent;
 import com.tidepool.api.model.Team;
 
 @Controller
@@ -35,6 +43,8 @@ public class FrameworkController {
 	private AuthenticationManager authManager;
 	private VelocityEngine velocityEngine;
 	private EmailController emailController;
+	
+	private SimpleDateFormat dateFormat =new SimpleDateFormat("mm/dd/yyyy");
 	
 	@Autowired  
 	public void setVelocityEngine(VelocityEngine velocityEngine) {
@@ -106,8 +116,9 @@ public class FrameworkController {
 		return "framework/admin/teams";
 	}
 	
-	@RequestMapping(value="/team", method=RequestMethod.GET)
-	public String getAdminTeam(HttpServletRequest request, 
+	@RequestMapping(value="/team{teamId}", method=RequestMethod.GET)
+	public String getAdminTeam(HttpServletRequest request,
+			@PathVariable Long teamId,
 			@RequestParam(required=false) String owner,
 			Model model) {
 		
@@ -120,6 +131,10 @@ public class FrameworkController {
 			model.addAttribute("admin", account);
 		}
 		
+		if (teamId != null) {
+			model.addAttribute("team", hBaseManager.getTeamFromId(teamId));
+		}
+		
 		model.addAttribute("account", account);
 		
 		return "framework/admin/team";
@@ -128,7 +143,7 @@ public class FrameworkController {
 
 	@RequestMapping(value="/teamPost", method=RequestMethod.POST)
 	public String teamPost(HttpServletRequest request, 
-			@RequestParam(required=true) String name,
+			@RequestParam(required=true) String teamName,
 			@RequestParam(required=true) String timeline) {
 		
 		Account account =  getAccount();				
@@ -137,10 +152,51 @@ public class FrameworkController {
 		}
 		
 		Team team = new Team();
-		team.setName(name);
+		team.setName(teamName);
+		team.setOwnerId(account.getUserId());
+		if (!StringUtils.isEmpty(timeline)) {
+			try {
+				long date = dateFormat.parse(timeline).getTime();
+				team.setTimeline(date);
+			} catch (ParseException e) {				
+				e.printStackTrace();
+			}
+		}
+		hBaseManager.createTeam(team);
 		
+		return "redirect:teams";
+	}
+	
+	@RequestMapping(value="/teamMemberPost", method=RequestMethod.POST)
+	public @ResponseBody Account teamMemberPost(HttpServletRequest request,
+			@RequestParam(required=true) String teamId,
+			@RequestParam(required=true) String firstName,
+			@RequestParam(required=true) String lastName,			
+			@RequestParam(required=true) String email,
+			@RequestParam(required=true) String age,
+			@RequestParam(required=true) String gender,			
+			@RequestParam(required=true) String jobTitle) {
 		
-		return "framework/admin/teams";
+		Account account =  getAccount();				
+		if (account == null) {
+			return null;
+		}
+				
+		Account newAccount = new Account();
+		newAccount.setFirstName(firstName);
+		newAccount.setLastName(lastName);
+		newAccount.setEmail(email);
+		newAccount.setJobTitle(jobTitle);
+		newAccount.setAge(age);
+		newAccount.setGender(gender);
+		
+		try {
+			newAccount = hBaseManager.createAccount(newAccount);
+		} catch (Exception e) {			
+			e.printStackTrace();
+		}
+				
+		return newAccount;
 	}
 	
 	

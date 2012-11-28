@@ -28,6 +28,8 @@ public class Account implements Serializable, UserDetails {
 	public static final byte[] assess_code_column = Bytes.toBytes("assess_code_status");
 	public static final byte[] company_column = Bytes.toBytes("company");
 	public static final byte[] phone_number_column = Bytes.toBytes("phone_number");
+	public static final byte[] age_column = Bytes.toBytes("age");
+	public static final byte[] job_title_column = Bytes.toBytes("job_title");
 	
 	public static final byte[] extraverted_column = Bytes.toBytes("extraverted");
 	public static final byte[] critical_column = Bytes.toBytes("critical");
@@ -82,6 +84,8 @@ public class Account implements Serializable, UserDetails {
 	private String assessCode;
 	private String company;
 	private String phoneNumber;
+	private String jobTitle;
+	private String age;
 	
 	public int extraverted;
 	public int critical;
@@ -504,6 +508,22 @@ public class Account implements Serializable, UserDetails {
 
 	public void setPhoneNumber(String phoneNumber) {
 		this.phoneNumber = phoneNumber;
+	}
+
+	public String getJobTitle() {
+		return jobTitle;
+	}
+
+	public void setJobTitle(String jobTitle) {
+		this.jobTitle = jobTitle;
+	}
+
+	public String getAge() {
+		return age;
+	}
+
+	public void setAge(String age) {
+		this.age = age;
 	}
 	
 }

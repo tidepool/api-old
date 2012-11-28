@@ -267,6 +267,10 @@
 		    			   		});
 		        			circle.setFill('white');
 				        	layer.draw();
+		        		} else {
+		        			$.post(servicesAPI + "/json/assessmentevent.ajax", 
+			    			   		{accountId:$('#userId').val(), explicitId:name , type:"timing-wrong-click-red-after-yellow", startTime:startTime, endTime:new Date().getTime()}, 
+			    			    		function(items) {});
 		        		}		        		
 		        		return;
 		        	}
@@ -284,9 +288,9 @@
 		    			   		});
 		        	} else {
 		        		$.post(servicesAPI + "/json/assessmentevent.ajax", 
-		    			   		{accountId:$('#userId').val(), explicitId:name , type:"timing-wrong-click", startTime:startTime, endTime:new Date().getTime()}, 
+		    			   		{accountId:$('#userId').val(), explicitId:name , type:"timing-wrong-click-red", startTime:startTime, endTime:new Date().getTime()}, 
 		    			    		function(items) {
-		    			   			    nextCommand();	
+		    			   			    
 		    			   		});
 		        	}
 		        }

@@ -324,6 +324,15 @@ public class HBaseManager {
 			account.setPhoneNumber((Bytes.toString(val)));					
 		}
 		
+		if (result.containsColumn(family_name_column, Account.age_column)) {
+			byte[] val = result.getValue(family_name_column, Account.age_column);
+			account.setAge((Bytes.toString(val)));					
+		}
+		
+		if (result.containsColumn(family_name_column, Account.job_title_column)) {
+			byte[] val = result.getValue(family_name_column, Account.job_title_column);
+			account.setJobTitle((Bytes.toString(val)));					
+		}
 				
 	}
 	
@@ -394,8 +403,10 @@ public class HBaseManager {
 			put.add(family_name_column, Account.interest_in_measurement_column, Bytes.toBytes(account.getInterest_in_measurement()));
 			put.add(family_name_column, Account.understanding_personality_column, Bytes.toBytes(account.getUnderstanding_personality()));
 			put.add(family_name_column, Account.interesting_dating_partners_column, Bytes.toBytes(account.getInteresting_dating_partners()));
-							
-			put.add(family_name_column, Account.ip_column, Bytes.toBytes(account.getIp()));
+			
+			if (account.getIp() != null) {
+				put.add(family_name_column, Account.ip_column, Bytes.toBytes(account.getIp()));
+			}
 			
 			if (account.getAssessCode() != null) { 
 				put.add(family_name_column, Account.assess_code_column, Bytes.toBytes(account.getAssessCode()));
@@ -407,6 +418,14 @@ public class HBaseManager {
 			
 			if (account.getPhoneNumber() != null) {
 				put.add(family_name_column, Account.phone_number_column, Bytes.toBytes(account.getPhoneNumber()));
+			}
+			
+			if (account.getAge() != null) {
+				put.add(family_name_column, Account.age_column, Bytes.toBytes(account.getAge()));
+			}
+			
+			if (account.getJobTitle() != null) {
+				put.add(family_name_column, Account.job_title_column, Bytes.toBytes(account.getJobTitle()));
 			}
 			
 			table.put(put);			
@@ -1458,6 +1477,23 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 	}
 	
 	
+	public Team getTeamFromId(long id) {
+		Team team = null;			
+		try {
+			HTableInterface table = pool.getTable(teamTable);
+			Get get = new Get(Bytes.toBytes(id));					
+			Result result = table.get(get);							
+			team = new Team();				
+			mapTeam(team, result);				
+			return team;
+			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} 		
+		return team;
+	}
+	
+	
 	public Team createTeam(Team team) {
 		
 		HTableInterface counter = pool.getTable(countersTable);
@@ -1512,6 +1548,11 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 		if (result.containsColumn(family_name_column, Team.name_column)) {
 			byte[] val = result.getValue(family_name_column, Team.name_column);
 			team.setName(Bytes.toString(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Team.timeline_column)) {
+			byte[] val = result.getValue(family_name_column, Team.timeline_column);
+			team.setTimeline(Bytes.toLong(val));					
 		}
 		
 	}

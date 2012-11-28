@@ -161,6 +161,9 @@
 		      
 		      $("#start").click(function() {
 			  		$("#instructions").hide();
+			  		for (var i in circleArray) {
+				  	 	circleArray[i].setDraggable(true);
+				  	}
 			  		 $.post(servicesAPI + "/json/assessmentevent.ajax", 
 	    			    		{accountId:$('#userId').val(), explicitId:'instruction' , type:"click"}, 
 	    			    		function(items) {	    			    			
@@ -171,7 +174,7 @@
 			   }); 
 			  			  
 		      function drawImages() {		            
-		    	  selfGroup = buildSelfCircle("Self", 100, 100);
+		    	  selfGroup = buildSelfCircle("Self", 100, 150);
 		    	  layer.add(selfGroup); 
 		    	
 		    	  layer.add(build5Circle("Independent/ \nAloof", "independent_aloof",100, 350));
@@ -204,7 +207,7 @@
 			              y: y,
 			              name:id,
 			              rotationDeg: 0,
-			              draggable:true
+			              draggable:false
 			            });
 			          
 		        	var plusText = new Kinetic.Text({
@@ -256,15 +259,17 @@
 							count++;
 						}							   
 						
-						if (count == 5) {							
+						if (count == 5) {
 							  $('#instructions0').hide();
 							  $('#instructions').show();
 							  selfGroup.setVisible(true);
 							  
-							  for (var i in circleArray) {
-								circleArray[i].hideResize();
+							  function clear() {							  
+							  	for (var i in circleArray) {
+							  	 	circleArray[i].hideResize();
+							  	}
 							  }
-							  
+							  setInterval(clear, 3000);								  							  
 						} 
 		        		
 		        	}
@@ -393,6 +398,7 @@
 			            	plusText.setVisible(false);
 			            	minusBox.setVisible(false);
 			            	minusText.setVisible(false);
+			            	layer.draw();
 			            }
 			            circleArray.push(group);
 		        		return group;

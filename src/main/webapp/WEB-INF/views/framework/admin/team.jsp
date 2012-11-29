@@ -36,9 +36,11 @@
 	      				    <input type="text" name="teamName" id="teamName" placeholder="Team Name" <c:if test="${ not empty team }">value="${ team.name }"</c:if>>
 	      					<table class="table table-bordered table-striped">
   								<th>Select</th><th>Name</th><th>Age</th><th>Sex</th><th>Job Title</th>
+  								<c:forEach var="member" items="${team.teamMembers}" varStatus="rowCounter">
+  									<tr><td><input type="checkbox"/></td><td>${ member.account.firstName } ${ member.account.lastName }</td><td>${ member.account.age }</td><td>${ member.account.gender }</td><td>${ member.account.jobTitle }</td></tr>
+  								</c:forEach>
   								<tr class="template-member-row" style="display:none"><td><input type="checkbox"/></td><td class="template-name">Kilgore Trout</td><td class="template-age">44</td><td class="template-sex">M</td><td class="template-job-title">Writer</td></tr>
-  								<tr><td><input type="checkbox"/></td><td>Billy Pilgrim</td><td>44</td><td>M</td><td>Writer</td></tr>
-  								<tr><td colspan="5" style="align:center"><a href="#myModal" role="button" class="btn btn-primary" data-toggle="modal">Add Team Member</a></td></tr>
+  								<tr><td colspan="5" style="align:center"><a href="#newMemberModal" role="button" class="btn btn-primary" data-toggle="modal">Add Team Member</a></td></tr>
 							</table>							
 							</div>
 														
@@ -58,13 +60,15 @@
 	      				    <div class="span3 bigthree">When?</div>
 	      				    <div class="span9">
 	      						<input type="text" name="timeline" id="datepicker" <c:if test="${ not empty team }">value="${ team.formattedTimeline }"</c:if> placeholder="Pick a date"/>
+	      						<a href="#emailModal" role="button" class="btn btn-primary" data-toggle="modal">Email Notifications</a>
 	      					</div>
+	      					
 	      				</div>
 	      				
 	      				<div class="row-fluid">
 	      					<div class="span3 bigthree">&nbsp;</div>
 	      				    <div class="span9">
-	      						<button class="btn btn-primary">Create Team</button>
+	      						<button class="btn btn-primary"><c:if test="${ not empty team }">Update Team</c:if><c:if test="${ empty team }">Create Team</c:if></button>
 	      					</div>
 	      				</div>
 	      			</form>	
@@ -111,7 +115,7 @@
 								 		$clone.find('.template-job-title').html(account.age);
 								 		$clone.show();
 								 		$tr.after($clone);
-								 		$('#myModal').modal('hide');
+								 		$('#newMemberModal').modal('hide');
 								 		return true;
 							 		}, "json"	
 							  );
@@ -128,13 +132,13 @@
 			})(jQuery);		
 		</script>
 
-	<!-- Modal -->
-	<div id="myModal" class="modal hide fade" tabindex="-1" role="dialog"
-		aria-labelledby="myModalLabel" aria-hidden="true">
+	<!-- New Member Modal -->
+	<div id="newMemberModal" class="modal hide fade" tabindex="-1" role="dialog"
+		aria-labelledby="newMemberModalLabel" aria-hidden="true">
 		<div class="modal-header">
 			<button type="button" class="close" data-dismiss="modal"
 				aria-hidden="true">×</button>
-			<h3 id="myModalLabel">Add A Team Member</h3>
+			<h3 id="newMemberModalLabel">Add A Team Member</h3>
 		</div>
 		<div class="modal-body">
 			<form class="form-horizontal">
@@ -195,5 +199,41 @@
 			<button class="btn btn-primary" id="submitTeamMemberButton">Add Team Member</button>
 		</div>
 	</div>
+	
+	
+	<div id="emailModal" class="modal hide fade" tabindex="-1" role="dialog"
+		aria-labelledby="emailModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">×</button>
+			<h3 id="emailModalLabel">Email Notification</h3>
+		</div>
+		<div class="modal-body">
+			<form class="form-horizontal">
+									
+					<div class="control-group alert alert-error" style="display:none" id="emailError">Hold up....</div>
+												
+					<div class="control-group">
+						<label class="control-label" for="firstName">Subject</label>
+						<div class="controls">
+							<input type="text" id="subject" name="subject" placeholder="Add a subject">
+						</div>
+					</div>
+																				
+					<div class="control-group">
+						<label class="control-label" for="email">Email</label>
+						<div class="controls">
+							<textarea id="body" name="body" placeholder="Enter a message"></textarea>
+						</div>
+					</div>
+					
+				</form>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary" id="submitTeamMemberButton">Save Email</button>
+		</div>
+	</div>
+	
 </body>
 </html>

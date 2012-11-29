@@ -19,9 +19,9 @@ public class SpringAuthenticator implements UserDetailsService {
 	
 	public UserDetails loadUserByUsername(String email) throws UsernameNotFoundException {		
 		Account account = hBaseManager.getAccountFromEmail(email);
-		if (!account.getAccountStatus().equals("0")) {
-			throw new UsernameNotFoundException(email);
-		}
+		//if (!account.getAccountStatus().equals("0")) {
+		//	throw new UsernameNotFoundException(email);
+		//}
 		return account;
 	}
 

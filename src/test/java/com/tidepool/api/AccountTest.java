@@ -27,7 +27,7 @@ public class AccountTest {
 	@Autowired
 	private ShaPasswordEncoder encoder;
 	
-	//@Test
+	@Test
 	public void testAccountLookup() {
 		Account account = hBaseManager.getAccountFromEmail("jshoop@tidepool.co"); 		
 		assertNotNull(account);

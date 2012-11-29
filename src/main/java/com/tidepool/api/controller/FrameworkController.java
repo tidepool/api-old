@@ -29,6 +29,7 @@ import com.tidepool.api.email.EmailController;
 import com.tidepool.api.model.Account;
 import com.tidepool.api.model.CodingEvent;
 import com.tidepool.api.model.Team;
+import com.tidepool.api.model.TeamAccount;
 
 @Controller
 public class FrameworkController {
@@ -132,7 +133,9 @@ public class FrameworkController {
 		}
 		
 		if (teamId != null) {
-			model.addAttribute("team", hBaseManager.getTeamFromId(teamId));
+			Team team = hBaseManager.getTeamFromId(teamId);
+			hBaseManager.loadAccountsForTeam(team);
+			model.addAttribute("team", team);
 		}
 		
 		model.addAttribute("account", account);
@@ -144,14 +147,20 @@ public class FrameworkController {
 	@RequestMapping(value="/teamPost", method=RequestMethod.POST)
 	public String teamPost(HttpServletRequest request, 
 			@RequestParam(required=true) String teamName,
+			@RequestParam(required=false) Long teamId,
 			@RequestParam(required=true) String timeline) {
 		
 		Account account =  getAccount();				
 		if (account == null) {
 			return "framework/admin/register";
 		}
-		
-		Team team = new Team();
+			
+		Team team = null;
+		if (teamId != null) {
+			team = hBaseManager.getTeamFromId(teamId);
+		} else {
+			team = new Team();
+		}
 		team.setName(teamName);
 		team.setOwnerId(account.getUserId());
 		if (!StringUtils.isEmpty(timeline)) {
@@ -162,14 +171,18 @@ public class FrameworkController {
 				e.printStackTrace();
 			}
 		}
-		hBaseManager.createTeam(team);
+		if (teamId != null) {
+			hBaseManager.saveTeam(team);
+		} else {
+			hBaseManager.createTeam(team);
+		}
 		
 		return "redirect:teams";
 	}
 	
 	@RequestMapping(value="/teamMemberPost", method=RequestMethod.POST)
 	public @ResponseBody Account teamMemberPost(HttpServletRequest request,
-			@RequestParam(required=true) String teamId,
+			@RequestParam(required=true) Long teamId,
 			@RequestParam(required=true) String firstName,
 			@RequestParam(required=true) String lastName,			
 			@RequestParam(required=true) String email,
@@ -181,7 +194,9 @@ public class FrameworkController {
 		if (account == null) {
 			return null;
 		}
-				
+		
+		Team team = hBaseManager.getTeamFromId(teamId);
+		
 		Account newAccount = new Account();
 		newAccount.setFirstName(firstName);
 		newAccount.setLastName(lastName);
@@ -195,7 +210,11 @@ public class FrameworkController {
 		} catch (Exception e) {			
 			e.printStackTrace();
 		}
-				
+		
+		TeamAccount teamAccount = new TeamAccount();
+		teamAccount.setAccount(newAccount);
+		hBaseManager.addAccountToTeam(teamAccount, team);
+		
 		return newAccount;
 	}
 	

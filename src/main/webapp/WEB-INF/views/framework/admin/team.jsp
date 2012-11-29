@@ -137,12 +137,12 @@
 								      emailSubject:$("#emailSubject").val(),
 								 	  emailBody:$("#emailSubject").val()}, 
 									 function (data) {																	 		
-								 		
+								 		 $('#emailModal').modal('hide');
 							 		}, "json"	
 							  );
 							
 							return true;
-						}
+						});
 					 
 					 
 				});

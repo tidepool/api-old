@@ -67,7 +67,7 @@
 		
 			<div id="instructions">
 				<div>
-					<p>Pick you favorite picture and rank them in order.</p> 					
+					<p>Pick your favorite picture and rank them in order.</p> 					
 					<div>					
 					</div>
 				</div>

@@ -119,26 +119,11 @@ public class APIController {
 		}
 		model.addAttribute("assessCode", 0);
 		model.addAttribute("account", new Account());
-		return "assessment/assessment-register";
-	}
-	
-	/*
-	 * 
-	 * Assessment code.
-	 * 
-	 * 
-	 */
-
-	@RequestMapping(value="/assess1", method=RequestMethod.GET)
-	public String getAssessmentRegister1(HttpServletRequest request, @RequestParam(required=false) String owner,
-			Model model) {
 		
-		if (getAccount() != null && getAccount().isAdmin()) {
-			model.addAttribute("admin", getAccount());
-		}
+		VariantManager variantManager = new VariantManager("0");
+		request.getSession().setAttribute("variantManager", variantManager);
 		
-		model.addAttribute("account", new Account());
-		model.addAttribute("assessCode", 1);
+		
 		return "assessment/assessment-register";
 	}
 	
@@ -153,6 +138,13 @@ public class APIController {
 		
 		model.addAttribute("account", new Account());
 		model.addAttribute("assessCode", code);
+		
+		if (StringUtils.isEmpty(code)) {
+			code = "0";
+		}
+		VariantManager variantManager = new VariantManager(code);
+		request.getSession().setAttribute("variantManager", variantManager);
+		
 		return "assessment/assessment-register";
 	}
 	
@@ -206,8 +198,9 @@ public class APIController {
 				e.printStackTrace();	
 			}
 			
-		
-		return "forward:timing";
+			
+		VariantManager variantManager = (VariantManager)request.getSession().getAttribute("variantManager");		
+		return "forward:" + variantManager.getNext();
 	}
 	
 	@RequestMapping(value="/assessment", method=RequestMethod.GET)
@@ -245,11 +238,14 @@ public class APIController {
 		model.addAttribute("cdn_url", cdnUrl);
 		model.addAttribute("account", request.getSession().getAttribute("account"));
 		
-		if (startIndex == 5) {
-			model.addAttribute("nextWindow", "assessmentFeedback");				
-		} else {		
-			model.addAttribute("nextWindow", "drag" + startIndex);				
-		}
+//		if (startIndex == 5) {
+//			model.addAttribute("nextWindow", "assessmentFeedback");				
+//		} else {		
+//			model.addAttribute("nextWindow", "drag" + startIndex);				
+//		}
+		
+		VariantManager variantManager = (VariantManager)request.getSession().getAttribute("variantManager");
+		model.addAttribute("nextWindow", variantManager.getNext());	
 		return "assessment/image";
 	}
 	
@@ -264,6 +260,10 @@ public class APIController {
 		
 		model.addAttribute("cdn_url", cdnUrl);	
 		model.addAttribute("account", request.getSession().getAttribute("account"));
+		
+		VariantManager variantManager = (VariantManager)request.getSession().getAttribute("variantManager");
+		model.addAttribute("nextWindow", variantManager.getNext());
+		
 		return "assessment/drag0";
 	}
 	
@@ -277,6 +277,10 @@ public class APIController {
 		
 		model.addAttribute("cdn_url", cdnUrl);	
 		model.addAttribute("account", request.getSession().getAttribute("account"));
+		
+		VariantManager variantManager = (VariantManager)request.getSession().getAttribute("variantManager");
+		model.addAttribute("nextWindow", variantManager.getNext());
+		
 		return "assessment/drag1";
 	}
 	
@@ -290,6 +294,10 @@ public class APIController {
 		
 		model.addAttribute("cdn_url", cdnUrl);	
 		model.addAttribute("account", request.getSession().getAttribute("account"));
+		
+		VariantManager variantManager = (VariantManager)request.getSession().getAttribute("variantManager");
+		model.addAttribute("nextWindow", variantManager.getNext());
+		
 		return "assessment/drag2";
 	}
 	
@@ -303,6 +311,10 @@ public class APIController {
 		
 		model.addAttribute("cdn_url", cdnUrl);	
 		model.addAttribute("account", request.getSession().getAttribute("account"));
+		
+		VariantManager variantManager = (VariantManager)request.getSession().getAttribute("variantManager");
+		model.addAttribute("nextWindow", variantManager.getNext());
+		
 		return "assessment/drag3";
 	}	
 
@@ -316,6 +328,10 @@ public class APIController {
 		
 		model.addAttribute("cdn_url", cdnUrl);	
 		model.addAttribute("account", request.getSession().getAttribute("account"));
+		
+		VariantManager variantManager = (VariantManager)request.getSession().getAttribute("variantManager");
+		model.addAttribute("nextWindow", variantManager.getNext());
+		
 		return "assessment/drag4";
 	}		
 	
@@ -343,6 +359,10 @@ public class APIController {
 		
 		model.addAttribute("cdn_url", cdnUrl);	
 		model.addAttribute("account", request.getSession().getAttribute("account"));
+		
+		VariantManager variantManager = (VariantManager)request.getSession().getAttribute("variantManager");
+		model.addAttribute("nextWindow", variantManager.getNext());
+		
 		return "assessment/timing";
 	}
 	

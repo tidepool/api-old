@@ -143,7 +143,7 @@
 		    	  $.post(servicesAPI + "/json/assessmentevent.ajax", 
 	  			    		{accountId:$('#userId').val(), explicitId:'next' , type:"next"}, 
 	  			    		function(items) {});
-		    	 window.location="<c:url value="/image2"/>";  
+		    	 window.location="<c:url value="/${nextWindow}"/>";  
 		      });  
 		     
 		      
@@ -269,7 +269,7 @@
 							  	 	circleArray[i].hideResize();
 							  	}
 							  }
-							  setInterval(clear, 3000);								  							  
+							  setInterval(clear, 2000);								  							  
 						} 
 		        		
 		        	}

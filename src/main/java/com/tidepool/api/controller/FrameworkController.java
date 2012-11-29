@@ -180,15 +180,11 @@ public class FrameworkController {
 		return "redirect:teams";
 	}
 	
-	@RequestMapping(value="/teamMemberPost", method=RequestMethod.POST)
+	@RequestMapping(value="/emailPost", method=RequestMethod.POST)
 	public @ResponseBody Account teamMemberPost(HttpServletRequest request,
 			@RequestParam(required=true) Long teamId,
-			@RequestParam(required=true) String firstName,
-			@RequestParam(required=true) String lastName,			
-			@RequestParam(required=true) String email,
-			@RequestParam(required=true) String age,
-			@RequestParam(required=true) String gender,			
-			@RequestParam(required=true) String jobTitle) {
+			@RequestParam(required=true) String emailSubject,
+			@RequestParam(required=true) String emailBody) {
 		
 		Account account =  getAccount();				
 		if (account == null) {
@@ -196,26 +192,11 @@ public class FrameworkController {
 		}
 		
 		Team team = hBaseManager.getTeamFromId(teamId);
+		team.setInviteBody(emailBody);
+		team.setInviteSubject(emailSubject);
+		hBaseManager.saveTeam(team);
 		
-		Account newAccount = new Account();
-		newAccount.setFirstName(firstName);
-		newAccount.setLastName(lastName);
-		newAccount.setEmail(email);
-		newAccount.setJobTitle(jobTitle);
-		newAccount.setAge(age);
-		newAccount.setGender(gender);
-		
-		try {
-			newAccount = hBaseManager.createAccount(newAccount);
-		} catch (Exception e) {			
-			e.printStackTrace();
-		}
-		
-		TeamAccount teamAccount = new TeamAccount();
-		teamAccount.setAccount(newAccount);
-		hBaseManager.addAccountToTeam(teamAccount, team);
-		
-		return newAccount;
+		return null;
 	}
 	
 	

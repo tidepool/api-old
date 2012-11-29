@@ -116,17 +116,34 @@
 								 		$clone.show();
 								 		$tr.after($clone);
 								 		$('#newMemberModal').modal('hide');
+								 		$("#firstName").val("");
+										$("#lastName").val("");
+										$("#age").val("");
+										$("#jobTitle").val("");
+										$("#email").val("");
 								 		return true;
 							 		}, "json"	
 							  );
 							
 							return true;
-						}
-								
-						return true;
-						 
-						 
+						}								
+						return true;						 						 
 					 });
+					 
+					 $("#saveEmailButton").click(function() {					 		
+						 						
+							 $.post("<c:url value="/emailPost" />",									 
+									 {teamId:$('#teamId').val(),
+								      emailSubject:$("#emailSubject").val(),
+								 	  emailBody:$("#emailSubject").val()}, 
+									 function (data) {																	 		
+								 		
+							 		}, "json"	
+							  );
+							
+							return true;
+						}
+					 
 					 
 				});
 			})(jQuery);		
@@ -212,18 +229,25 @@
 			<form class="form-horizontal">
 									
 					<div class="control-group alert alert-error" style="display:none" id="emailError">Hold up....</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="emailTo">To</label>
+						<div class="controls">
+							<input type="text" id="emailTo" name="emailTo">
+						</div>
+					</div>
 												
 					<div class="control-group">
-						<label class="control-label" for="firstName">Subject</label>
+						<label class="control-label" for="emailSubject">Subject</label>
 						<div class="controls">
-							<input type="text" id="subject" name="subject" placeholder="Add a subject">
+							<input type="text" id="emailSubject" name="emailSubject" placeholder="Add a subject" <c:if test="${ not empty team}">${ team.inviteSubject }</c:if>>
 						</div>
 					</div>
 																				
 					<div class="control-group">
-						<label class="control-label" for="email">Email</label>
+						<label class="control-label" for="emailBody">Email</label>
 						<div class="controls">
-							<textarea id="body" name="body" placeholder="Enter a message"></textarea>
+							<textarea id="emailBody" name="emailBody" placeholder="Enter a message"><c:if test="${ not empty team}">${ team.inviteBody }</c:if></textarea>
 						</div>
 					</div>
 					
@@ -231,7 +255,7 @@
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" id="submitTeamMemberButton">Save Email</button>
+			<button class="btn btn-primary" id="saveEmailButton">Save Email</button>
 		</div>
 	</div>
 	

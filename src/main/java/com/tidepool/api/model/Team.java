@@ -12,6 +12,9 @@ public class Team {
 	public static final byte[] owner_id_column = Bytes.toBytes("owner_id");
 	public static final byte[] name_column = Bytes.toBytes("name");
 	public static final byte[] timeline_column = Bytes.toBytes("timeline");
+	public static final byte[] invite_subject_column = Bytes.toBytes("invite_subject");
+	public static final byte[] invite_body_column = Bytes.toBytes("invite_body");
+	
 	private final SimpleDateFormat dateFormat =new SimpleDateFormat("mm/dd/yyyy");
 	
 	public long id;
@@ -19,6 +22,9 @@ public class Team {
 	public String ownerId;
 	public List<TeamAccount> teamMembers = new ArrayList<TeamAccount>();
 	public long timeline;
+	
+	public String inviteSubject;
+	public String inviteBody;
 	
 	
 	public String getOwnerId() {
@@ -56,6 +62,18 @@ public class Team {
 	}
 	public void setTeamMembers(List<TeamAccount> teamMembers) {
 		this.teamMembers = teamMembers;
+	}
+	public String getInviteSubject() {
+		return inviteSubject;
+	}
+	public void setInviteSubject(String inviteSubject) {
+		this.inviteSubject = inviteSubject;
+	}
+	public String getInviteBody() {
+		return inviteBody;
+	}
+	public void setInviteBody(String inviteBody) {
+		this.inviteBody = inviteBody;
 	}
 	
 }

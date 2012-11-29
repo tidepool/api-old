@@ -1520,7 +1520,15 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 			if (team.getOwnerId() != null) {
 				put.add(family_name_column, Team.owner_id_column, Bytes.toBytes(team.getOwnerId()));
 			}
-						
+			
+			if (team.getInviteBody() != null) {
+				put.add(family_name_column, Team.invite_body_column, Bytes.toBytes(team.getInviteBody()));
+			}
+			
+			if (team.getInviteSubject() != null) {
+				put.add(family_name_column, Team.invite_subject_column, Bytes.toBytes(team.getInviteSubject()));
+			}
+			
 			put.add(family_name_column, Team.timeline_column, Bytes.toBytes(team.getTimeline()));
 			
 			table.put(put);
@@ -1553,6 +1561,16 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 		if (result.containsColumn(family_name_column, Team.timeline_column)) {
 			byte[] val = result.getValue(family_name_column, Team.timeline_column);
 			team.setTimeline(Bytes.toLong(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Team.invite_subject_column)) {
+			byte[] val = result.getValue(family_name_column, Team.invite_subject_column);
+			team.setInviteSubject(Bytes.toString(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Team.invite_body_column)) {
+			byte[] val = result.getValue(family_name_column, Team.invite_body_column);
+			team.setInviteBody(Bytes.toString(val));					
 		}
 		
 	}

@@ -22,7 +22,7 @@
 	  					<ul class="breadcrumb">
   							<li><a href="adminhome">Home</a> <span class="divider">/</span></li>
   							<li><a href="teams">Teams</a> <span class="divider">/</span></li>
-  							<li class="active">New Team</li>
+  							<li class="active"><c:if test="${ not empty team }">${ team.name }</c:if><c:if test="${ empty team }">New Team</c:if></li>
 						</ul>
 	  				</div>
 	  			</div>
@@ -135,7 +135,7 @@
 							 $.post("<c:url value="/emailPost" />",									 
 									 {teamId:$('#teamId').val(),
 								      emailSubject:$("#emailSubject").val(),
-								 	  emailBody:$("#emailSubject").val()}, 
+								 	  emailBody:$("#emailBody").val()}, 
 									 function (data) {																	 		
 								 		 $('#emailModal').modal('hide');
 							 		}, "json"	

@@ -20,31 +20,18 @@
 	    	    <div class="row-fluid mini-layout">
 	  				<div class="span10 mini-layout-breadcrumbs">
 	  					<ul class="breadcrumb">
-  							<li class="active"><a href="#">Home</a> <span class="divider">/</span></li>  							
+  							<li><a href="adminhome">Home</a> <span class="divider">/</span></li>
+  							<li><a href="reports">Reports</a> <span class="divider">/</span></li>
+  							<li class="active"><c:if test="${ not empty report }">${ report.name }</c:if><c:if test="${ empty report }">New Report</c:if></li>
 						</ul>
 	  				</div>
 	  			</div>
 	  			<div class="row-fluid mini-layout">  				
 	    			<div class="span2 mini-layout-sidebar">
-	      				<div class="accordion" id="accordion2">
-						  <div class="accordion-group">
-						    <div class="accordion-heading">
-						      <a href="teams">
-						        Teams
-						      </a>
-						    </div>
-						   </div>
-						  <div class="accordion-group">
-						    <div class="accordion-heading">
-						      <a href="reports">
-						       Reports
-						      </a>
-						    </div>						    
-						  </div>
-						</div>
+	      				Filters
 	    			</div>
 	    			<div class="span7 mini-layout-body">
-	      				Main body
+	      				Add report
 	    			</div>
 	  			</div>
 			</div>
@@ -55,9 +42,7 @@
 		<script>	
 			(function ($) {
 				$(document).ready(function () {								
-					
-					$(".collapse").collapse();
-					
+										
 				});
 			})(jQuery);		
 		</script>			

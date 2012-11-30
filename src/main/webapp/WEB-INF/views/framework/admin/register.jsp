@@ -73,7 +73,7 @@
 					<div class="control-group">
 						<label class="control-label" for="password">Re-type Password</label>
 						<div class="controls">
-							<input type="repassword" id="repassword" name="repassword" placeholder="Retype Password">
+							<input type="password" id="repassword" name="repassword" placeholder="Retype Password">
 						</div>
 					</div>
 					

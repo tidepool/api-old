@@ -21,9 +21,18 @@ public class VariantManager {
 		"assessmentFeedback"
 	};
 	
-	private String[] variant1 = {			
-			"image0",
-			"assessmentFeedback"
+	private String[] variant1 = {
+			 "timing",
+			 "drag0",
+			 "image1",
+			 "drag1",
+			 "image3",
+			 "drag3",
+			 "image4",
+			 "drag4",
+			 "image5",
+			 "image6",
+			 "assessmentFeedback"
 		};
 	
 	

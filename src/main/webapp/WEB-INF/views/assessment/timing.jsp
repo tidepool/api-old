@@ -260,7 +260,7 @@
 		    			   			{accountId:$('#userId').val(), explicitId:name , type:"timing-click-red-after-yellow", startTime:startTime, endTime:new Date().getTime()}, 
 		    			    			function(items) {
 		    			   				if (test1Counter == test1Limit) {	
-		    			   				 	window.location="<c:url value="/image0"/>";
+		    			   				 	window.location="<c:url value="/${nextWindow}"/>";
 		    			   				} else {
 		    			   					$("#test1").addClass("btn-success");
 		    			   				}

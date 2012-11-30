@@ -78,9 +78,49 @@ public class FrameworkController {
 		this.authManager = authManager;
 	}
 	
+	@RequestMapping(value="/home", method=RequestMethod.GET)
+	public String getHome(HttpServletRequest request,
+			@RequestParam(required=false) String owner,
+			Model model) {
+		
+		Account account =  accountService.getAccount();				
+		if (account == null) {
+			return "framework/admin/register";
+		}
+		
+		else if (account.isFrameworkAdmin()) {
+			return "forward:/adminhome";
+		}
+		
+		else if (account.isFrameworkUser()) {
+			return "forward:/userhome";
+		}
+		
+		return "framework/admin/register";
+		
+	}
 	
 	@RequestMapping(value="/adminhome", method=RequestMethod.GET)
 	public String getAdminHome(HttpServletRequest request, 
+			@RequestParam(required=false) String owner,
+			Model model) {
+		
+		Account account =  getAccount();				
+		if (account == null) {
+			return "framework/admin/register";
+		}
+		
+		if (account != null && account.isAdmin()) {
+			model.addAttribute("admin", account);
+		}
+		
+		model.addAttribute("account", account);
+		
+		return "framework/admin/home";
+	}
+	
+	@RequestMapping(value="/userhome", method=RequestMethod.GET)
+	public String getUserHome(HttpServletRequest request, 
 			@RequestParam(required=false) String owner,
 			Model model) {
 		
@@ -198,6 +238,49 @@ public class FrameworkController {
 		hBaseManager.saveTeam(team);
 		
 		return null;
+	}
+	
+	
+	@RequestMapping(value="/reports", method=RequestMethod.GET)
+	public String getAdminReports(HttpServletRequest request, 
+			@RequestParam(required=false) String owner,
+			Model model) {
+		
+		Account account =  getAccount();				
+		if (account == null) {
+			return "framework/admin/register";
+		}
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("account", account);		
+		model.addAttribute("reports", hBaseManager.getTeamsForAccount(account));
+		
+		return "framework/admin/reports";
+	}
+	
+	@RequestMapping(value="/report{reportId}", method=RequestMethod.GET)
+	public String getAdminReport(HttpServletRequest request,
+			@PathVariable Long reportId,
+			@RequestParam(required=false) String owner,
+			Model model) {
+		
+		Account account =  getAccount();				
+		if (account == null) {
+			return "framework/admin/register";
+		}
+		
+		if (account.isAdmin()) {
+			model.addAttribute("admin", account);
+		}
+		
+		
+		
+		model.addAttribute("account", account);
+		
+		return "framework/admin/report";
 	}
 	
 	

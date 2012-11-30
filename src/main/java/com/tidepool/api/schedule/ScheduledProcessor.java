@@ -13,7 +13,8 @@ public class ScheduledProcessor implements Processor {
     
     @Scheduled(fixedDelay = 60000)
     public void process() {
-        System.out.println("processing next at " + new Date());
+        
+    	System.out.println("processing next at " + new Date());
         
         
         

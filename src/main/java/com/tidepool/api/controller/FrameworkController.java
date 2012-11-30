@@ -22,6 +22,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.scheduling.annotation.Scheduled;
 
 import com.tidepool.api.authentication.AccountService;
 import com.tidepool.api.data.HBaseManager;
@@ -262,6 +263,8 @@ public class FrameworkController {
 		return "redirect:/assess";
 		
 	}
+	
+	
 	
 	
 	private Account getAccount() {

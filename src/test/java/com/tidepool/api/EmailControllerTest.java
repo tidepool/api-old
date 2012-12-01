@@ -44,15 +44,7 @@ public class EmailControllerTest {
 	
 	@Test
 	public void testVelocityEmail() {		
-		Map model = new HashMap();
-        model.put("testString", "pow");	
-		String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "com/tidepool/api/email/test.vm", model);		
-		try {
-			emailController.sendEmail("josephshoop@gmail.com", "admin@tidepool.co", "test", text);
-		} catch (Exception e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}		
+		emailController.sendTestEmail("something great...");
 	}
 	
 }

@@ -14,6 +14,7 @@ public class Team {
 	public static final byte[] timeline_column = Bytes.toBytes("timeline");
 	public static final byte[] invite_subject_column = Bytes.toBytes("invite_subject");
 	public static final byte[] invite_body_column = Bytes.toBytes("invite_body");
+	public static final byte[] invite_reminder_column = Bytes.toBytes("invite_reminder");
 	
 	private final SimpleDateFormat dateFormat =new SimpleDateFormat("mm/dd/yyyy");
 	
@@ -25,7 +26,7 @@ public class Team {
 	
 	public String inviteSubject;
 	public String inviteBody;
-	
+	public String inviteReminder;
 	
 	public String getOwnerId() {
 		return ownerId;
@@ -74,6 +75,12 @@ public class Team {
 	}
 	public void setInviteBody(String inviteBody) {
 		this.inviteBody = inviteBody;
+	}
+	public String getInviteReminder() {
+		return inviteReminder;
+	}
+	public void setInviteReminder(String inviteReminder) {
+		this.inviteReminder = inviteReminder;
 	}
 	
 }

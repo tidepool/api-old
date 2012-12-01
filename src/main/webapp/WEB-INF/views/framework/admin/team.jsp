@@ -37,9 +37,9 @@
 	      					<table class="table table-bordered table-striped">
   								<th>Select</th><th>Name</th><th>Age</th><th>Sex</th><th>Job Title</th>
   								<c:forEach var="member" items="${team.teamMembers}" varStatus="rowCounter">
-  									<tr><td><input type="checkbox"/></td><td>${ member.account.firstName } ${ member.account.lastName }</td><td>${ member.account.age }</td><td>${ member.account.gender }</td><td>${ member.account.jobTitle }</td></tr>
+  									<tr><td><input  value="${member.account.userId }" name="activeUsers" type="checkbox" <c:if test="${ member.active }">checked</c:if> ></td><td>${ member.account.firstName } ${ member.account.lastName }</td><td>${ member.account.age }</td><td>${ member.account.gender }</td><td>${ member.account.jobTitle }</td></tr>
   								</c:forEach>
-  								<tr class="template-member-row" style="display:none"><td><input type="checkbox"/></td><td class="template-name">Kilgore Trout</td><td class="template-age">44</td><td class="template-sex">M</td><td class="template-job-title">Writer</td></tr>
+  								<tr class="template-member-row" style="display:none"><td><input class="template-checkbox" checked type="checkbox"/></td><td class="template-name">Kilgore Trout</td><td class="template-age">44</td><td class="template-sex">M</td><td class="template-job-title">Writer</td></tr>
   								<tr><td colspan="5" style="align:center"><a href="#newMemberModal" role="button" class="btn btn-primary" data-toggle="modal">Add Team Member</a></td></tr>
 							</table>							
 							</div>
@@ -109,8 +109,10 @@
 									 function (account) {									
 								 		var $tr = $('.template-member-row');
 								 		var $clone = $tr.clone();
+								 		$clone.find('.template-checkbox').attr('name',"activeUsers");
+								 		$clone.find('.template-checkbox').attr('value', account.userId);								 		
 								 		$clone.find('.template-name').html(account.firstName + " " + account.lastName);
-								 		$clone.find('.template-age').html(account.age);
+								 		$clone.find('.template-age').html(account.age);								 		
 								 		$clone.find('.template-gender').html(account.gender);
 								 		$clone.find('.template-job-title').html(account.age);
 								 		$clone.show();
@@ -135,7 +137,9 @@
 							 $.post("<c:url value="/emailPost" />",									 
 									 {teamId:$('#teamId').val(),
 								      emailSubject:$("#emailSubject").val(),
-								 	  emailBody:$("#emailBody").val()}, 
+								 	  emailBody:$("#emailBody").val(),
+								 	  emailReminder:$("#emailReminder").val() 
+									 }, 
 									 function (data) {																	 		
 								 		 $('#emailModal').modal('hide');
 							 		}, "json"	
@@ -250,6 +254,18 @@
 							<textarea id="emailBody" name="emailBody" placeholder="Enter a message"><c:if test="${ not empty team}">${ team.inviteBody }</c:if></textarea>
 						</div>
 					</div>
+					
+					<div class="control-group">
+						<label class="control-label" for="emailReminder">Remind with Email</label>
+						<div class="controls">
+							<select id="emailReminder" name="emailReminder" placeholder="Set a reminder">
+								<option value="daily" <c:if test="${ not empty team and team.inviteReminder eq 'daily'}">selected</c:if> >Daily</option>
+								<option value="weekly" <c:if test="${ not empty team and team.inviteReminder eq 'weekly'}">selected</c:if> >Weekly</option>
+								<option value="monthly" <c:if test="${ not empty team and team.inviteReminder eq 'monthly'}">selected</c:if>>Monthly</option>
+							</select>
+						</div>
+					</div>
+					
 					
 				</form>
 		</div>

@@ -1,6 +1,8 @@
 package com.tidepool.api.email;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Properties;
 
 import javax.mail.BodyPart;
@@ -14,10 +16,15 @@ import javax.mail.internet.MimeBodyPart;
 import javax.mail.internet.MimeMessage;
 import javax.mail.internet.MimeMultipart;
 
+import org.apache.velocity.app.VelocityEngine;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Repository;
+import org.springframework.ui.velocity.VelocityEngineUtils;
 
 import com.amazonaws.auth.PropertiesCredentials;
 import com.amazonaws.services.simpleemail.AWSJavaMailTransport;
+import com.tidepool.api.model.Account;
+import com.tidepool.api.model.Invite;
 
 @Repository
 public class EmailController {
@@ -25,6 +32,9 @@ public class EmailController {
 	private String accessKey;
 	private Properties props;
 	private PropertiesCredentials credentials = null;
+	
+	@Autowired
+	public VelocityEngine velocityEngine;
 	
 	public EmailController() {
 		
@@ -142,10 +152,31 @@ public class EmailController {
 	}
 	
 	
-//	 @Value("#{appProperties.accessKey}")
-//	 public void setAccessKey(String accessKey) {
-//		 this.accessKey = accessKey;
-//	 }
-
+	public void sendTestEmail(String name) {
+		Map model = new HashMap();
+        model.put("testString", name);	
+		String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "com/tidepool/api/email/test.vm", model);		
+		try {
+			sendMultipartEmail("josephshoop@gmail.com", "admin@tidepool.co", "test", text);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
+	
+	public void sendInvitationEmail(Account inviteeAccount, Account inviter, Invite invite) {
+		Map model = new HashMap();
+        model.put("inviteeAccount", inviteeAccount);
+        model.put("inviterAccount", inviter);
+        model.put("invite", invite);        
+		String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "com/tidepool/api/email/invite.vm", model);		
+		try {
+			sendMultipartEmail(inviteeAccount.getEmail(), "admin@tidepool.co", "Invitation", text);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
 	
 }

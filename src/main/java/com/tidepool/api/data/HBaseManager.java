@@ -31,7 +31,9 @@ import org.apache.hadoop.hbase.filter.SingleColumnValueFilter;
 import org.apache.hadoop.hbase.filter.SubstringComparator;
 import org.apache.hadoop.hbase.filter.ValueFilter;
 import org.apache.hadoop.hbase.util.Bytes;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.authentication.encoding.ShaPasswordEncoder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import com.tidepool.api.model.Account;
@@ -44,6 +46,7 @@ import com.tidepool.api.model.CodingEventRollup;
 import com.tidepool.api.model.CodingGroup;
 import com.tidepool.api.model.Factor;
 import com.tidepool.api.model.Highlight;
+import com.tidepool.api.model.Invite;
 import com.tidepool.api.model.MainGroup;
 import com.tidepool.api.model.Photo;
 import com.tidepool.api.model.RowMapper;
@@ -64,6 +67,9 @@ public class HBaseManager {
 	@Value("${tidepool.hbase.master}") 
 	private String hbaseMaster;
 	
+	@Autowired
+	private ShaPasswordEncoder encoder;
+	
 	private static HBaseManager instance = new HBaseManager();
 	private Configuration conf = null;
 	private HTablePool pool = null;
@@ -76,6 +82,7 @@ public class HBaseManager {
 	private final String explicitEventTable= "explicit_event";
 	private final String teamTable= "team";
 	private final String teamAccountMapTable= "team_account_map";
+	private final String inviteTable= "invite";
 	
 	private final String explicitImageTable= "explicit_image";
 	//private final String explicitImageTable= "image_content_detail";
@@ -129,7 +136,7 @@ public class HBaseManager {
 		return account;
 	}
 	
-	private Account getAccountFromEmailInternal(String email) {
+	public Account getAccountFromEmailInternal(String email) {
 		Account account = null;
 		ResultScanner scanner  = null;
 		SingleColumnValueFilter filter = new SingleColumnValueFilter(
@@ -1529,6 +1536,10 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 				put.add(family_name_column, Team.invite_subject_column, Bytes.toBytes(team.getInviteSubject()));
 			}
 			
+			if (team.getInviteReminder() != null) {
+				put.add(family_name_column, Team.invite_reminder_column, Bytes.toBytes(team.getInviteReminder()));
+			}
+			
 			put.add(family_name_column, Team.timeline_column, Bytes.toBytes(team.getTimeline()));
 			
 			table.put(put);
@@ -1571,6 +1582,11 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 		if (result.containsColumn(family_name_column, Team.invite_body_column)) {
 			byte[] val = result.getValue(family_name_column, Team.invite_body_column);
 			team.setInviteBody(Bytes.toString(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Team.invite_reminder_column)) {
+			byte[] val = result.getValue(family_name_column, Team.invite_reminder_column);
+			team.setInviteReminder(Bytes.toString(val));					
 		}
 		
 	}
@@ -1670,6 +1686,74 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 		}	
 		
 	}
+	
+	
+	public Invite lookupInvite(String secret) {
+		
+			ResultScanner scanner  = null;
+			SingleColumnValueFilter filter = new SingleColumnValueFilter(
+					family_name_column,
+					Invite.secret_column,
+					CompareOp.EQUAL,
+					Bytes.toBytes(secret));
+
+			try {
+				HTableInterface table = pool.getTable(inviteTable);
+				Scan scan = new Scan();
+				scan.setFilter(filter);
+				scanner = table.getScanner(scan);		
+				for (Result result : scanner) {				
+					Invite invite = new Invite();
+					
+					if (result.containsColumn(family_name_column, Invite.account_id_column)) {
+						byte[] val = result.getValue(family_name_column, Invite.account_id_column);
+						invite.setAccountId(Bytes.toString(val));					
+					}
+					
+					if (result.containsColumn(family_name_column, Invite.owner_id_column)) {
+						byte[] val = result.getValue(family_name_column, Invite.owner_id_column);
+						invite.setOwnerId(Bytes.toString(val));					
+					}
+					
+					if (result.containsColumn(family_name_column, Invite.secret_column)) {
+						byte[] val = result.getValue(family_name_column, Invite.secret_column);
+						invite.setSecret(Bytes.toString(val));					
+					}
+					
+					return invite;
+				}			
+			} catch(Exception e) {
+				e.printStackTrace();
+			} finally {
+				scanner.close();
+			}		
+			return null;	
+		
+	}
+	
+	public Invite createInvite(String ownerId, String accountId) {
+		Invite invite = new Invite();
+		HTableInterface counter = pool.getTable(countersTable);
+		try {			
+			long nextCounter = counter.incrementColumnValue(Bytes.toBytes("11"), family_name_column, Bytes.toBytes(inviteTable), 1);
+			invite.setId(nextCounter);			
+			HTableInterface table = pool.getTable(inviteTable);
+			Put put = new Put(Bytes.toBytes(invite.getId()));					
+			put.add(family_name_column, Invite.owner_id_column, Bytes.toBytes(ownerId));
+			put.add(family_name_column, Invite.account_id_column, Bytes.toBytes(accountId));
+			String encoded = encoder.encodePassword(accountId, ownerId);
+			invite.setSecret(encoded);
+			put.add(family_name_column, Invite.secret_column, Bytes.toBytes(encoded));
+			table.put(put);
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {			
+			return invite;
+		}			
+	}
+	
+	
+	
 	
 
 }

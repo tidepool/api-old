@@ -29,6 +29,7 @@ import com.tidepool.api.data.HBaseManager;
 import com.tidepool.api.email.EmailController;
 import com.tidepool.api.model.Account;
 import com.tidepool.api.model.CodingEvent;
+import com.tidepool.api.model.Invite;
 import com.tidepool.api.model.Team;
 import com.tidepool.api.model.TeamAccount;
 
@@ -218,14 +219,79 @@ public class FrameworkController {
 			hBaseManager.createTeam(team);
 		}
 		
+		String[] activeUsers =  request.getParameterValues("activeUsers");		
+		hBaseManager.loadAccountsForTeam(team);
+		
+		for (TeamAccount teamAccount : team.getTeamMembers()) {
+			teamAccount.setActive(false);
+			if (activeUsers != null) {
+				for (String activeId : activeUsers) {				
+					if (teamAccount.getAccount().getUserId().equals(activeId)) {					
+						teamAccount.setActive(true);					
+					}
+				}
+			}
+			hBaseManager.saveTeamAccount(teamAccount);
+		}
+		
+		for (TeamAccount teamAccount : team.getTeamMembers()) {
+			
+		}
+		
+		
 		return "redirect:teams";
 	}
 	
-	@RequestMapping(value="/emailPost", method=RequestMethod.POST)
+	@RequestMapping(value="/teamMemberPost", method=RequestMethod.POST)
 	public @ResponseBody Account teamMemberPost(HttpServletRequest request,
 			@RequestParam(required=true) Long teamId,
+			@RequestParam(required=true) String firstName,
+			@RequestParam(required=true) String lastName,			
+			@RequestParam(required=true) String email,
+			@RequestParam(required=true) String age,
+			@RequestParam(required=true) String gender,			
+			@RequestParam(required=true) String jobTitle) {
+		
+		Account account =  getAccount();				
+		if (account == null) {
+			return null;
+		}
+		
+		Team team = hBaseManager.getTeamFromId(teamId);
+		
+		Account newAccount = hBaseManager.getAccountFromEmailInternal(email);
+		
+		if (newAccount == null) {
+			newAccount = new Account();
+			newAccount.setFirstName(firstName);
+			newAccount.setLastName(lastName);
+			newAccount.setEmail(email);
+			newAccount.setJobTitle(jobTitle);
+			newAccount.setAge(age);
+			newAccount.setGender(gender);
+
+			try {
+				newAccount = hBaseManager.createAccount(newAccount);
+			} catch (Exception e) {			
+				e.printStackTrace();
+			}
+		}
+		TeamAccount teamAccount = new TeamAccount();
+		teamAccount.setActive(true);
+		teamAccount.setAccount(newAccount);
+		hBaseManager.addAccountToTeam(teamAccount, team);
+		
+	
+		return newAccount;
+	}
+	
+	
+	@RequestMapping(value="/emailPost", method=RequestMethod.POST)
+	public @ResponseBody Account emailPost(HttpServletRequest request,
+			@RequestParam(required=true) Long teamId,
 			@RequestParam(required=true) String emailSubject,
-			@RequestParam(required=true) String emailBody) {
+			@RequestParam(required=true) String emailBody,
+			@RequestParam(required=true) String emailReminder) {
 		
 		Account account =  getAccount();				
 		if (account == null) {
@@ -235,6 +301,7 @@ public class FrameworkController {
 		Team team = hBaseManager.getTeamFromId(teamId);
 		team.setInviteBody(emailBody);
 		team.setInviteSubject(emailSubject);
+		team.setInviteReminder(emailReminder);
 		hBaseManager.saveTeam(team);
 		
 		return null;
@@ -321,25 +388,25 @@ public class FrameworkController {
 			@RequestParam(required=false) String password,
 			@RequestParam(required=false) String company) {
 		
-		Account account = new Account();
-		account.setFirstName(firstName);
-		account.setLastName(lastName);
-		account.setPhoneNumber(phoneNumber);
-		account.setEmail(email);
-		account.setPassword(encoder.encodePassword(password, email));
-		account.setCompany(company);
-		account.setRegistrationLevel("1");
-		account.setIp(request.getRemoteAddr());
-		account.setAccountStatus("0");
-		account.setElementGroupId(Account.FRAMEWORK_ADMIN);
+		Account newAccount = new Account();
+		newAccount.setFirstName(firstName);
+		newAccount.setLastName(lastName);
+		newAccount.setPhoneNumber(phoneNumber);
+		newAccount.setEmail(email);
+		newAccount.setPassword(encoder.encodePassword(password, email));
+		newAccount.setCompany(company);
+		newAccount.setRegistrationLevel("1");
+		newAccount.setIp(request.getRemoteAddr());
+		newAccount.setAccountStatus("0");
+		newAccount.setElementGroupId(Account.FRAMEWORK_ADMIN);
 		
 		try {
-			hBaseManager.createAccount(account);
+			hBaseManager.createAccount(newAccount);
 		} catch (Exception exception) {			
 			exception.printStackTrace();
 		}
 		
-		Authentication authRequest = new UsernamePasswordAuthenticationToken(account.getEmail(), password);
+		Authentication authRequest = new UsernamePasswordAuthenticationToken(newAccount.getEmail(), password);
 		Authentication result = authManager.authenticate(authRequest);
 		SecurityContextHolder.getContext().setAuthentication(result);
 				
@@ -347,8 +414,22 @@ public class FrameworkController {
 		
 	}
 	
-	
-	
+	@RequestMapping(value="/invite/{inviteId}", method=RequestMethod.GET)
+	public String getInvite(HttpServletRequest request, 
+			@RequestParam(required=false) String owner,
+			@PathVariable String inviteId,
+			Model model) {
+		
+		Invite foundInvite = hBaseManager.lookupInvite(inviteId);
+		
+		if (foundInvite == null) {
+			return "forward:/register";
+		}
+		
+		//add to session?
+		
+		return "forward:assess";
+	}
 	
 	private Account getAccount() {
 		Account account =  accountService.getAccount();		

@@ -1,0 +1,19 @@
+<html>
+	<body>
+		<div>
+			Hi ${inviteeAccount.firstName},
+		</div>
+		<br/>		
+		<div>
+			You have been invited to take the assessment.
+		</div>
+		<div>
+		 	Click <a href="{inviteSiteURL}/{invite.secret}">here</a> to begin. 
+		</div>
+		</br>
+		<div>
+		  	Thanks, The Team
+		  	
+		</div>
+	</body>
+</html>

@@ -30,6 +30,9 @@ public class Account implements Serializable, UserDetails {
 	public static final byte[] phone_number_column = Bytes.toBytes("phone_number");
 	public static final byte[] age_column = Bytes.toBytes("age");
 	public static final byte[] job_title_column = Bytes.toBytes("job_title");
+		
+	public static final byte[] password_reset_challenge_column = Bytes.toBytes("password_reset_challenge");
+	public static final byte[] password_reset_challenge_timestamp_column = Bytes.toBytes("password_reset_challenge_timestamp");
 	
 	public static final byte[] extraverted_column = Bytes.toBytes("extraverted");
 	public static final byte[] critical_column = Bytes.toBytes("critical");
@@ -86,6 +89,10 @@ public class Account implements Serializable, UserDetails {
 	private String phoneNumber;
 	private String jobTitle;
 	private String age;
+	
+	private String passwordResetChallenge;
+	private long passwordResetChallengeTimestamp;
+	
 	
 	public int extraverted;
 	public int critical;
@@ -524,6 +531,23 @@ public class Account implements Serializable, UserDetails {
 
 	public void setAge(String age) {
 		this.age = age;
+	}
+
+	public String getPasswordResetChallenge() {
+		return passwordResetChallenge;
+	}
+
+	public void setPasswordResetChallenge(String passwordResetChallenge) {
+		this.passwordResetChallenge = passwordResetChallenge;
+	}
+
+	public long getPasswordResetChallengeTimestamp() {
+		return passwordResetChallengeTimestamp;
+	}
+
+	public void setPasswordResetChallengeTimestamp(
+			long passwordResetChallengeTimestamp) {
+		this.passwordResetChallengeTimestamp = passwordResetChallengeTimestamp;
 	}
 	
 }

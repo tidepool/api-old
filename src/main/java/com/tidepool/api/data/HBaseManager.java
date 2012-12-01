@@ -136,6 +136,8 @@ public class HBaseManager {
 		return account;
 	}
 	
+
+	
 	public Account getAccountFromEmailInternal(String email) {
 		Account account = null;
 		ResultScanner scanner  = null;
@@ -174,6 +176,37 @@ public class HBaseManager {
 		return account;
 	}
 
+	
+	public Account getAccountFromPasswordChallenge(String challenge) {
+		Account account = null;
+		ResultScanner scanner  = null;
+		SingleColumnValueFilter filter = new SingleColumnValueFilter(
+				family_name_column,
+				Account.password_reset_challenge_column,
+				CompareOp.EQUAL,
+				Bytes.toBytes(challenge)
+		);
+		filter.setFilterIfMissing(true);
+		try {
+			HTableInterface table = pool.getTable(accountTable);
+			Scan scan = new Scan();
+			
+			scan.setFilter(filter);
+			scanner = table.getScanner(scan);					
+			for (Result result : scanner) {
+				account = new Account();				
+				mapAccount(account, result);				
+				return account;
+			}
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {			
+			scanner.close();
+		}
+		return null;
+	}
+	
+	
 	private void mapAccount(Account account, Result result) {
 		account.setUserId(Bytes.toString(result.getRow()));
 		
@@ -339,8 +372,18 @@ public class HBaseManager {
 		if (result.containsColumn(family_name_column, Account.job_title_column)) {
 			byte[] val = result.getValue(family_name_column, Account.job_title_column);
 			account.setJobTitle((Bytes.toString(val)));					
+		}		
+		
+		if (result.containsColumn(family_name_column, Account.password_reset_challenge_column)) {
+			byte[] val = result.getValue(family_name_column, Account.password_reset_challenge_column);
+			account.setPasswordResetChallenge((Bytes.toString(val)));					
 		}
-				
+		
+		if (result.containsColumn(family_name_column, Account.password_reset_challenge_timestamp_column)) {
+			byte[] val = result.getValue(family_name_column, Account.password_reset_challenge_timestamp_column);
+			account.setPasswordResetChallengeTimestamp((Bytes.toLong(val)));					
+		}
+		
 	}
 	
 	public void saveAccount(Account account) {
@@ -435,6 +478,12 @@ public class HBaseManager {
 				put.add(family_name_column, Account.job_title_column, Bytes.toBytes(account.getJobTitle()));
 			}
 			
+			if (account.getPasswordResetChallenge() != null) {
+				put.add(family_name_column, Account.password_reset_challenge_column, Bytes.toBytes(account.getPasswordResetChallenge()));
+			}
+						
+			put.add(family_name_column, Account.password_reset_challenge_timestamp_column, Bytes.toBytes(account.getPasswordResetChallengeTimestamp()));
+						
 			table.put(put);			
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -1752,8 +1801,4 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 		}			
 	}
 	
-	
-	
-	
-
 }

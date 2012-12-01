@@ -39,6 +39,8 @@ public class FrameworkController {
 	@Value("${tidepool.cdn.url}") 
 	private String cdnUrl;
 	
+	@Value("${tidepool.invite.url}") 
+	private String inviteUrl;
 	
 	private HBaseManager hBaseManager;
 	private AccountService accountService;
@@ -410,7 +412,7 @@ public class FrameworkController {
 		Authentication result = authManager.authenticate(authRequest);
 		SecurityContextHolder.getContext().setAuthentication(result);
 				
-		return "redirect:/assess";
+		return "redirect:/home";
 		
 	}
 	
@@ -426,9 +428,71 @@ public class FrameworkController {
 			return "forward:/register";
 		}
 		
+		
+		
 		//add to session?
 		
 		return "forward:assess";
+	}
+	
+	
+	@RequestMapping(value="/passwordEmailPost", method=RequestMethod.POST)
+	public String registerPost(HttpServletRequest request,
+			@RequestParam(required=true) String email) {
+		
+		Account account = hBaseManager.getAccountFromEmailInternal(email);
+		if (account == null) {
+			return null;
+		}
+		
+		long now = System.currentTimeMillis();
+		String encoded = encoder.encodePassword(account.getUserId(), now);
+		account.setPasswordResetChallenge(encoded);
+		account.setPasswordResetChallengeTimestamp(now);
+		hBaseManager.saveAccount(account);
+		
+		emailController.sendForgotPasswordEmail(account);
+		
+		return null;
+	}
+	
+	@RequestMapping(value="/resetpassword/{challenge}", method=RequestMethod.GET)
+	public String resetPassword(HttpServletRequest request, 
+			@RequestParam(required=false) String owner,
+			@PathVariable String challenge,
+			Model model) {
+		
+		model.addAttribute("challenge", challenge);	
+		
+		return "admin/reset-password";
+	}
+	
+	
+	@RequestMapping(value="/resetpasswordPost", method=RequestMethod.POST)
+	public String resetPasswordPost(HttpServletRequest request, 
+			@PathVariable String challenge,
+			@RequestParam(required=false) String password,
+			Model model) {
+		
+		Account account = hBaseManager.getAccountFromPasswordChallenge(challenge);
+		
+		account.setPassword(encoder.encodePassword(password, account.getEmail()));
+		account.setPasswordResetChallenge(null);
+		account.setPasswordResetChallengeTimestamp(0);
+		hBaseManager.saveAccount(account);
+		
+		Authentication authRequest = new UsernamePasswordAuthenticationToken(account.getEmail(), password);
+		Authentication result = authManager.authenticate(authRequest);
+		SecurityContextHolder.getContext().setAuthentication(result);
+		
+		if (account == null) {
+			return "admin/register";
+		}
+		
+		
+		
+		
+		return "admin/home";
 	}
 	
 	private Account getAccount() {

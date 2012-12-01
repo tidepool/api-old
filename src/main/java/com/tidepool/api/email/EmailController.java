@@ -18,6 +18,7 @@ import javax.mail.internet.MimeMultipart;
 
 import org.apache.velocity.app.VelocityEngine;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Repository;
 import org.springframework.ui.velocity.VelocityEngineUtils;
 
@@ -35,6 +36,9 @@ public class EmailController {
 	
 	@Autowired
 	public VelocityEngine velocityEngine;
+	
+	@Value("${tidepool.invite.url}") 
+	private String inviteUrl;
 	
 	public EmailController() {
 		
@@ -158,6 +162,20 @@ public class EmailController {
 		String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "com/tidepool/api/email/test.vm", model);		
 		try {
 			sendMultipartEmail("josephshoop@gmail.com", "admin@tidepool.co", "test", text);
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}	
+	}
+	
+	public void sendForgotPasswordEmail(Account account) {
+		Map model = new HashMap();
+		model.put("account", account);
+		model.put("inviteURL", inviteUrl);
+        
+		String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "com/tidepool/api/email/lost_password.vm", model);		
+		try {
+			sendMultipartEmail(account.getEmail(), "admin@tidepool.co", "Password reset", text);
 		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

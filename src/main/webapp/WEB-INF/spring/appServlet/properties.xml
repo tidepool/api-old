@@ -16,13 +16,14 @@
 		<prop key="tidepool.training.cdn.url">https://s3.amazonaws.com</prop>								
 		<prop key="tidepool.attribute.page.limit">6</prop>
 		<prop key="tidepool.registration.limit">3</prop>
-		
+		<prop key="tidepool.invite.url">http://localhost:8080/invite</prop>
 		
 		<!-- LOCAL --> 
 		<prop key="tidepool.hbase.quorum">localhost</prop>						
 		<prop key="tidepool.hbase.clientPort">2181</prop>
-		<prop key="tidepool.hbase.master">localhost:60000</prop>						
-	
+		<prop key="tidepool.hbase.master">localhost:60000</prop>
+								
+		
 		<!-- LIVE: BUT NOT WORKING YET --> 
 		<!-- <prop key="tidepool.hbase.quorum">ec2-23-22-153-180.compute-1.amazonaws.com</prop>						
 		<prop key="tidepool.hbase.clientPort">2181</prop>

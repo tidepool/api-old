@@ -33,7 +33,7 @@
 	  			<input type="password" name="j_password" id="inputPassword" placeholder="Password">
 	  			<button type="submit" class="btn">Login</button>
 	  			<div class="forgot right">
-	  				<a>forgot password</a> / <a>forgot login</a>
+	  				<a href="#passwordEmailModal" role="button" data-toggle="modal">forgot password</a>
 				</div> 
 			</form>
 		</c:if>
@@ -44,3 +44,27 @@
         </div>        
       </div>
 </div>
+<c:if test="${ empty account }">
+	<div id="passwordEmailModal" class="modal hide fade" tabindex="-1" role="dialog"
+		aria-labelledby="passwordEmailModalLabel" aria-hidden="true">
+		<div class="modal-header">
+			<button type="button" class="close" data-dismiss="modal"
+				aria-hidden="true">×</button>
+			<h3 id="emailModalLabel">Reset Password</h3>
+		</div>
+		<div class="modal-body">
+			<form class="form-horizontal">																				
+					<div class="control-group">
+						<label class="control-label" for="emailReset">Email</label>
+						<div class="controls">
+							<input type="text" id="emailReset" name="emailReset" placeholder="your email address">
+						</div>
+					</div>
+			</form>
+		</div>
+		<div class="modal-footer">
+			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
+			<button class="btn btn-primary" id="passwordEmailButton">Get Password</button>
+		</div>
+	</div>
+</c:if>

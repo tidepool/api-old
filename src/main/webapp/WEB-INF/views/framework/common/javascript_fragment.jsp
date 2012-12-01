@@ -16,3 +16,4 @@
 <script src="<c:url value="/resources/bootstrap/js/bootstrap-button.js"/>"></script>
 <script src="<c:url value="/resources/bootstrap/js/bootstrap-collapse.js"/>"></script>
 <script src="<c:url value="/resources/bootstrap/js/bootstrap-carousel.js"/>"></script>
+<script src="<c:url value="/resources/js/nav_fragment.js"/>"></script>

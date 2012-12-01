@@ -430,6 +430,7 @@ public class FrameworkController {
 		
 		
 		
+		
 		//add to session?
 		
 		return "forward:assess";
@@ -437,12 +438,12 @@ public class FrameworkController {
 	
 	
 	@RequestMapping(value="/passwordEmailPost", method=RequestMethod.POST)
-	public String registerPost(HttpServletRequest request,
+	public @ResponseBody String registerPost(HttpServletRequest request,
 			@RequestParam(required=true) String email) {
 		
 		Account account = hBaseManager.getAccountFromEmailInternal(email);
 		if (account == null) {
-			return null;
+			return "fail";
 		}
 		
 		long now = System.currentTimeMillis();
@@ -456,6 +457,7 @@ public class FrameworkController {
 		return null;
 	}
 	
+	
 	@RequestMapping(value="/resetpassword/{challenge}", method=RequestMethod.GET)
 	public String resetPassword(HttpServletRequest request, 
 			@RequestParam(required=false) String owner,
@@ -464,7 +466,7 @@ public class FrameworkController {
 		
 		model.addAttribute("challenge", challenge);	
 		
-		return "admin/reset-password";
+		return "framework/admin/reset-password";
 	}
 	
 	
@@ -476,6 +478,10 @@ public class FrameworkController {
 		
 		Account account = hBaseManager.getAccountFromPasswordChallenge(challenge);
 		
+		if (account == null) {
+			return "framework/admin/register";
+		}
+		
 		account.setPassword(encoder.encodePassword(password, account.getEmail()));
 		account.setPasswordResetChallenge(null);
 		account.setPasswordResetChallengeTimestamp(0);
@@ -485,14 +491,8 @@ public class FrameworkController {
 		Authentication result = authManager.authenticate(authRequest);
 		SecurityContextHolder.getContext().setAuthentication(result);
 		
-		if (account == null) {
-			return "admin/register";
-		}
 		
-		
-		
-		
-		return "admin/home";
+		return "framework/admin/home";
 	}
 	
 	private Account getAccount() {

@@ -53,7 +53,10 @@
 			<h3 id="emailModalLabel">Reset Password</h3>
 		</div>
 		<div class="modal-body">
-			<form class="form-horizontal">																				
+		
+			<div id="passwordResetInstructions" style="display:none">An email has been sent to your address with password reset instructions.</div>
+			
+			<form class="form-horizontal" id="passwordResetForm" >																				
 					<div class="control-group">
 						<label class="control-label" for="emailReset">Email</label>
 						<div class="controls">
@@ -64,7 +67,8 @@
 		</div>
 		<div class="modal-footer">
 			<button class="btn" data-dismiss="modal" aria-hidden="true">Cancel</button>
-			<button class="btn btn-primary" id="passwordEmailButton">Get Password</button>
+			<button class="btn btn-primary" id="passwordEmailButton">Reset Password</button>
+			<button class="btn btn-primary" style="display:none" id="passwordResetInstructionsButton">Ok</button>
 		</div>
 	</div>
 </c:if>

@@ -16,7 +16,7 @@
 		<prop key="tidepool.training.cdn.url">https://s3.amazonaws.com</prop>								
 		<prop key="tidepool.attribute.page.limit">6</prop>
 		<prop key="tidepool.registration.limit">3</prop>
-		<prop key="tidepool.invite.url">http://localhost:8080/invite</prop>
+		<prop key="tidepool.invite.url">http://localhost:8080/tidepoolAPI/</prop>
 		
 		<!-- LOCAL --> 
 		<prop key="tidepool.hbase.quorum">localhost</prop>						

@@ -187,8 +187,9 @@ public class EmailController {
 		Map model = new HashMap();
         model.put("inviteeAccount", inviteeAccount);
         model.put("inviterAccount", inviter);
-        model.put("invite", invite);        
-		String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "com/tidepool/api/email/invite.vm", model);		
+        model.put("invite", invite);
+        model.put("inviteURL", inviteUrl);
+		String text = VelocityEngineUtils.mergeTemplateIntoString(velocityEngine, "com/tidepool/api/email/invitation.vm", model);		
 		try {
 			sendMultipartEmail(inviteeAccount.getEmail(), "admin@tidepool.co", "Invitation", text);
 		} catch (Exception e) {

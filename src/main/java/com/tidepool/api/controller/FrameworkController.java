@@ -237,7 +237,10 @@ public class FrameworkController {
 		}
 		
 		for (TeamAccount teamAccount : team.getTeamMembers()) {
-			
+			if (teamAccount.isActive()) {
+				Invite invite = hBaseManager.createInvite(account.getUserId(), teamAccount.getAccount().getUserId());
+				emailController.sendInvitationEmail(teamAccount.getAccount(), account, invite);
+			}
 		}
 		
 		
@@ -425,15 +428,13 @@ public class FrameworkController {
 		Invite foundInvite = hBaseManager.lookupInvite(inviteId);
 		
 		if (foundInvite == null) {
-			return "forward:/register";
+			return "redirect:/register";
 		}
-		
-		
 		
 		
 		//add to session?
 		
-		return "forward:assess";
+		return "redirect:/assess";
 	}
 	
 	

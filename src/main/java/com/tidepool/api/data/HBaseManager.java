@@ -458,6 +458,10 @@ public class HBaseManager {
 				put.add(family_name_column, Account.ip_column, Bytes.toBytes(account.getIp()));
 			}
 			
+			if (account.getCookie() != null) {
+				put.add(family_name_column, Account.cookie_column, Bytes.toBytes(account.getCookie()));
+			}
+						
 			if (account.getAssessCode() != null) { 
 				put.add(family_name_column, Account.assess_code_column, Bytes.toBytes(account.getAssessCode()));
 			}

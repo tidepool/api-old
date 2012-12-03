@@ -5,7 +5,9 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.Random;
 
+import javax.servlet.http.Cookie;
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 
 import org.apache.commons.lang.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +32,8 @@ import com.tidepool.api.model.CodingEvent;
 @Controller
 public class APIController {
 	
+	private static final String ASSESS_COOKIE = "assess";
+
 	@Value("${tidepool.training.cdn.url}") 
 	private String cdnUrl;
 	
@@ -150,7 +154,8 @@ public class APIController {
 	
 	
 	@RequestMapping(value="/assessPost", method=RequestMethod.GET)
-	public String postAssessmentRegister(HttpServletRequest request, 
+	public String postAssessmentRegister(HttpServletRequest request,
+			HttpServletResponse response, 
 			@RequestParam(required=false) String assessCode,
 			@RequestParam(required=false) String zipCode,
 			@RequestParam(required=false) String birthDate,
@@ -185,13 +190,36 @@ public class APIController {
 				account.setIp(request.getRemoteAddr());
 				account.setBirthYear(birthDate);
 				account.setGender(gender);
-				account = hBaseManager.createAssessAccount(account);
+				
+				
+				Cookie[] cookies = request.getCookies();
+		        boolean foundCookie = false;
+
+		        for(int i = 0; i < cookies.length; i++) { 
+		            Cookie cookie1 = cookies[i];
+		            if (cookie1.getName().equals(ASSESS_COOKIE)) {
+		                System.out.println("assess code:" + cookie1.getValue());
+		                foundCookie = true;
+		                account.setCookie(cookie1.getValue());
+		            }
+		        }  
+
+		        account = hBaseManager.createAssessAccount(account);
 				request.getSession().setAttribute("account", account);
+		        
+		        if (!foundCookie) {
+		            Cookie cookie1 = new Cookie(ASSESS_COOKIE, account.getUserId());
+		            cookie1.setMaxAge(24*60*60*365);
+		            response.addCookie(cookie1); 
+		        }
+
 				
 				CodingEvent event = new CodingEvent();
 				event.user_id = account.getUserId();
 				event.type = "start";	
 				hBaseManager.logCodingEvent(event);	
+				
+				
 				
 			} catch (Exception e) {
 				System.out.println("Error creating account: ");

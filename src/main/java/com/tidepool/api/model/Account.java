@@ -52,6 +52,7 @@ public class Account implements Serializable, UserDetails {
 	public static final byte[] interesting_dating_partners_column = Bytes.toBytes("interesting_dating_partners");
 	
 	public static final byte[] ip_column = Bytes.toBytes("ip");
+	public static final byte[] cookie_column = Bytes.toBytes("cookie");
 	
 	public static final String ROLE_ADMIN = "ROLE_ADMIN";
 	public static final String ROLE_USER = "ROLE_USER";
@@ -123,7 +124,7 @@ public class Account implements Serializable, UserDetails {
 	public String conventionalLabel = "Conventional, uncreative.";
 	
 	public String ip;
-	
+	public String cookie;
 	
 	public Collection<? extends GrantedAuthority> getAuthorities() {
 		return authorities;
@@ -548,6 +549,14 @@ public class Account implements Serializable, UserDetails {
 	public void setPasswordResetChallengeTimestamp(
 			long passwordResetChallengeTimestamp) {
 		this.passwordResetChallengeTimestamp = passwordResetChallengeTimestamp;
+	}
+
+	public String getCookie() {
+		return cookie;
+	}
+
+	public void setCookie(String cookie) {
+		this.cookie = cookie;
 	}
 	
 }

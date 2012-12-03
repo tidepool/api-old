@@ -473,7 +473,7 @@ public class FrameworkController {
 	
 	@RequestMapping(value="/resetpasswordPost", method=RequestMethod.POST)
 	public String resetPasswordPost(HttpServletRequest request, 
-			@PathVariable String challenge,
+			@RequestParam(required=false) String challenge,
 			@RequestParam(required=false) String password,
 			Model model) {
 		
@@ -493,7 +493,7 @@ public class FrameworkController {
 		SecurityContextHolder.getContext().setAuthentication(result);
 		
 		
-		return "framework/admin/home";
+		return "redirect:/home";
 	}
 	
 	private Account getAccount() {

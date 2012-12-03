@@ -47,7 +47,7 @@
 					
 					<div class="control-group">
 						<div class="controls">				
-							<button type="submit" id="signUpButton" class="btn">Sign Up</button>
+							<button type="submit" id="signUpButton" class="btn">Reset</button>
 						</div>
 					</div>
 				</form>

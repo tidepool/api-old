@@ -13,28 +13,34 @@ public class TeamAccount {
 	public long teamId;
 	public boolean active;
 	
-	
 	public long getTeamId() {
 		return teamId;
 	}
+	
 	public void setTeamId(long teamId) {
 		this.teamId = teamId;
 	}
+	
 	public boolean isActive() {
-		return active;
+		return active;	
 	}
+	
 	public void setActive(boolean active) {
 		this.active = active;
 	}
+	
 	public Account getAccount() {
 		return account;
 	}
+	
 	public void setAccount(Account account) {
 		this.account = account;
 	}
+	
 	public long getId() {
-		return id;
+		return id;	
 	}
+	
 	public void setId(long id) {
 		this.id = id;
 	}

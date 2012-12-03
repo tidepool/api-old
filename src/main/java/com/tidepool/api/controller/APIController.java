@@ -113,27 +113,10 @@ public class APIController {
 	 * 
 	 * 
 	 */
-
-	@RequestMapping(value="/assess", method=RequestMethod.GET)
-	public String getAssessmentRegister(HttpServletRequest request, @RequestParam(required=false) String owner,
-			Model model) {
-		
-		if (getAccount() != null && getAccount().isAdmin()) {
-			model.addAttribute("admin", getAccount());
-		}
-		model.addAttribute("assessCode", 0);
-		model.addAttribute("account", new Account());
-		
-		VariantManager variantManager = new VariantManager("0");
-		request.getSession().setAttribute("variantManager", variantManager);
-		
-		
-		return "assessment/assessment-register";
-	}
-	
-	
 	@RequestMapping(value="/assess{code}", method=RequestMethod.GET)
-	public String getAssessmentRegisterN(HttpServletRequest request, @PathVariable String code, @RequestParam(required=false) String owner,
+	public String getAssessmentRegisterN(HttpServletRequest request, 
+			@PathVariable String code, 
+			@RequestParam(required=false) String owner,
 			Model model) {
 		
 		if (getAccount() != null && getAccount().isAdmin()) {
@@ -148,6 +131,14 @@ public class APIController {
 		}
 		VariantManager variantManager = new VariantManager(code);
 		request.getSession().setAttribute("variantManager", variantManager);
+		
+		if (request.getSession().getAttribute("invite") != null) {
+			
+			//Forward to start page of assessment if part of internal...
+			
+			
+		}
+		
 		
 		return "assessment/assessment-register";
 	}

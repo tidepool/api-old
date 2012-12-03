@@ -35,6 +35,11 @@ public class VariantManager {
 			 "assessmentFeedback"
 		};
 	
+	private String[] variant10 = {			 
+			 "image1",
+			 "endUserRegister"
+		};
+	
 	
 	private HashMap<String, String[]> map = new HashMap<String, String[]>();
 	private String testNumber = "0";
@@ -45,7 +50,7 @@ public class VariantManager {
 		
 		map.put("0", variant0);
 		map.put("1", variant1);
-		
+		map.put("10", variant10);
 	}
 	
 	public String getNext() {

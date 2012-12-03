@@ -6,11 +6,13 @@ public class Invite {
 
 	public static final byte[] owner_id_column = Bytes.toBytes("owner_id");
 	public static final byte[] account_id_column = Bytes.toBytes("account_id");
+	public static final byte[] team_id_column = Bytes.toBytes("team_id");
 	public static final byte[] secret_column = Bytes.toBytes("secret");
 	
 	public long id;
 	public String ownerId;
 	public String accountId;
+	public long teamId;
 	public String secret;
 	
 	public String getOwnerId() {
@@ -37,5 +39,12 @@ public class Invite {
 	public void setId(long id) {
 		this.id = id;
 	}
+	public long getTeamId() {
+		return teamId;
+	}
+	public void setTeamId(long teamId) {
+		this.teamId = teamId;
+	}
+	
 	
 }

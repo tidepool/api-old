@@ -60,7 +60,7 @@
 	      				    <div class="span3 bigthree">When?</div>
 	      				    <div class="span9">
 	      						<input type="text" name="timeline" id="datepicker" <c:if test="${ not empty team }">value="${ team.formattedTimeline }"</c:if> placeholder="Pick a date"/>
-	      						<a href="#emailModal" role="button" class="btn btn-primary" data-toggle="modal">Email Notifications</a>
+	      						<a href="#emailModal" role="button" class="btn btn-primary emailButton" data-toggle="modal">Email Notification</a>
 	      					</div>
 	      					
 	      				</div>
@@ -68,7 +68,8 @@
 	      				<div class="row-fluid">
 	      					<div class="span3 bigthree">&nbsp;</div>
 	      				    <div class="span9">
-	      						<button class="btn btn-primary"><c:if test="${ not empty team }">Send Invite</c:if><c:if test="${ empty team }">Create Team</c:if></button>
+	      						<button class="btn" href='<c:url value="/teams" />'>Cancel</button>
+	      						<button class="btn btn-success"><c:if test="${ not empty team }">Send Invite</c:if><c:if test="${ empty team }">Create Team</c:if></button>	      						
 	      					</div>
 	      				</div>
 	      			</form>	
@@ -257,7 +258,7 @@
 					<div class="control-group">
 						<label class="control-label" for="emailTo">To</label>
 						<div class="controls">
-							<input type="text" id="emailTo" name="emailTo">
+							<input type="text" id="emailTo" name="emailTo" placeholder="All selected users">
 						</div>
 					</div>
 												

@@ -22,7 +22,7 @@ public class InviteTest {
 	
 	@Test
 	public void testInvite() {
-		Invite invite = hBaseManager.createInvite("Pig", "Bodine");
+		Invite invite = hBaseManager.createInvite("Pig", "Bodine", 101L);
 		
 		assertNotNull(invite);
 		

@@ -2,8 +2,8 @@ package com.tidepool.api.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
-import java.util.Date;
 
+import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -22,13 +22,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.scheduling.annotation.Scheduled;
 
 import com.tidepool.api.authentication.AccountService;
 import com.tidepool.api.data.HBaseManager;
 import com.tidepool.api.email.EmailController;
 import com.tidepool.api.model.Account;
-import com.tidepool.api.model.CodingEvent;
 import com.tidepool.api.model.Invite;
 import com.tidepool.api.model.Team;
 import com.tidepool.api.model.TeamAccount;
@@ -138,7 +136,7 @@ public class FrameworkController {
 		
 		model.addAttribute("account", account);
 		
-		return "framework/admin/home";
+		return "framework/user/home";
 	}
 	
 	@RequestMapping(value="/teams", method=RequestMethod.GET)
@@ -198,8 +196,7 @@ public class FrameworkController {
 		if (account == null) {
 			return null;
 		}
-		
-		
+				
 		Team team = null;
 		if (teamId != null) {
 			team = hBaseManager.getTeamFromId(teamId);
@@ -276,7 +273,7 @@ public class FrameworkController {
 		
 		for (TeamAccount teamAccount : team.getTeamMembers()) {
 			if (teamAccount.isActive()) {
-				Invite invite = hBaseManager.createInvite(account.getUserId(), teamAccount.getAccount().getUserId());
+				Invite invite = hBaseManager.createInvite(account.getUserId(), teamAccount.getAccount().getUserId(), team.getId());				
 				emailController.sendInvitationEmail(teamAccount.getAccount(), account, invite);
 			}
 		}
@@ -420,6 +417,65 @@ public class FrameworkController {
 		return "framework/admin/register";
 	}
 	
+	@RequestMapping(value="/endUserRegister", method=RequestMethod.GET)
+	public String getEndUserRegister(HttpServletRequest request, 
+			@RequestParam(required=false) String owner,
+			Model model) {
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		return "framework/user/register";
+	}
+	
+	
+	@RequestMapping(value="/endUserRegisterPost", method=RequestMethod.POST)
+	public String endUserRegisterPost(HttpServletRequest request,
+			@RequestParam(required=true) String firstName,
+			@RequestParam(required=false) String lastName,			
+			@RequestParam(required=false) String email,
+			@RequestParam(required=false) String password
+			) {
+		
+		Invite invite = (Invite) request.getSession().getAttribute("invite");
+		Account newAccount = null;
+		if (invite != null) {
+			newAccount = hBaseManager.getAccountFromId(invite.getAccountId());
+						
+		} else {		
+			newAccount = new Account();
+		}
+		
+		newAccount.setFirstName(firstName);
+		newAccount.setLastName(lastName);		
+		newAccount.setEmail(email);
+		newAccount.setPassword(encoder.encodePassword(password, email));		
+		newAccount.setRegistrationLevel("1");
+		newAccount.setIp(request.getRemoteAddr());
+		newAccount.setAccountStatus("0");
+		newAccount.setElementGroupId(Account.FRAMEWORK_USER);
+		
+		try {
+			
+			if (invite != null) {
+				hBaseManager.saveAccount(newAccount);
+			} else {
+				hBaseManager.createAccount(newAccount);
+			}
+		
+		} catch (Exception exception) {			
+			exception.printStackTrace();
+		}
+		
+		Authentication authRequest = new UsernamePasswordAuthenticationToken(newAccount.getEmail(), password);
+		Authentication result = authManager.authenticate(authRequest);
+		SecurityContextHolder.getContext().setAuthentication(result);
+				
+		return "redirect:/home";
+		
+	}
+	
 	
 	@RequestMapping(value="/userRegister", method=RequestMethod.POST)
 	public String registerPost(HttpServletRequest request,
@@ -468,10 +524,9 @@ public class FrameworkController {
 			return "redirect:/register";
 		}
 		
+		request.getSession().setAttribute("invite", foundInvite);		
 		
-		//add to session?
-		
-		return "redirect:/assess";
+		return "redirect:/assess10";
 	}
 	
 	

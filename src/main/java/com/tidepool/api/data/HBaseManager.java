@@ -118,7 +118,7 @@ public class HBaseManager {
 	}
 
 
-	private Account getAccountFromId(String id) {
+	public Account getAccountFromId(String id) {
 		Account account = null;
 				
 		try {
@@ -1593,6 +1593,8 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 				put.add(family_name_column, Team.invite_reminder_column, Bytes.toBytes(team.getInviteReminder()));
 			}
 			
+			
+			put.add(family_name_column, Team.invite_last_column, Bytes.toBytes(team.getInviteLast()));						
 			put.add(family_name_column, Team.timeline_column, Bytes.toBytes(team.getTimeline()));
 			
 			table.put(put);
@@ -1642,6 +1644,11 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 			team.setInviteReminder(Bytes.toString(val));					
 		}
 		
+		if (result.containsColumn(family_name_column, Team.invite_last_column)) {
+			byte[] val = result.getValue(family_name_column, Team.invite_last_column);
+			team.setInviteLast(Bytes.toLong(val));					
+		}
+		
 	}
 	
 	public List<Team> getTeamsForAccount(Account account) {
@@ -1670,6 +1677,28 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 		}		
 		return teams;	
 	}
+	
+	
+	public List<Team> getTeams() {
+		List<Team> teams = new ArrayList<Team>();
+		ResultScanner scanner  = null;		
+		try {
+			HTableInterface table = pool.getTable(teamTable);
+			Scan scan = new Scan();			
+			scanner = table.getScanner(scan);		
+			for (Result result : scanner) {				
+				Team team = new Team();
+				mapTeam(team, result);
+				teams.add(team);
+			}			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			scanner.close();
+		}		
+		return teams;	
+	}
+	
 	
 	public void loadAccountsForTeam(Team team) {
 		
@@ -1773,6 +1802,11 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 						invite.setSecret(Bytes.toString(val));					
 					}
 					
+					if (result.containsColumn(family_name_column, Invite.team_id_column)) {
+						byte[] val = result.getValue(family_name_column, Invite.team_id_column);
+						invite.setTeamId(Bytes.toLong(val));					
+					}
+					
 					return invite;
 				}			
 			} catch(Exception e) {
@@ -1784,7 +1818,7 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 		
 	}
 	
-	public Invite createInvite(String ownerId, String accountId) {
+	public Invite createInvite(String ownerId, String accountId, long teamId) {
 		Invite invite = new Invite();
 		HTableInterface counter = pool.getTable(countersTable);
 		try {			
@@ -1794,6 +1828,7 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 			Put put = new Put(Bytes.toBytes(invite.getId()));					
 			put.add(family_name_column, Invite.owner_id_column, Bytes.toBytes(ownerId));
 			put.add(family_name_column, Invite.account_id_column, Bytes.toBytes(accountId));
+			put.add(family_name_column, Invite.team_id_column, Bytes.toBytes(teamId));
 			String encoded = encoder.encodePassword(accountId, ownerId);
 			invite.setSecret(encoded);
 			put.add(family_name_column, Invite.secret_column, Bytes.toBytes(encoded));

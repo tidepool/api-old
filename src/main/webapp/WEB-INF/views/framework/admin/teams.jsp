@@ -28,24 +28,15 @@
 	  			<div class="row-fluid mini-layout">  				
 	    			<div class="span2 mini-layout-sidebar">
 	    				
-	    				<div class="accordion" id="accordion2">
-	    				<c:forEach var="team" items="${teams}" varStatus="rowCounter">
-		      				
-							  <div class="accordion-group">
-							    <div class="accordion-heading">
-							      <a class="accordion-toggle" data-toggle="collapse" data-parent="#accordion2" href="#collapseOne">
-							        ${ team.name }
-							      </a>
-							    </div>
-							    <div id="collapseOne" class="accordion-body collapse">
-							      <div class="accordion-inner">
-							        <a href="<c:url value="/team${ team.id }" />">Detail</a>
-							      </div>
-							    </div>
-							  </div>
-							  
+	    				<ul>
+	    				<c:forEach var="team" items="${teams}" varStatus="rowCounter">		      				
+						  	<li>
+						      <a  href='<c:url value="/team${ team.id }" />' >
+						        ${ team.name }
+						      </a>
+						    </li>							  
 						</c:forEach>
-						</div>
+						</ul>
 	    			</div>
 	    			<div class="span7 mini-layout-body">
 	      				<a href="team" class="btn btn-primary">Create New Team</a>

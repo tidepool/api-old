@@ -187,6 +187,44 @@ public class FrameworkController {
 		return "framework/admin/team";
 	}
 	
+	
+	@RequestMapping(value="/teamSavePost", method=RequestMethod.POST)
+	public  @ResponseBody Team teamSavePost(HttpServletRequest request, 
+			@RequestParam(required=true) String teamName,
+			@RequestParam(required=false) Long teamId,
+			@RequestParam(required=true) String timeline) {
+		
+		Account account =  getAccount();				
+		if (account == null) {
+			return null;
+		}
+		
+		
+		Team team = null;
+		if (teamId != null) {
+			team = hBaseManager.getTeamFromId(teamId);
+		} else {
+			team = new Team();
+		}
+		team.setName(teamName);
+		team.setOwnerId(account.getUserId());
+		if (!StringUtils.isEmpty(timeline)) {
+			try {
+				long date = dateFormat.parse(timeline).getTime();
+				team.setTimeline(date);
+			} catch (ParseException e) {				
+				e.printStackTrace();
+			}
+		}
+		if (teamId != null) {
+			hBaseManager.saveTeam(team);
+		} else {
+			hBaseManager.createTeam(team);
+		}
+		
+		return team;
+	}
+	
 
 	@RequestMapping(value="/teamPost", method=RequestMethod.POST)
 	public String teamPost(HttpServletRequest request, 
@@ -242,7 +280,6 @@ public class FrameworkController {
 				emailController.sendInvitationEmail(teamAccount.getAccount(), account, invite);
 			}
 		}
-		
 		
 		return "redirect:teams";
 	}

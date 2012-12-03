@@ -197,8 +197,7 @@ public class APIController {
 
 		        for(int i = 0; i < cookies.length; i++) { 
 		            Cookie cookie1 = cookies[i];
-		            if (cookie1.getName().equals(ASSESS_COOKIE)) {
-		                System.out.println("assess code:" + cookie1.getValue());
+		            if (cookie1.getName().equals(ASSESS_COOKIE)) {		               
 		                foundCookie = true;
 		                account.setCookie(cookie1.getValue());
 		            }

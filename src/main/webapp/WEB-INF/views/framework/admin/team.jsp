@@ -68,7 +68,7 @@
 	      				<div class="row-fluid">
 	      					<div class="span3 bigthree">&nbsp;</div>
 	      				    <div class="span9">
-	      						<button class="btn btn-primary"><c:if test="${ not empty team }">Update Team</c:if><c:if test="${ empty team }">Create Team</c:if></button>
+	      						<button class="btn btn-primary"><c:if test="${ not empty team }">Send Invite</c:if><c:if test="${ empty team }">Create Team</c:if></button>
 	      					</div>
 	      				</div>
 	      			</form>	
@@ -84,7 +84,27 @@
 		<script>	
 			(function ($) {
 				$(document).ready(function () {								
+					
+					 function saveTeam() {						
+						 $.post("<c:url value="/teamSavePost" />",									 
+								 {teamId:$('#teamId').val(),
+							      teamName:$('#teamName').val(),
+							      timeline:$('#datepicker').val()	  
+								 }, 
+								 function (team) {									
+									 $('#teamId').val(team.id);							 		
+						 		}, "json"	
+						  );						 
+					 } 
 						
+					 $('#teamName').change(function() {
+						  saveTeam();
+					 });
+					 
+					 $('#datepicker').change(function() {
+						  saveTeam();
+					 });
+					 
 					 $( "#datepicker" ).datepicker();
 					 
 					 $("#submitTeamMemberButton").click(function() {					 		

@@ -426,6 +426,11 @@ public class FrameworkController {
 			model.addAttribute("admin", getAccount());
 		}
 		
+		Invite invite = (Invite) request.getSession().getAttribute("invite");		
+		if (invite != null) {
+			model.addAttribute("account", hBaseManager.getAccountFromId(invite.getAccountId()));						
+		}
+			
 		return "framework/user/register";
 	}
 	

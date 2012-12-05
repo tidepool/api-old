@@ -31,22 +31,21 @@
 					<div class="control-group">
 						<label class="control-label" for="firstName">First Name</label>
 						<div class="controls">
-							<input type="text" id="firstName" name="firstName" placeholder="First Name">
+							<input type="text" id="firstName" name="firstName" placeholder="First Name" <c:if test="${ not empty account }">value="${ account.firstName}"</c:if> >
 						</div>
 					</div>
 					
 					<div class="control-group">
 						<label class="control-label" for="lastName">Last Name</label>
 						<div class="controls">
-							<input type="text" id="lastName" name="lastName" placeholder="Last Name">
+							<input type="text" id="lastName" name="lastName" placeholder="Last Name" <c:if test="${ not empty account }">value="${ account.lastName}"</c:if>>
 						</div>
 					</div>
-							
-					
+												
 					<div class="control-group">
 						<label class="control-label" for="email">Email</label>
 						<div class="controls">
-							<input type="text" id="email" name="email" placeholder="email">
+							<input type="text" id="email" name="email" placeholder="email" <c:if test="${ not empty account }">value="${ account.email}"</c:if>>
 						</div>
 					</div>
 					

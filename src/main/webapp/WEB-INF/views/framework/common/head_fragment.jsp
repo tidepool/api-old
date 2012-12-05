@@ -9,7 +9,10 @@
     <title>${ param.title }</title>    
     <meta name="description" content="">
     <meta name="author" content="">
-
+	<link rel="icon" 
+      type="image/png" 
+      href="<c:url value="/resources/bootstrap/img/favicon.png" />" >
+      
     <link href="<c:url value="/resources/bootstrap/css/bootstrap.css" />" rel="stylesheet">
     <link href="<c:url value="/resources/bootstrap/css/anchor-footer.css" />" rel="stylesheet">
     <%--  <link href="<c:url value="/resources/bootstrap/css/bootstrap-responsive.css" />" rel="stylesheet"> --%>

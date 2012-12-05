@@ -2,6 +2,8 @@ package com.tidepool.api.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.HashMap;
+import java.util.List;
 
 import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
@@ -178,7 +180,18 @@ public class FrameworkController {
 			Team team = hBaseManager.getTeamFromId(teamId);
 			hBaseManager.loadAccountsForTeam(team);
 			model.addAttribute("team", team);
+		
+			if (team != null) {
+				List<Invite> invites = hBaseManager.getInvitesForTeam(team);
+				HashMap<String, Invite> inviteMap = new HashMap<String, Invite>();
+				for (Invite invite : invites) {
+					inviteMap.put(invite.getAccountId(), invite);
+				}
+				model.addAttribute("inviteMap", inviteMap);
+			}
 		}
+		
+		
 		
 		model.addAttribute("account", account);
 		
@@ -446,8 +459,9 @@ public class FrameworkController {
 		Invite invite = (Invite) request.getSession().getAttribute("invite");
 		Account newAccount = null;
 		if (invite != null) {
-			newAccount = hBaseManager.getAccountFromId(invite.getAccountId());
-						
+			newAccount = hBaseManager.getAccountFromId(invite.getAccountId());			
+			invite.setStatus(Invite.CLOSED_STATUS);	
+			hBaseManager.saveInvite(invite);
 		} else {		
 			newAccount = new Account();
 		}
@@ -460,7 +474,7 @@ public class FrameworkController {
 		newAccount.setIp(request.getRemoteAddr());
 		newAccount.setAccountStatus("0");
 		newAccount.setElementGroupId(Account.FRAMEWORK_USER);
-		
+				
 		try {
 			
 			if (invite != null) {

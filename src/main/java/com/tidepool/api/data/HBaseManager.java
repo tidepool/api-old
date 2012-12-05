@@ -1785,28 +1785,8 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 				scan.setFilter(filter);
 				scanner = table.getScanner(scan);		
 				for (Result result : scanner) {				
-					Invite invite = new Invite();
-					
-					if (result.containsColumn(family_name_column, Invite.account_id_column)) {
-						byte[] val = result.getValue(family_name_column, Invite.account_id_column);
-						invite.setAccountId(Bytes.toString(val));					
-					}
-					
-					if (result.containsColumn(family_name_column, Invite.owner_id_column)) {
-						byte[] val = result.getValue(family_name_column, Invite.owner_id_column);
-						invite.setOwnerId(Bytes.toString(val));					
-					}
-					
-					if (result.containsColumn(family_name_column, Invite.secret_column)) {
-						byte[] val = result.getValue(family_name_column, Invite.secret_column);
-						invite.setSecret(Bytes.toString(val));					
-					}
-					
-					if (result.containsColumn(family_name_column, Invite.team_id_column)) {
-						byte[] val = result.getValue(family_name_column, Invite.team_id_column);
-						invite.setTeamId(Bytes.toLong(val));					
-					}
-					
+					Invite invite = new Invite();					
+					mapInvite(result, invite);					
 					return invite;
 				}			
 			} catch(Exception e) {
@@ -1816,6 +1796,36 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 			}		
 			return null;	
 		
+	}
+
+	private void mapInvite(Result result, Invite invite) {
+		
+		invite.setId(Bytes.toLong(result.getRow()));
+		
+		if (result.containsColumn(family_name_column, Invite.account_id_column)) {
+			byte[] val = result.getValue(family_name_column, Invite.account_id_column);
+			invite.setAccountId(Bytes.toString(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Invite.owner_id_column)) {
+			byte[] val = result.getValue(family_name_column, Invite.owner_id_column);
+			invite.setOwnerId(Bytes.toString(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Invite.secret_column)) {
+			byte[] val = result.getValue(family_name_column, Invite.secret_column);
+			invite.setSecret(Bytes.toString(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Invite.team_id_column)) {
+			byte[] val = result.getValue(family_name_column, Invite.team_id_column);
+			invite.setTeamId(Bytes.toLong(val));					
+		}
+		
+		if (result.containsColumn(family_name_column, Invite.status_column)) {
+			byte[] val = result.getValue(family_name_column, Invite.status_column);
+			invite.setStatus(Bytes.toString(val));					
+		}
 	}
 	
 	public Invite createInvite(String ownerId, String accountId, long teamId) {
@@ -1829,6 +1839,7 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 			put.add(family_name_column, Invite.owner_id_column, Bytes.toBytes(ownerId));
 			put.add(family_name_column, Invite.account_id_column, Bytes.toBytes(accountId));
 			put.add(family_name_column, Invite.team_id_column, Bytes.toBytes(teamId));
+			put.add(family_name_column, Invite.status_column, Bytes.toBytes(Invite.OPEN_STATUS));
 			String encoded = encoder.encodePassword(accountId, ownerId);
 			invite.setSecret(encoded);
 			put.add(family_name_column, Invite.secret_column, Bytes.toBytes(encoded));
@@ -1839,5 +1850,50 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 			return invite;
 		}			
 	}
+	
+	
+	public void saveInvite(Invite invite) {		
+		try {				
+			HTableInterface table = pool.getTable(inviteTable);
+			Put put = new Put(Bytes.toBytes(invite.getId()));					
+			put.add(family_name_column, Invite.owner_id_column, Bytes.toBytes(invite.getOwnerId()));
+			put.add(family_name_column, Invite.account_id_column, Bytes.toBytes(invite.getAccountId()));
+			put.add(family_name_column, Invite.team_id_column, Bytes.toBytes(invite.getTeamId()));			
+			put.add(family_name_column, Invite.status_column, Bytes.toBytes(invite.getStatus()));
+			table.put(put);
+		} catch(Exception e) {
+			e.printStackTrace();
+		}
+	}
+	
+	public List<Invite> getInvitesForTeam(Team team) {
+		List<Invite> invites = new ArrayList<Invite>();
+		
+		ResultScanner scanner  = null;
+		SingleColumnValueFilter filter = new SingleColumnValueFilter(
+				family_name_column,
+				Invite.team_id_column,
+				CompareOp.EQUAL,
+				Bytes.toBytes(team.getId()));
+
+		try {
+			HTableInterface table = pool.getTable(inviteTable);
+			Scan scan = new Scan();
+			scan.setFilter(filter);
+			scanner = table.getScanner(scan);		
+			for (Result result : scanner) {				
+				Invite invite = new Invite();				
+				mapInvite(result, invite);			
+				invites.add(invite);
+			}			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			scanner.close();
+		}		
+		return invites;	
+		
+	}
+	
 	
 }

@@ -35,9 +35,28 @@
 	      				    <div class="span9">
 	      				    <input type="text" name="teamName" id="teamName" placeholder="Team Name" <c:if test="${ not empty team }">value="${ team.name }"</c:if>>
 	      					<table class="table table-bordered table-striped">
-  								<th>Select</th><th>Name</th><th>Age</th><th>Sex</th><th>Job Title</th><<th>Status</th>
+  								<th>Select</th><th>Name</th><th>Age</th><th>Sex</th><th>Job Title</th><th>Status</th>
   								<c:forEach var="member" items="${team.teamMembers}" varStatus="rowCounter">
-  									<tr><td><input  value="${member.account.userId }" name="activeUsers" type="checkbox" <c:if test="${ member.active }">checked</c:if> ></td><td>${ member.account.firstName } ${ member.account.lastName }</td><td>${ member.account.age }</td><td>${ member.account.gender }</td><td>${ member.account.jobTitle }</td><td>Pending</td></tr>
+  									<tr>
+  									<td><input value="${member.account.userId }" class="activeUsers" name="activeUsers" type="checkbox" <c:if test="${ member.active }">checked</c:if> ></td>
+  									<td>${ member.account.firstName } ${ member.account.lastName }</td>
+  									<td>${ member.account.age }</td>
+  									<td>${ member.account.gender }</td>
+  									<td>${ member.account.jobTitle }</td>
+  									
+  									<c:choose>
+  										<c:when test="${ not empty inviteMap[member.account.userId ] && inviteMap[member.account.userId ].status eq 'OPEN'}">
+  											<td>Pending</td>		
+  										</c:when>
+  										<c:when test="${ not empty inviteMap[member.account.userId ] && inviteMap[member.account.userId ].status eq 'CLOSED'}">
+  											<td>Completed</td>
+  										</c:when>
+  										<c:otherwise>
+  											<td>Un-assigned</td>
+  										</c:otherwise>
+  									</c:choose>
+  									
+  									</tr>
   								</c:forEach>
   								<tr class="template-member-row" style="display:none"><td><input class="template-checkbox" checked type="checkbox"/></td><td class="template-name">Kilgore Trout</td><td class="template-age">44</td><td class="template-sex">M</td><td class="template-job-title">Writer</td><td>Pending</td></tr>
   								<tr><td colspan="5" style="align:center"><a href="#newMemberModal" role="button" class="btn btn-primary" data-toggle="modal">Add Team Member</a></td></tr>
@@ -131,6 +150,7 @@
 								 		var $tr = $('.template-member-row');
 								 		var $clone = $tr.clone();
 								 		$clone.find('.template-checkbox').attr('name',"activeUsers");
+								 		
 								 		$clone.find('.template-checkbox').attr('value', account.userId);								 		
 								 		$clone.find('.template-name').html(account.firstName + " " + account.lastName);
 								 		$clone.find('.template-age').html(account.age);								 		
@@ -169,6 +189,15 @@
 							return true;
 						});
 					 
+					 
+					 $(".activeUsers").click(function() {						
+						var active;
+						if ($(this).prop('checked')) {
+						 	active = true;
+						} else {
+							active = false;
+						}						 						 
+					 });
 					 
 				});
 			})(jQuery);		

@@ -27,6 +27,10 @@
 				<form class="form-horizontal" action="<c:url value="/endUserRegisterPost" />" method="POST">
 									
 					<div class="control-group alert alert-error" style="display:none" id="error">Hold up....</div>
+					
+					<div class="alert alert-success">
+  						Thanks for completing the assessment! Register to see the results.
+					</div>
 												
 					<div class="control-group">
 						<label class="control-label" for="firstName">First Name</label>

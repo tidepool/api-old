@@ -600,6 +600,32 @@ public class FrameworkController {
 		return "redirect:/assess10";
 	}
 	
+	@RequestMapping(value="/resendInvitePost", method=RequestMethod.POST)
+	public @ResponseBody String resendInvitePost(HttpServletRequest request,
+			@RequestParam(required=true) long teamId,
+			@RequestParam(required=true) String memberId,
+			Model model) {
+		
+		Account account = getAccount();
+		if (account == null || !account.isAdmin()) {
+			return "fail";		
+		}
+		
+		Team team = hBaseManager.getTeamFromId(teamId);
+		
+		if (team != null && team.getOwnerId().equals(getAccount().getUserId())) {
+			
+			hBaseManager.loadAccountsForTeam(team);
+			for (TeamAccount teamAccount : team.getTeamMembers()) {
+				if (teamAccount.getAccount().getUserId().equals(memberId)) {
+					
+				}
+			}
+		}
+				
+		return "fail";
+	}
+	
 	
 	@RequestMapping(value="/passwordEmailPost", method=RequestMethod.POST)
 	public @ResponseBody String registerPost(HttpServletRequest request,

@@ -32,7 +32,16 @@ public class InviteTest {
 		
 		assertNotNull(foundInvite);
 		
+		assertNotNull(hBaseManager.getExistingInvite("Pig", "Bodine", 101L));
 		
+		foundInvite.setStatus(Invite.CLOSED_STATUS);
+		
+		hBaseManager.saveInvite(foundInvite);
+		
+		assertNotNull(hBaseManager.getExistingInvite("Pig", "Bodine", 101L));
+		assertTrue(hBaseManager.getExistingInvite("Pig", "Bodine", 101L).getStatus().equals(Invite.CLOSED_STATUS));		
+		assertTrue(hBaseManager.createInvite("Pig", "Bodine", 101L).getStatus().equals(Invite.OPEN_STATUS));
+		assertTrue(hBaseManager.getExistingInvite("Pig", "Bodine", 101L).getStatus().equals(Invite.OPEN_STATUS));	
 		
 	}
 	

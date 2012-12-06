@@ -1829,26 +1829,33 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 	}
 	
 	public Invite createInvite(String ownerId, String accountId, long teamId) {
-		Invite invite = new Invite();
-		HTableInterface counter = pool.getTable(countersTable);
-		try {			
-			long nextCounter = counter.incrementColumnValue(Bytes.toBytes("11"), family_name_column, Bytes.toBytes(inviteTable), 1);
-			invite.setId(nextCounter);			
-			HTableInterface table = pool.getTable(inviteTable);
-			Put put = new Put(Bytes.toBytes(invite.getId()));					
-			put.add(family_name_column, Invite.owner_id_column, Bytes.toBytes(ownerId));
-			put.add(family_name_column, Invite.account_id_column, Bytes.toBytes(accountId));
-			put.add(family_name_column, Invite.team_id_column, Bytes.toBytes(teamId));
-			put.add(family_name_column, Invite.status_column, Bytes.toBytes(Invite.OPEN_STATUS));
-			String encoded = encoder.encodePassword(accountId, ownerId);
-			invite.setSecret(encoded);
-			put.add(family_name_column, Invite.secret_column, Bytes.toBytes(encoded));
-			table.put(put);
-		} catch(Exception e) {
-			e.printStackTrace();
-		} finally {			
+		Invite invite = null;
+		if ((invite = getExistingInvite(ownerId, accountId, teamId)) != null) {
+			invite.setStatus(Invite.OPEN_STATUS);
+			saveInvite(invite);
 			return invite;
-		}			
+		} else {
+			invite = new Invite();
+			HTableInterface counter = pool.getTable(countersTable);
+			try {			
+				long nextCounter = counter.incrementColumnValue(Bytes.toBytes("11"), family_name_column, Bytes.toBytes(inviteTable), 1);
+				invite.setId(nextCounter);			
+				HTableInterface table = pool.getTable(inviteTable);
+				Put put = new Put(Bytes.toBytes(invite.getId()));					
+				put.add(family_name_column, Invite.owner_id_column, Bytes.toBytes(ownerId));
+				put.add(family_name_column, Invite.account_id_column, Bytes.toBytes(accountId));
+				put.add(family_name_column, Invite.team_id_column, Bytes.toBytes(teamId));
+				put.add(family_name_column, Invite.status_column, Bytes.toBytes(Invite.OPEN_STATUS));
+				String encoded = encoder.encodePassword(accountId, ownerId);
+				invite.setSecret(encoded);
+				put.add(family_name_column, Invite.secret_column, Bytes.toBytes(encoded));
+				table.put(put);
+			} catch(Exception e) {
+				e.printStackTrace();
+			} finally {
+				return invite;
+			}	
+		}
 	}
 	
 	
@@ -1865,6 +1872,59 @@ public List<CodedItem> getFolderCodedItemsForPictures(String folderType, String.
 			e.printStackTrace();
 		}
 	}
+	
+	
+	public Invite getExistingInvite(String ownerId, String accountId, long teamId) {
+		
+		List<Filter> filters = new ArrayList<Filter>();
+		
+		SingleColumnValueFilter filter0 = new SingleColumnValueFilter(
+				family_name_column,
+				Invite.owner_id_column,
+				CompareOp.EQUAL,
+				Bytes.toBytes(ownerId)
+		);
+		filters.add(filter0);
+
+		SingleColumnValueFilter filter1 = new SingleColumnValueFilter(
+				family_name_column,
+				Invite.account_id_column,
+				CompareOp.EQUAL,
+				Bytes.toBytes(accountId)
+		);
+		filters.add(filter1);
+
+		SingleColumnValueFilter filter2 = new SingleColumnValueFilter(
+				family_name_column,
+				Invite.team_id_column,
+				CompareOp.EQUAL,
+				Bytes.toBytes(teamId)
+		);
+		filters.add(filter2);
+
+		FilterList filterList = new FilterList(filters);
+
+		ResultScanner scanner  = null;
+
+		try {
+			HTableInterface table = pool.getTable(inviteTable);
+			Scan scan = new Scan();
+			scan.setFilter(filterList);
+			scanner = table.getScanner(scan);		
+			for (Result result : scanner) {				
+				Invite invite = new Invite();				
+				mapInvite(result, invite);			
+				return invite;
+			}			
+		} catch(Exception e) {
+			e.printStackTrace();
+		} finally {
+			scanner.close();
+		}		
+
+		return null;
+	}
+	
 	
 	public List<Invite> getInvitesForTeam(Team team) {
 		List<Invite> invites = new ArrayList<Invite>();

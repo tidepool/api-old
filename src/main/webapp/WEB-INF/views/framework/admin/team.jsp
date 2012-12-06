@@ -46,7 +46,7 @@
   									
   									<c:choose>
   										<c:when test="${ not empty inviteMap[member.account.userId ] && inviteMap[member.account.userId ].status eq 'OPEN'}">
-  											<td>Pending</td>		
+  											<td>Pending <span class="badge badge-info resend-invite" name="${member.account.userId }">Resend Invite</span></td>		
   										</c:when>
   										<c:when test="${ not empty inviteMap[member.account.userId ] && inviteMap[member.account.userId ].status eq 'CLOSED'}">
   											<td>Completed</td>
@@ -59,7 +59,7 @@
   									</tr>
   								</c:forEach>
   								<tr class="template-member-row" style="display:none"><td><input class="template-checkbox" checked type="checkbox"/></td><td class="template-name">Kilgore Trout</td><td class="template-age">44</td><td class="template-sex">M</td><td class="template-job-title">Writer</td><td>Pending</td></tr>
-  								<tr><td colspan="5" style="align:center"><a href="#newMemberModal" role="button" class="btn btn-primary" data-toggle="modal">Add Team Member</a></td></tr>
+  								<tr><td colspan="6" style="align:center"><a href="#newMemberModal" role="button" class="btn btn-primary" data-toggle="modal">Add Team Member</a></td></tr>
 							</table>							
 							</div>
 														
@@ -192,13 +192,31 @@
 					 
 					 $(".activeUsers").click(function() {						
 						var active;
+						var teamMemberId = $(this).attr('value');
 						if ($(this).prop('checked')) {
 						 	active = true;
 						} else {
 							active = false;
-						}						 						 
+						}
+						
+						$.post("<c:url value="/teamMemberActivePost" />",									 
+								 {teamId:$('#teamId').val(),							      
+							 	  memberId:teamMemberId,
+							 	  active:active
+								 }, 
+								 function (data) {}, "json"	
+						  );											
 					 });
 					 
+					 $(".resendInvite").click(function() {													
+							var teamMemberId = $(this).attr('name');													
+							$.post("<c:url value="/resendInvitePost" />",									 
+									 {teamId:$('#teamId').val(),							      
+								 	  memberId:teamMemberId								 	  
+									 }, 
+									 function (data) {}, "json"	
+							  );											
+						 });
 				});
 			})(jQuery);		
 		</script>

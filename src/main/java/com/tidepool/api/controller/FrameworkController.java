@@ -294,6 +294,40 @@ public class FrameworkController {
 		return "redirect:teams";
 	}
 	
+	
+	
+	@RequestMapping(value="/teamMemberActivePost", method=RequestMethod.POST)
+	public @ResponseBody Account teamMemberPost(HttpServletRequest request,
+			@RequestParam(required=true) Long teamId,
+			@RequestParam(required=true) String memberId,
+			@RequestParam(required=true) boolean active) {
+		
+		Account account =  getAccount();				
+		if (account == null || !account.isFrameworkAdmin()) {
+			return null;
+		}
+		
+		Team team = null;
+		if (teamId != null) {
+			team = hBaseManager.getTeamFromId(teamId);
+		} 
+		
+		if (!team.getOwnerId().equals(account.getUserId())) {
+			return null;
+		}
+		
+		hBaseManager.loadAccountsForTeam(team);
+		
+		for (TeamAccount teamAccount : team.getTeamMembers()) {
+			if (teamAccount.getAccount().getUserId().equals(memberId)) {
+				teamAccount.setActive(active);
+				hBaseManager.saveTeamAccount(teamAccount);
+			}
+		}		
+		
+		return null;
+	}
+	
 	@RequestMapping(value="/teamMemberPost", method=RequestMethod.POST)
 	public @ResponseBody Account teamMemberPost(HttpServletRequest request,
 			@RequestParam(required=true) Long teamId,
@@ -332,8 +366,7 @@ public class FrameworkController {
 		teamAccount.setActive(true);
 		teamAccount.setAccount(newAccount);
 		hBaseManager.addAccountToTeam(teamAccount, team);
-		
-	
+			
 		return newAccount;
 	}
 	
@@ -359,7 +392,7 @@ public class FrameworkController {
 		return null;
 	}
 	
-	
+
 	@RequestMapping(value="/reports", method=RequestMethod.GET)
 	public String getAdminReports(HttpServletRequest request, 
 			@RequestParam(required=false) String owner,
@@ -400,6 +433,25 @@ public class FrameworkController {
 		model.addAttribute("account", account);
 		
 		return "framework/admin/report";
+	}
+	
+	@RequestMapping(value="/testdata", method=RequestMethod.GET)
+	public String getTestData(HttpServletRequest request, 
+			@RequestParam(required=false) String owner,
+			Model model) {
+		
+		Account account =  getAccount();				
+		if (account == null) {
+			return "framework/admin/register";
+		}
+		
+		if (getAccount() != null && getAccount().isAdmin()) {
+			model.addAttribute("admin", getAccount());
+		}
+		
+		model.addAttribute("account", account);				
+		
+		return "framework/admin/test-data";
 	}
 	
 	

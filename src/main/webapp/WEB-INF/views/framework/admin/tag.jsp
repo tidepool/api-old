@@ -35,9 +35,7 @@
 	      					Copy and past this tag on your html page before the end <code>body</code> tag
 	      				</div>
 	      				<div>
-	      					<textarea id="codelink_stage1" class="span7" readonly="" rows="14" name="codelink_stage1" wrap="off">
-	      						<c:import url="tag-code.jsp"></c:import>
-	      					</textarea>
+	      					<textarea id="codelink_stage1" class="span7" readonly="" rows="14" name="codelink_stage1" wrap="off"><c:import url="tag-code.jsp"></c:import></textarea>
 	      				</div>
 	      				<div>	      				
 	      				 Here is a sample button <button class="btn btn-success" id="tidepoolButton">Test</button>

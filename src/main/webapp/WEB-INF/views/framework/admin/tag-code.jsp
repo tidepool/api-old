@@ -1,11 +1,9 @@
-<!-- Tidepool Tag -->
-<%@page contentType="text/html;charset=UTF-8"%><%@page pageEncoding="UTF-8"%><%@ page session="false" %><%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %><%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %><%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
+<!-- Tidepool Tag --><%@page contentType="text/html;charset=UTF-8"%><%@page pageEncoding="UTF-8"%><%@ page session="false" %><%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %><%@ taglib uri="http://java.sun.com/jsp/jstl/fmt" prefix="fmt" %><%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn"%>
 <script type="text/javascript">
 	var _tevents = _tevents || [];	
 	(function() {
 	var elem = document.createElement('script');
-	//elem.src = (document.location.protocol == "https:" ? "https://secure" : "http://edge") + ".quantserve.com/quant.js";
-	elem.src = "<c:url value="/resources/js/tidepool.js"/>";								
+	elem.src = (document.location.protocol == "https:" ? "https://secure.tidepool.co/resources/js/tidepool.js" : '<c:url value="/resources/js/tidepool.js"/>');
 	elem.async = true;
 	elem.type = "text/javascript";
 	var scpt = document.getElementsByTagName('script')[0];

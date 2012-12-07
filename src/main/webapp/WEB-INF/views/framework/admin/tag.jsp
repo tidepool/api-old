@@ -20,56 +20,35 @@
 	    	    <div class="row-fluid mini-layout">
 	  				<div class="span10 mini-layout-breadcrumbs">
 	  					<ul class="breadcrumb">
-  							<li class="active"><a href="#">Home</a> <span class="divider">/</span></li>  							
+  							<li><a href="adminhome">Home</a> <span class="divider">/</span></li>
+  							<li class="active"><a href="#">Tag</a> <span class="divider"></span></li>  							
 						</ul>
 	  				</div>
 	  			</div>
 	  			<div class="row-fluid mini-layout">  				
 	    			<div class="span2 mini-layout-sidebar">
-	      				<div class="accordion" id="accordion2">
-						  <div class="accordion-group">
-						    <div class="accordion-heading">
-						      <a href="teams">
-						        Teams
-						      </a>
-						    </div>
-						   </div>
-						  <div class="accordion-group">
-						    <div class="accordion-heading">
-						      <a href="reports">
-						       Reports
-						      </a>
-						    </div>						    
-						  </div>
-						
-							<div class="accordion-group">
-						    <div class="accordion-heading">
-						      <a href="tag">
-						       Tag
-						      </a>
-						    </div>						    
-						  </div>
+	    				
 						</div>
-						
-						
-	    			</div>
+	    			
 	    			<div class="span7 mini-layout-body">
-	      				Main body
-	    			</div>
-	  			</div>
-			</div>
+	      				<div>
+	      					Copy and past this tag on your html page before the end <code>body</code> tag
+	      				</div>
+	      				<div>
+	      					<textarea id="codelink_stage1" class="span7" readonly="" rows="14" name="codelink_stage1" wrap="off">
+	      						<c:import url="tag-code.jsp"></c:import>
+	      					</textarea>
+	      				</div>
+	      				<div>	      				
+	      				 Here is a sample button <button class="btn btn-success" id="tidepoolButton">Test</button>
+	      				</div>	      			
+	      			</div>	
+	    		</div>
+	  		</div>
 		</div>
 		
 		<c:import url="../common/foot_fragment.jsp"></c:import>		
 		<c:import url="../common/javascript_fragment.jsp"></c:import>		
-		<script>	
-			(function ($) {
-				$(document).ready(function () {								
-					
-					$(".collapse").collapse();
-					
-				});
-			})(jQuery);		
-		</script>			
+		<c:import url="tag-code.jsp"></c:import>		
 	</body>
 </html>

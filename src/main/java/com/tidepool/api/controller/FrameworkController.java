@@ -685,6 +685,26 @@ public class FrameworkController {
 		return "redirect:/home";
 	}
 	
+	@RequestMapping(value="/tag", method=RequestMethod.GET)
+	public String getAdminTag(HttpServletRequest request,			
+			@RequestParam(required=false) String owner,
+			Model model) {
+		
+		Account account =  getAccount();				
+		if (account == null) {
+			return "framework/admin/register";
+		}
+		
+		if (account.isAdmin()) {
+			model.addAttribute("admin", account);
+		}
+						
+		model.addAttribute("account", account);
+		
+		return "framework/admin/tag";
+	}
+	
+	
 	private Account getAccount() {
 		Account account =  accountService.getAccount();		
 		return account;

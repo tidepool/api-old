@@ -5,7 +5,6 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.List;
 
-import javax.mail.Session;
 import javax.servlet.http.HttpServletRequest;
 
 import org.apache.commons.lang.StringUtils;
@@ -41,6 +40,9 @@ public class FrameworkController {
 	
 	@Value("${tidepool.invite.url}") 
 	private String inviteUrl;
+
+	@Value("${tidepool.tag.url}") 
+	private String tagUrl;
 	
 	private HBaseManager hBaseManager;
 	private AccountService accountService;
@@ -702,6 +704,16 @@ public class FrameworkController {
 		model.addAttribute("account", account);
 		
 		return "framework/admin/tag";
+	}
+	
+	@RequestMapping(value="/tag-code", method=RequestMethod.GET)
+	public String getTagCode(HttpServletRequest request,			
+			@RequestParam(required=false) String owner,
+			Model model) {
+		
+		model.addAttribute("tagUrl", tagUrl);
+									
+		return "framework/admin/tag-code";
 	}
 	
 	

@@ -18,19 +18,26 @@
 		<prop key="tidepool.registration.limit">3</prop>
 		
 		
-		<!-- LOCAL --> 
+		<!-- Need to get MVN filtering to work -->
 <!-- 		<prop key="tidepool.hbase.quorum">localhost</prop>						
 		<prop key="tidepool.hbase.clientPort">2181</prop>
 		<prop key="tidepool.hbase.master">localhost:60000</prop>
-		<prop key="tidepool.invite.url">http://localhost:8080/tidepoolAPI/</prop>		
-		<prop key="tidepool.tag.url">http://localhost:8080/tidepoolAPI/resources/js/tidepool.js</prop>		 -->				
+		<prop key="tidepool.invite.url">${invite.url}</prop>		
+		<prop key="tidepool.tag.url">${tag.url}</prop> -->
 		
-		<!-- LIVE --> 
+		<!-- LOCAL --> 
 		<prop key="tidepool.hbase.quorum">localhost</prop>						
 		<prop key="tidepool.hbase.clientPort">2181</prop>
 		<prop key="tidepool.hbase.master">localhost:60000</prop>
+		<prop key="tidepool.invite.url">http://localhost:8080/tidepoolAPI/</prop>		
+		<prop key="tidepool.tag.url">http://localhost:8080/tidepoolAPI/resources/js/tidepool.js</prop>					
+		
+		<!-- LIVE --> 
+		<!-- <prop key="tidepool.hbase.quorum">localhost</prop>						
+		<prop key="tidepool.hbase.clientPort">2181</prop>
+		<prop key="tidepool.hbase.master">localhost:60000</prop>
 		<prop key="tidepool.invite.url">http://code.tidepool.co/</prop>		
-		<prop key="tidepool.tag.url">http://code.tidepool.co/resources/js/tidepool.js</prop>	
+		<prop key="tidepool.tag.url">http://code.tidepool.co/resources/js/tidepool.js</prop>	 -->
 	
 	</util:properties>
 	
